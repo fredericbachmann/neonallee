@@ -1,7 +1,7 @@
 'use client'
 
 import Profile from './profile'
-import { Toolbar, AppBar, Box, Stack } from '@mui/material'
+import { Toolbar, AppBar, Box } from '@mui/material'
 import Link from 'next/link'
 
 interface ActionBarProps {
@@ -12,13 +12,11 @@ export default function ActionBar({ children }: ActionBarProps) {
 
     return (
         <AppBar position='sticky' color='inherit'>
-            <Toolbar className='items-center' >
-                <Link href='/' >[LOGO]</Link>
+            <Toolbar className='space-x-2'>
+                <Link href='/' className='no-underline'>[LOGO]</Link>
                 <Box sx={{ flexGrow: 1 }} />
-                <Stack direction='row' spacing={2}>
-                {children}
+                    {children}
                 <Profile />
-                </Stack>
 
             </Toolbar>
         </AppBar>

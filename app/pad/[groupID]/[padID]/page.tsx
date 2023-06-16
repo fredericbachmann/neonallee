@@ -39,14 +39,13 @@ export default async function Page({ params }: { params: { groupID: string, padI
     const sessionID = (await sessionRes.json()).data.sessionID
 
 
-//TODO: man muss 1x über etherpad/auth_session connecten, bevor es in iframe klappt 
     return <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <PadAppBar />
         <div style={{ flex: 1, display: 'flex' }}>
             <iframe
                 name="embed_readwrite"
                 src={`http://localhost:9001/auth_session?sessionID=${sessionID}&groupID=${params.groupID}&padName=${params.padID}&showControls=true&showChat=true&showLineNumbers=true&useMonospaceFont=false`}
-                style={{ width: '100%' }}
+                style={{ width: '100%', border: 0 }}
             />
         </div>
     </div>

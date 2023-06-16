@@ -12,7 +12,7 @@ export default function PadAppBar() {
             <Link href='/' onClick={async () => { await fetch(`/api/etherpad/delete/${params.groupID}`) }}>
                 <DeleteIcon />
             </Link>
-            <Button variant='contained' color='secondary' >Teilen</Button>
+            <Button variant='contained' color='success' >Teilen</Button>
     </ActionBar>
 
 }
