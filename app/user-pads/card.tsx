@@ -1,35 +1,35 @@
 'use client'
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2"
 import { useRouter } from "next/navigation"
-import { Card, CardActionArea, CardMedia, CardContent, Typography } from '@mui/material'
+import { Card } from "flowbite-react"
+import Link from "next/link"
 
 export default function ArticleCard({ padIDs }: { padIDs: string[] }) {
     const router = useRouter()
 
     function getCard(padID: string) {
         return (
-            <Card id={padID[0]} onClick={() => router.push(`/pad/${padID[0].replace('$', '/')}`)} style={{ width: '18rem', cursor: "pointer" }}>
-                <CardActionArea>
-                    <CardMedia component="img" src="https://picsum.photos/400/200" />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5">Titel</Typography>
-                        <Typography variant="body2" color="text.secondary">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin bibendum venenatis tincidunt..</Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+            <div className="w-96">
+                <Link id={padID[0]} href={`/pad/${padID[0].replace('$', '/')}`}>
+                    <Card imgSrc="https://picsum.photos/400/200">
+                        <h5 className="text-2xl tracking-tight">Titel</h5>
+                        <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin bibendum venenatis tincidunt..</p>
+                    </Card>
+                </Link>
+            </div>
         )
     }
 
     return (
-        <Grid2 container spacing={5} xs justifyContent="center">
+        <div className="flex flex-wrap justify-center">
             {
                 padIDs.map((padID) => {
                     if (padID[0]) {
-                        return <Grid2>
+                        return <div className="p-5">
                             {getCard(padID)}
-                        </Grid2>
+                        </div>
+
                     }
                 })}
-        </Grid2>
+        </div>
     )
 }

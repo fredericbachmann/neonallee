@@ -1,34 +1,29 @@
 
-import { Button, IconButton, Avatar, Menu, MenuItem } from '@mui/material'
+import { Avatar, Dropdown, Button } from 'flowbite-react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 
-
-
 export default function Profile() {
     const { data: session } = useSession()
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
+   
     return (session && session.user && session.user.image ? (
         <div>
-            <IconButton onClick={handleClick} size='small'>
-                <Avatar sx={{ width: 40, height: 40 }} src={session?.user?.image} />
-            </IconButton>
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem><Link href='/user-pads' style={{ color: 'black', textDecoration: 'none' }}>meine Dokumente</Link></MenuItem>
-                <MenuItem onClick={() => { signOut(); handleClose() }}>Logout</MenuItem>
-            </Menu>
+        <Dropdown inline label={<Avatar img={session.user.image} rounded />}>
+            <Dropdown.Header>
+                <span className='block'>{session.user.name}</span>
+                <span className='block truncate'>{session.user.email}</span>
+            </Dropdown.Header>
+            <Dropdown.Item>
+                <Link href='/user-pads' >meine Dokumente</Link>
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => { signOut(); }} >
+                Logout
+            </Dropdown.Item>
+        </Dropdown>
         </div>
     ) : (
-        <Button variant="contained" color='success' onClick={() => signIn()}>Login</Button>
+        <Button color='success' onClick={() => signIn()}>Login</Button>
     )
 
     )

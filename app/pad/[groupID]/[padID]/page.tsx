@@ -4,10 +4,6 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getAuthor } from "@/app/api/etherpad/get-author"
 import { prisma } from "@/app/db"
 import { getServerSession } from "next-auth"
-import ActionBar from "@/app/components/app-bar"
-import { Button, Stack } from "@mui/material"
-import Link from "next/link"
-import DeleteIcon from '@mui/icons-material/Delete'
 import PadAppBar from "./app-bar"
 
 export default async function Page({ params }: { params: { groupID: string, padID: string } }) {
