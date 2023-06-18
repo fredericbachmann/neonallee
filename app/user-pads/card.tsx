@@ -1,17 +1,15 @@
 'use client'
-import { useRouter } from "next/navigation"
 import { Card } from "flowbite-react"
 import Link from "next/link"
 
-export default function ArticleCard({ padIDs }: { padIDs: string[] }) {
-    const router = useRouter()
+export default function ArticleCard({ pads }: { pads: { etherPadID: string; etherGroupID: string; }[] }) {
 
-    function getCard(padID: string) {
+    function getCard(pad: { etherPadID: string; etherGroupID: string; }) {
         return (
             <div className="w-96">
-                <Link id={padID[0]} href={`/pad/${padID[0].replace('$', '/')}`}>
+                <Link href={`/pad/${pad.etherGroupID}/${pad.etherPadID}`}>
                     <Card imgSrc="https://picsum.photos/400/200">
-                        <h5 className="text-2xl tracking-tight">Titel</h5>
+                        <h5 className="text-2xl tracking-tight">{pad.etherPadID}</h5>
                         <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin bibendum venenatis tincidunt..</p>
                     </Card>
                 </Link>
@@ -22,13 +20,10 @@ export default function ArticleCard({ padIDs }: { padIDs: string[] }) {
     return (
         <div className="flex flex-wrap justify-center">
             {
-                padIDs.map((padID) => {
-                    if (padID[0]) {
-                        return <div className="p-5">
-                            {getCard(padID)}
-                        </div>
-
-                    }
+                pads.map((pad) => {
+                    return <div className="p-5" id={pad.etherGroupID}>
+                        {getCard(pad)}
+                    </div>
                 })}
         </div>
     )

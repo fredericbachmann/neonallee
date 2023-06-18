@@ -5,6 +5,7 @@ import { getAuthor } from "@/app/api/etherpad/get-author"
 import { prisma } from "@/app/db"
 import { getServerSession } from "next-auth"
 import PadAppBar from "./app-bar"
+import { etherApiReq } from "@/app/etherApi"
 
 export default async function Page({ params }: { params: { groupID: string, padID: string } }) {
     const session = await getServerSession(authOptions)
@@ -15,24 +16,24 @@ export default async function Page({ params }: { params: { groupID: string, padI
         {
             where: {
                 email: session.user.email,
-                groups: {
+                pads: {
                     some: {
-                        etherID: params.groupID
+                        pad: {
+                            etherGroupID: params.groupID,
+                            etherPadID: decodeURIComponent(params.padID)
+                        }
                     }
                 }
             }
         }
     )
+    
 
     if (!hasAccess) return <h2>You don't have access to this pad.</h2>
     const authorID: string = await getAuthor()
     const validUntil: number = Math.floor(Date.now() / 1000) + 60 * 60 * 12
 
-    const sessionRes = await fetch(`${process.env.ETHERPAD_URL}/api/1/createSession?apikey=${process.env.ETHERPAD_API_KEY}&groupID=${params.groupID}&authorID=${authorID}&validUntil=${validUntil}`)
-    if (!sessionRes.ok) {
-        throw new Error('Failed to fetch data')
-    }
-    const sessionID = (await sessionRes.json()).data.sessionID
+    const sessionID: string = (await etherApiReq('createSession', `groupID=${params.groupID}&authorID=${authorID}&validUntil=${validUntil}`)).sessionID
 
 
     return <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
