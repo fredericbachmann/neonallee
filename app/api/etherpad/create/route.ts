@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    return NextResponse.json({ message: 'Not logged in' })
+    redirect('/api/auth/signin')
   }
   if (!session.user || !session.user.email) {
     return NextResponse.json({ message: 'Invalid login' })
