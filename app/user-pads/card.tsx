@@ -21,7 +21,7 @@ export default function ArticleCard({ pads }: { pads: { etherPadID: string; ethe
         <div className="flex flex-wrap justify-center">
             {
                 pads.map((pad) => {
-                    return <div className="p-5" id={pad.etherGroupID}>
+                    return <div className="p-5" key={pad.etherGroupID}>
                         {getCard(pad)}
                     </div>
                 })}

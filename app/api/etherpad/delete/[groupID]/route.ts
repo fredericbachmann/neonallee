@@ -3,46 +3,34 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../../../auth/[...nextauth]/route"
 import { prisma } from "@/app/db"
 import { etherApiReq } from "@/app/etherApi"
-import { redirect } from "next/navigation"
 
 
-export async function GET(_: Request, { params }: { params: { groupID: string } }) {
+export async function DELETE(_: Request, { params }: { params: { groupID: string } }) {
   const session = await getServerSession(authOptions)
 
-  if (!session) {
-    redirect('/api/auth/signin')
-  }
-  if (!session.user || !session.user.email) {
-    return NextResponse.json({ message: 'Invalid login' })
+  if (!session || !session.user || !session.user.email) {
+    return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
-  const hasAccess: boolean = !!await prisma.user.findFirst( // check if the user has access to the pad
-    {
-      where: {
-        email: session.user.email,
-        pads: {
-          some: {
-            pad: {
-              etherGroupID: params.groupID
-            }
+  const padToDelete = await prisma.pad.findFirst({ // find the given pad (if the authenticated user has access)
+    where: {
+      etherGroupID: params.groupID,
+      members: {
+        some: {
+          permission: "OWNER",
+          user: {
+            email: session.user.email
           }
         }
       }
     }
-  )
-  if (!hasAccess) return NextResponse.json({ message: 'Access denied' })
+  })
+
+  if (!padToDelete) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
 
   await etherApiReq('deleteGroup', `groupID=${params.groupID}`)
 
-  const padToDelete = await prisma.pad.findUnique(
-    {
-      where: {
-        etherGroupID: params.groupID
-      }
-    }
-  )
-
-  if(padToDelete) {
+  if (padToDelete) {
     await prisma.usersOnPads.deleteMany({
       where: {
         padId: padToDelete.id
@@ -58,5 +46,5 @@ export async function GET(_: Request, { params }: { params: { groupID: string } 
     return NextResponse.json({ message: 'Pad doesn\'t exist.' })
   }
 
-  redirect('/user-pads')
+  return NextResponse.json({ message: 'Success' }, { status: 200 })
 }

@@ -1,27 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAuthor } from "../get-author"
+import { getAuthor } from "../../get-author"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { authOptions } from "../../../auth/[...nextauth]/route"
 import { prisma } from "@/app/db"
-import { redirect } from "next/navigation"
 import { etherApiReq } from "@/app/etherApi"
 
 
-export async function GET(request: NextRequest) {
-  const param = request.nextUrl.searchParams.get('padName') ?? 'Unbenannt'
-  const padName = param ? param : 'Unbenannt'
+export async function POST(_: NextRequest, { params }: { params: { padName: string } }) {
+  const padName = params.padName ? params.padName : 'Unbenannt'
 
   const session = await getServerSession(authOptions)
 
-  if (!session) {
-    redirect('/api/auth/signin')
-  }
-  if (!session.user || !session.user.email) {
-    return NextResponse.json({ message: 'Invalid login' })
+  if (!session || !session.user || !session.user.email) {
+    return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
   const groupData = await etherApiReq('createGroup', '') // creating new group
-  const groupID = groupData.groupID
+  const groupID: string = groupData.groupID
 
   const author = await getAuthor()
 
@@ -33,6 +28,7 @@ export async function GET(request: NextRequest) {
       etherGroupID: groupID,
       members: {
         create: {
+          permission: "OWNER",
           user: {
             connectOrCreate: {
               where: {
@@ -48,5 +44,5 @@ export async function GET(request: NextRequest) {
     }
   })
 
-  redirect(`/pad/${groupID}/${padName}`)
+  return NextResponse.json({ url: `/pad/${groupID}/${padName}` }, { status: 200 })
 }

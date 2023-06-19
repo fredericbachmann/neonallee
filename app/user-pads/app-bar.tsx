@@ -1,23 +1,33 @@
 'use client'
 import ActionBar from "@/app/components/app-bar";
 import { Button, Label, Modal, TextInput } from "flowbite-react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
-let setOpenModal = undefined
 
 export default function UserPadsAppBar() {
-    const router = useRouter();
     const [openModal, setOpenModal] = useState<string | undefined>()
+    const padNameInputRef = useRef<HTMLInputElement>(null)
+    const router = useRouter()
+
+    async function handleCreate(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        const padName = padNameInputRef.current?.value ? padNameInputRef.current?.value: 'Unbenannt'
+        const res = await fetch(`/api/etherpad/create/${padName}`, { method: 'POST' })
+        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 200) {
+            const json: { url: string } = await res.json()
+            router.push(json.url)
+        }
+    }
 
     return <ActionBar>
         <Modal dismissible show={openModal === 'padName'} onClose={() => setOpenModal(undefined)}>
             <Modal.Header>Neues Dokument</Modal.Header>
-            <form action="/api/etherpad/create">
+            <form onSubmit={handleCreate}>
                 <Modal.Body>
                     <Label htmlFor="padName" value="Name" />
-                    <TextInput id="padName" name="padName" placeholder="Unbenannt" />
+                    <TextInput id="padName" name="padName" placeholder="Unbenannt" ref={padNameInputRef} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit">Erstellen</Button>
