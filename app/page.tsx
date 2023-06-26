@@ -12,6 +12,7 @@ export default async function Page() {
 
   if(!session || !session.user || !session.user.email) redirect('/api/auth/signin')
 
+
   const pads = await prisma.pad.findMany({
     where: {
       members: {
