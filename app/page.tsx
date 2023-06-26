@@ -1,28 +1,39 @@
-'use client'
-import { Card } from "flowbite-react";
+import 'server-only'
 import ActionBar from "./components/app-bar"
-import Link from "next/link";
+import ReadArticleCard from './components/card'
+import { prisma } from './db'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextauth]/route'
+import { redirect } from 'next/navigation'
 
 
-export default function Page() {
+export default async function Page() {
+  const session = await getServerSession(authOptions)
 
+  if(!session || !session.user || !session.user.email) redirect('/api/auth/signin')
+
+  const pads = await prisma.pad.findMany({
+    where: {
+      members: {
+        some: {
+          permission: 'READ',
+          user: {
+            email: session.user.email
+          }
+        }
+      }
+    }
+  })
+  console.log(pads)
+
+  
   return (
     <center>
       <ActionBar />
       <div className="max-w-3xl">
         {
-          [...new Array(10)].map((_, index) =>
-            <Link href="/" key={index}>
-              <Card className="my-5">
-                <div className="flex">
-                  <div className="text-left">
-                    <h6 className="text-3xl tracking-tight">Titel</h6>
-                    <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
-                  <img src="https://picsum.photos/100" width={100} />
-                </div>
-              </Card>
-            </Link>
+          pads.map((pad, index) =>
+            <ReadArticleCard pad={pad} index={index} />
           )}
       </div>
     </center>

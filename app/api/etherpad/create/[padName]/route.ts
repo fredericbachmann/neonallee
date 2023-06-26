@@ -22,10 +22,14 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
 
   await etherApiReq('createGroupPad', `groupID=${groupID}&padName=${padName}&authorID=${author}`) // assigning the group a new pad
 
+  const readOnlyData = await etherApiReq('getReadOnlyID', `padID=${groupID}$${padName}`)
+  const readOnlyID: string = readOnlyData.readOnlyID
+
   await prisma.pad.create({
     data: {
       etherPadID: padName,
       etherGroupID: groupID,
+      readOnlyID: readOnlyID,
       members: {
         create: {
           permission: "OWNER",

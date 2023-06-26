@@ -6,11 +6,11 @@ import { prisma } from "@/app/db"
 import { getServerSession } from "next-auth"
 import PadAppBar from "./app-bar"
 import { etherApiReq } from "@/app/etherApi"
+import { redirect } from "next/navigation"
 
 export default async function Page({ params }: { params: { groupID: string, padID: string } }) {
     const session = await getServerSession(authOptions)
-    if (!session) return <>Not logged in</>
-    if (!session.user || !session.user.email) return <>Invalid login</>
+    if (!session || !session.user || !session.user.email) redirect('/api/auth/signin')
 
     const hasAccess: boolean = !!await prisma.user.findFirst(
         {
