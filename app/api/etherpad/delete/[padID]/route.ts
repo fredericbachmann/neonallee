@@ -26,7 +26,6 @@ export async function DELETE(_: Request, { params }: { params: { padID: string }
     }
   })
 
-console.log('delete')
   if (!padToDelete) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
   await etherApiReq('deletePad', `padID=${params.padID}`)
 

@@ -10,7 +10,6 @@ export async function POST(request: NextRequest, { params }: {
         write: 'READ' | 'WRITE'
     }
 }) {
-    console.log(JSON.stringify(params))
 
     const session = await getServerSession(authOptions)
 
