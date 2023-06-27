@@ -14,7 +14,7 @@ export default function PadAppBar() {
     const mailInputRef = useRef<HTMLInputElement>(null)
 
     async function handleDelete() {
-        const res = await fetch(`/api/etherpad/delete/${params.groupID}`, { method: 'DELETE' })
+        const res = await fetch(`/api/etherpad/delete/${params.padID}`, { method: 'DELETE' })
         if (res.status === 401) router.push('/api/auth/signin')
         if (res.status === 200) router.push('/user-pads')
     }
@@ -22,7 +22,7 @@ export default function PadAppBar() {
     async function handleShare(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const mail = mailInputRef.current?.value
-        const res = await fetch(`/api/etherpad/share/${params.groupID}/${mail}/${permission}`, { method: 'POST' })
+        const res = await fetch(`/api/etherpad/share/${params.padID}/${mail}/${permission}`, { method: 'POST' })
         setOpenModal(undefined)
     }
 

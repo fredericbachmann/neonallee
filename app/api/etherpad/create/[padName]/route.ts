@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getAuthor } from "../../get-author"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../../auth/[...nextauth]/route"
 import { prisma } from "@/app/db"
@@ -15,21 +14,12 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
     return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
-  const groupData = await etherApiReq('createGroup', '') // creating new group
-  const groupID: string = groupData.groupID
+  const data = await etherApiReq('createAuthorIfNotExistsFor', `authorMapper=${session.user?.email}&name=${session.user?.email}`)
+  const author = data.authorID
 
-  const author = await getAuthor()
-
-  await etherApiReq('createGroupPad', `groupID=${groupID}&padName=${padName}&authorID=${author}`) // assigning the group a new pad
-
-  const readOnlyData = await etherApiReq('getReadOnlyID', `padID=${groupID}$${padName}`)
-  const readOnlyID: string = readOnlyData.readOnlyID
-
-  await prisma.pad.create({
+  const result = await prisma.pad.create({
     data: {
-      etherPadID: padName,
-      etherGroupID: groupID,
-      readOnlyID: readOnlyID,
+      name: padName,
       members: {
         create: {
           permission: "OWNER",
@@ -45,8 +35,16 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
           }
         }
       }
+    },
+    select: {
+      id: true
     }
   })
 
-  return NextResponse.json({ url: `/pad/${groupID}/${padName}` }, { status: 200 })
+  const padId = result.id
+
+  await etherApiReq('createPad', `padID=${padId}&authorId=${author}`) // creating a new Pad
+
+
+  return NextResponse.json({ url: `/pad/${padId}` }, { status: 200 })
 }

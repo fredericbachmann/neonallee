@@ -33,8 +33,8 @@ export default async function Page() {
       <ActionBar />
       <div className="max-w-3xl">
         {
-          pads.map((pad, index) =>
-            <ReadArticleCard pad={pad} index={index} />
+          pads.map((pad, _) =>
+            <ReadArticleCard pad={pad} />
           )}
       </div>
     </center>

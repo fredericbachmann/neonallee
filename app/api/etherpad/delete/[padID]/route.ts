@@ -5,7 +5,7 @@ import { prisma } from "@/app/db"
 import { etherApiReq } from "@/app/etherApi"
 
 
-export async function DELETE(_: Request, { params }: { params: { groupID: string } }) {
+export async function DELETE(_: Request, { params }: { params: { padID: string } }) {
   const session = await getServerSession(authOptions)
 
   if (!session || !session.user || !session.user.email) {
@@ -14,7 +14,7 @@ export async function DELETE(_: Request, { params }: { params: { groupID: string
 
   const padToDelete = await prisma.pad.findFirst({ // find the given pad (if the authenticated user has access)
     where: {
-      etherGroupID: params.groupID,
+      id: params.padID,
       members: {
         some: {
           permission: "OWNER",
@@ -26,9 +26,9 @@ export async function DELETE(_: Request, { params }: { params: { groupID: string
     }
   })
 
+console.log('delete')
   if (!padToDelete) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
-
-  await etherApiReq('deleteGroup', `groupID=${params.groupID}`)
+  await etherApiReq('deletePad', `padID=${params.padID}`)
 
   if (padToDelete) {
     await prisma.usersOnPads.deleteMany({

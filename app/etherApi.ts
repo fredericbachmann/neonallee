@@ -9,7 +9,7 @@ export async function etherApiReq(method: string, params: string) {
         data: any
     } = await res.json()
 
-    if (json.code != 0) throw new Error(`Failed to fetch data, response: ${JSON.stringify(json)}`)
+    if (json.code != 0) throw new Error(`Failed to fetch data at URL ${url}, response: ${JSON.stringify(json)}`)
 
     return json.data
 }

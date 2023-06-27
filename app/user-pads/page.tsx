@@ -3,9 +3,10 @@ import UserPadsAppBar from "./app-bar";
 import ArticleCard from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
+import { Pad } from "@prisma/client";
 
 
-async function getPads(): Promise<{ etherPadID: string; etherGroupID: string; }[]> {
+async function getPads(): Promise<Pad[]> {
   const session = await getServerSession(authOptions)
   if (!session) return []
   if (!session.user || !session.user.email) return []
@@ -14,15 +15,12 @@ async function getPads(): Promise<{ etherPadID: string; etherGroupID: string; }[
     where: {
       members: {
         some: {
+          OR: [{permission: 'OWNER'}, {permission: 'WRITE'}],
           user: {
             email: session.user.email
           }
         }
       }
-    },
-    select: {
-      etherGroupID: true,
-      etherPadID: true
     }
   }
   )

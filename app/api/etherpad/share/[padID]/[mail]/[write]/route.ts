@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 export async function POST(request: NextRequest, { params }: {
     params: {
-        groupID: string,
+        padID: string,
         mail: string,
         write: 'READ' | 'WRITE'
     }
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest, { params }: {
 
     const pad = await prisma.pad.findFirst({ // find the pad for the given ID (if user has access)
         where: {
-            etherGroupID: params.groupID,
+            id: params.padID,
             members: {
                 some: {
                     permission: "OWNER",
@@ -34,20 +34,16 @@ export async function POST(request: NextRequest, { params }: {
 
     if (!pad) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
 
-    const user = await prisma.user.upsert({
-        create: {
-            email: params.mail
-        },
-        update: {},
+    const user = await prisma.user.findUnique({
         where: {
-            email: params.mail
+            email: session.user.email
         }
     })
 
     await prisma.usersOnPads.create({
         data: {
             padId: pad.id,
-            userId: user.id,
+            userId: user!.id,
             permission: params.write
         }
     })
