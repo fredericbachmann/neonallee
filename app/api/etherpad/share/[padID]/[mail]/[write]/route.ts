@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/db"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
-export async function POST(request: NextRequest, { params }: {
+export async function POST(_: NextRequest, { params }: {
     params: {
         padID: string,
         mail: string,
@@ -24,8 +24,8 @@ export async function POST(request: NextRequest, { params }: {
                 some: {
                     permission: "OWNER",
                     user: {
-                        email: session.user.email
-                    }
+                email: session.user.email
+}
                 }
             }
         }

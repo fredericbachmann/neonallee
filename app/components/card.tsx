@@ -6,6 +6,8 @@ import Link from "next/link"
 export default function ReadArticleCard(props: {pad: Pad}) {
     return <Link href={`/pad/${props.pad.id}`}>
     <Card className="my-5">
+      
+      <hr />
       <div className="flex">
         <div className="text-left">
           <h6 className="text-3xl tracking-tight">{props.pad.name}</h6>

@@ -6,9 +6,8 @@ import React from 'react'
 
 export default function Profile() {
     const { data: session } = useSession()
-   
+
     return (session && session.user && session.user.image ? (
-        <div>
         <Dropdown inline label={<Avatar img={session.user.image} rounded />}>
             <Dropdown.Header>
                 <span className='block'>{session.user.name}</span>
@@ -21,7 +20,6 @@ export default function Profile() {
                 Logout
             </Dropdown.Item>
         </Dropdown>
-        </div>
     ) : (
         <Button color='success' onClick={() => signIn()}>Login</Button>
     )

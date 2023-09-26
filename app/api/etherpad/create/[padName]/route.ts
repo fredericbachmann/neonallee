@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../../auth/[...nextauth]/route"
 import { prisma } from "@/app/db"
-import { etherApiReq } from "@/app/etherApi"
+import { etherApiReq } from "@/app/api/etherApi"
 
 
 export async function POST(_: NextRequest, { params }: { params: { padName: string } }) {
@@ -29,8 +29,8 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
                 email: session.user.email
               },
               create: {
-                email: session.user.email
-              }
+          email: session.user.email
+}
             }
           }
         }

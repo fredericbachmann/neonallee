@@ -25,7 +25,6 @@ export default async function Page() {
       }
     }
   })
-  console.log(pads)
 
   
   return (
