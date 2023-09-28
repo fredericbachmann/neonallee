@@ -2,7 +2,7 @@
 import "server-only"
 import PadAppBar from "./app-bar"
 
-export default async function Page({ params }: { params: { groupID: string, padID: string } }) {
+export default async function Page({ params }: { params: { padID: string } }) {
 
     return <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <PadAppBar />

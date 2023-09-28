@@ -15,14 +15,7 @@ export default async function Page() {
 
   const pads = await prisma.pad.findMany({
     where: {
-      members: {
-        some: {
-          permission: 'READ',
-          user: {
-            email: session.user.email
-          }
-        }
-      }
+      published: true
     }
   })
 

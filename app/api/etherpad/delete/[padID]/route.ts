@@ -18,9 +18,11 @@ export async function DELETE(_: Request, { params }: { params: { padID: string }
       members: {
         some: {
           permission: "OWNER",
-          user: {
-        email: session.user.email
-}
+          author: {
+            user: {
+              email: session.user.email
+            }
+          }
         }
       }
     }
@@ -30,7 +32,7 @@ export async function DELETE(_: Request, { params }: { params: { padID: string }
   await etherApiReq('deletePad', `padID=${params.padID}`)
 
   if (padToDelete) {
-    await prisma.usersOnPads.deleteMany({
+    await prisma.authorsOnPads.deleteMany({
       where: {
         padId: padToDelete.id
       }

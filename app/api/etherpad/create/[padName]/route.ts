@@ -17,20 +17,26 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
   const data = await etherApiReq('createAuthorIfNotExistsFor', `authorMapper=${session.user?.email}&name=${session.user?.email}`)
   const author = data.authorID
 
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email
+    },
+    select: {
+      id: true
+    }
+  })
+
+  if (!user) return NextResponse.error()
+
   const result = await prisma.pad.create({
     data: {
       name: padName,
       members: {
         create: {
           permission: "OWNER",
-          user: {
-            connectOrCreate: {
-              where: {
-                email: session.user.email
-              },
-              create: {
-          email: session.user.email
-}
+          author: {
+            connect: {
+              id: user.id
             }
           }
         }

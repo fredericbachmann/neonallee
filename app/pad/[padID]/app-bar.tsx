@@ -13,6 +13,12 @@ export default function PadAppBar() {
     const [permission, setPermission] = useState<'READ' | 'WRITE'>('READ')
     const mailInputRef = useRef<HTMLInputElement>(null)
 
+    async function handlePublish() {
+        const res = await fetch(`/api/etherpad/publish/${params.padID}`, { method: 'POST' })
+        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 200) setOpenModal(undefined)
+    }
+
     async function handleDelete() {
         const res = await fetch(`/api/etherpad/delete/${params.padID}`, { method: 'DELETE' })
         if (res.status === 401) router.push('/api/auth/signin')
@@ -27,27 +33,28 @@ export default function PadAppBar() {
     }
 
     return <ActionBar>
-        <Modal dismissible show={openModal === 'share'} onClose={() => setOpenModal(undefined)}>
-            <Modal.Header>Anderer Person Zugriff geben</Modal.Header>
-            <form onSubmit={handleShare}>
-                <Modal.Body>
-                    <Label htmlFor="mail" value="E-Mail" />
-                    <TextInput id="mail" name="mail" placeholder="mail@example.com" ref={mailInputRef} />
-                    <Button.Group>
-                        <Button color={permission === 'READ' ? 'blue' : 'gray'} onClick={() => setPermission('READ')}>Lesen</Button>
-                        <Button color={permission === 'WRITE' ? 'blue' : 'gray'} onClick={() => setPermission('WRITE')}>Schreiben</Button>
-                    </Button.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit">Freigeben</Button>
-                </Modal.Footer>
-            </form>
+        <Button onClick={() => setOpenModal('publish')}>
+            Veröffentlichen
+        </Button>
+        <Modal dismissible show={openModal === 'publish'} onClose={() => setOpenModal(undefined)}>
+            <Modal.Header>Dokument veröffentlichen</Modal.Header>
+            <Modal.Body>
+                Das Dokument wird veröffentlicht, also allen zugänglich gemacht.
+                Sie können es weiterhin bearbeiten.
+            </Modal.Body>
+            <Modal.Footer>
+                <div className='flex gap-4'>
+                    <Button color="success" onClick={() => handlePublish()}>Veröffentlichen!</Button>
+                    <Button color="gray" onClick={() => setOpenModal(undefined)}>Abbrechen</Button>
+                </div>
+            </Modal.Footer>
         </Modal>
+
 
         <Button onClick={() => setOpenModal('delete')}>
             <MdDelete className='w-5 h-5' />
         </Button>
-        <Modal show={openModal === 'delete'} size='md' popup onClose={() => setOpenModal(undefined)}>
+        <Modal dismissible show={openModal === 'delete'} size='md' popup onClose={() => setOpenModal(undefined)}>
             <Modal.Header />
             <Modal.Body>
                 <div className="text-center">
@@ -69,7 +76,25 @@ export default function PadAppBar() {
                 </div>
             </Modal.Body>
         </Modal>
+
+
         <Button onClick={() => setOpenModal('share')} color='success' >Teilen</Button>
+        <Modal dismissible show={openModal === 'share'} onClose={() => setOpenModal(undefined)}>
+            <Modal.Header>Anderer Person Zugriff geben</Modal.Header>
+            <form onSubmit={handleShare}>
+                <Modal.Body>
+                    <Label htmlFor="mail" value="E-Mail" />
+                    <TextInput id="mail" name="mail" placeholder="mail@example.com" ref={mailInputRef} />
+                    <Button.Group>
+                        <Button color={permission === 'READ' ? 'blue' : 'gray'} onClick={() => setPermission('READ')}>Lesen</Button>
+                        <Button color={permission === 'WRITE' ? 'blue' : 'gray'} onClick={() => setPermission('WRITE')}>Schreiben</Button>
+                    </Button.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type="submit">Freigeben</Button>
+                </Modal.Footer>
+            </form>
+        </Modal>
     </ActionBar>
 
 }

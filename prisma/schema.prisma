@@ -11,46 +11,55 @@ datasource db {
 }
 
 model Pad {
-  id      String        @id @default(cuid())
-  name    String
-    members UsersOnPads[]
+  id        String          @id @default(cuid())
+  name      String
+  members   AuthorsOnPads[]
+  published Boolean         @default(false)
 }
 
-model UsersOnPads {
-  user       User       @relation(fields: [userId], references: [id])
-  userId     String
+model AuthorsOnPads {
+  author     Author     @relation(fields: [authorId], references: [id])
+  authorId   String
   pad        Pad        @relation(fields: [padId], references: [id])
   padId      String
   permission Permission @default(READ)
 
-  @@id([userId, padId])
+  @@id([authorId, padId])
 }
 
 enum Role {
   USER
-  AUTHOR
   ADMIN
 }
 
 enum Permission {
   READ
   WRITE
-OWNER
+  OWNER
 }
 
+model Author {
+  user      User            @relation(fields: [id], references: [id], name: "user")
+  id        String          @id
+  username  String          @unique
+  pads      AuthorsOnPads[]
+  followers User[]          @relation(name: "follow")
+}
 
 // Next-auth:
 
 model User {
-  id            String        @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?       @unique
+  city          String    @default("Heidelberg")
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  role          Role          @default(USER)
-    pads          UsersOnPads[]
+  role          Role      @default(USER)
+  following     Author[]  @relation(name: "follow")
+  author        Author?   @relation(name: "user")
 }
 
 model Account {

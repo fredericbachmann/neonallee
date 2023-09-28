@@ -23,26 +23,38 @@ export async function POST(_: NextRequest, { params }: {
             members: {
                 some: {
                     permission: "OWNER",
-                    user: {
-                email: session.user.email
-}
+                    author: {
+                        user: {
+                            email: session.user.email
+                        }
+                    }
                 }
             }
         }
     })
-
     if (!pad) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
 
+
+    const isAuthor: boolean = !!await prisma.author.findFirst({ // check if user to be included is an author
+        where: {
+            user: {
+                email: params.mail
+            }
+        }
+    })
+    if (!isAuthor) return NextResponse.json({ message: 'given email does not belong to an author' }, { status: 400 })
+
+    
     const user = await prisma.user.findUnique({
         where: {
             email: session.user.email
         }
     })
 
-    await prisma.usersOnPads.create({
+    await prisma.authorsOnPads.create({
         data: {
             padId: pad.id,
-            userId: user!.id,
+            authorId: user!.id,
             permission: params.write
         }
     })
