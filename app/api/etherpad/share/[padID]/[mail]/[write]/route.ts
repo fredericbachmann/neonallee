@@ -44,17 +44,26 @@ export async function POST(_: NextRequest, { params }: {
     })
     if (!isAuthor) return NextResponse.json({ message: 'given email does not belong to an author' }, { status: 400 })
 
-    
+
     const user = await prisma.user.findUnique({
         where: {
-            email: session.user.email
+            email: params.mail
         }
     })
 
-    await prisma.authorsOnPads.create({
-        data: {
+    await prisma.authorsOnPads.upsert({
+        where: {
+            authorId_padId: {
+                authorId: user!.id,
+                padId: pad.id
+            }
+        },
+        create: {
             padId: pad.id,
             authorId: user!.id,
+            permission: params.write
+        },
+        update: {
             permission: params.write
         }
     })

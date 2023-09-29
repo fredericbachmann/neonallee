@@ -39,8 +39,9 @@ export default async function Page({ params }: { params: { username: string } })
         })
     }
 
-    const pads = await prisma.pad.findMany({ // every pad the author is invited to
+    const pads = await prisma.pad.findMany({ // every pad the author published
         where: {
+            published: true,
             members: {
                 some: {
                     author: {
@@ -55,7 +56,7 @@ export default async function Page({ params }: { params: { username: string } })
     return <div className="text-center">
         <ActionBar />
         {author.username}
-        <FollowToggle username={params.username} loggedIn={!!(session && session.user && session.user.email)} following={following} />
+        <FollowToggle username={params.username} isFollowing={following} />
         {
             pads.length > 0
                 ?
