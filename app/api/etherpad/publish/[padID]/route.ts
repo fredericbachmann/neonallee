@@ -6,22 +6,21 @@ import { prisma } from "@/app/db"
 export async function POST(_: Request, { params }: { params: { padID: string } }) {
   const session = await getServerSession(authOptions)
 
-  if (!session || !session.user || !session.user.email) {
+  if (!session) {
     return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
   const hasPermission: boolean = !!await prisma.pad.findFirst({
     where: {
+      id: params.padID,
       members: {
         some: {
+          permission: 'OWNER',
           author: {
-            user: {
-              email: session.user.email
-            }
+            id: session.user.id
           }
         }
-      },
-      id: params.padID
+      }
     }
   })
 

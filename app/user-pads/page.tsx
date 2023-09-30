@@ -8,16 +8,14 @@ import { Pad } from "@prisma/client";
 
 async function getPads(): Promise<Pad[]> {
   const session = await getServerSession(authOptions)
-  if (!session || !session.user || !session.user.email) return []
+  if (!session) return []
 
   const pads = await prisma.pad.findMany({
     where: {
       members: {
         some: {
           author: {
-            user: {
-              email: session.user.email
-            }
+            id: session.user.id
           }
         }
       }

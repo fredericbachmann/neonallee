@@ -7,7 +7,7 @@ import React from 'react'
 export default function Profile() {
     const { data: session } = useSession()
 
-    return (session && session.user && session.user.image ? (
+    return (session && session.user.image ? (
         <Dropdown inline label={<Avatar img={session.user.image} rounded />}>
             <Dropdown.Header>
                 <span className='block'>{session.user.name}</span>

@@ -7,16 +7,16 @@ export default function Share({ padID }: { padID: string }) {
     const [permission, setPermission] = useState<'READ' | 'WRITE'>('READ')
     const [status, setStatus] = useState<number | undefined>()
 
-    const mailInputRef = useRef<HTMLInputElement>(null)
+    const usernameInputRef = useRef<HTMLInputElement>(null)
     const router = useRouter()
 
     async function handleShare(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        const mail = mailInputRef.current?.value
-        const res = await fetch(`/api/etherpad/share/${padID}/${mail}/${permission}`, { method: 'POST' }) // call the internal api
+        const username = usernameInputRef.current?.value
+        const res = await fetch(`/api/etherpad/share/${padID}/${username}/${permission}`, { method: 'POST' }) // call the internal api
         setStatus(res.status)
         if (res.status === 401) router.push('/api/auth/signin')
-        if (res.status === 200 && !!mailInputRef.current) mailInputRef.current.value = "" // success, clear input field
+        if (res.status === 200 && !!usernameInputRef.current) usernameInputRef.current.value = "" // success, clear input field
     }
 
     return <>
@@ -25,8 +25,8 @@ export default function Share({ padID }: { padID: string }) {
             <Modal.Header>Anderer Person Zugriff geben</Modal.Header>
             <form onSubmit={handleShare}>
                 <Modal.Body>
-                    <Label htmlFor="mail" value="E-Mail" />
-                    <TextInput id="mail" name="mail" placeholder="mail@example.com" ref={mailInputRef} />
+                    <Label htmlFor="username" value="Nutzername" />
+                    <TextInput id="usermane" name="username" placeholder="HeinzHerrmann482" ref={usernameInputRef} />
                     <br />
                     <Label value="Berechtigung" />
                     <br />

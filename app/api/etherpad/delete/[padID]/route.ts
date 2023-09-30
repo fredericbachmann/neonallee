@@ -8,7 +8,7 @@ import { etherApiReq } from "@/app/api/etherApi"
 export async function DELETE(_: Request, { params }: { params: { padID: string } }) {
   const session = await getServerSession(authOptions)
 
-  if (!session || !session.user || !session.user.email) {
+  if (!session) {
     return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
@@ -19,9 +19,7 @@ export async function DELETE(_: Request, { params }: { params: { padID: string }
         some: {
           permission: "OWNER",
           author: {
-            user: {
-              email: session.user.email
-            }
+            id: session.user.id
           }
         }
       }
@@ -29,23 +27,20 @@ export async function DELETE(_: Request, { params }: { params: { padID: string }
   })
 
   if (!padToDelete) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
+  
   await etherApiReq('deletePad', `padID=${params.padID}`)
 
-  if (padToDelete) {
-    await prisma.authorsOnPads.deleteMany({
-      where: {
-        padId: padToDelete.id
-      }
-    });
+  await prisma.authorsOnPads.deleteMany({
+    where: {
+      padId: padToDelete.id
+    }
+  })
 
-    await prisma.pad.delete({
-      where: {
-        id: padToDelete.id
-      }
-    })
-  } else {
-    return NextResponse.json({ message: 'Pad doesn\'t exist.' })
-  }
+  await prisma.pad.delete({
+    where: {
+      id: padToDelete.id
+    }
+  })
 
   return NextResponse.json({ message: 'Success' }, { status: 200 })
 }

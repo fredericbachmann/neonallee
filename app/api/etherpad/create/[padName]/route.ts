@@ -10,23 +10,20 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
 
   const session = await getServerSession(authOptions)
 
-  if (!session || !session.user || !session.user.email) {
+  if (!session) {
     return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
   }
 
-  const data = await etherApiReq('createAuthorIfNotExistsFor', `authorMapper=${session.user?.email}&name=${session.user?.email}`)
+  const data = await etherApiReq('createAuthorIfNotExistsFor', `authorMapper=${session.user.id}&name=${session.user.name}`)
   const author = data.authorID
 
-  const user = await prisma.user.findUnique({
+  const isAuthor = !!await prisma.author.findUnique({
     where: {
-      email: session.user.email
-    },
-    select: {
-      id: true
+      id: session.user.id
     }
   })
 
-  if (!user) return NextResponse.error()
+  if (!isAuthor) return NextResponse.json({ message: 'Not an author' }, { status: 400 })
 
   const result = await prisma.pad.create({
     data: {
@@ -36,7 +33,7 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
           permission: "OWNER",
           author: {
             connect: {
-              id: user.id
+              id: session.user.id
             }
           }
         }

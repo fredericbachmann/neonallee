@@ -6,14 +6,14 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 export async function POST(_: NextRequest, { params }: {
     params: {
         padID: string,
-        mail: string,
-        write: 'READ' | 'WRITE'
+        username: string,
+        permission: 'READ' | 'WRITE'
     }
 }) {
 
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session) {
         return NextResponse.json({ message: 'Invalid login' }, { status: 401 })
     }
 
@@ -24,9 +24,7 @@ export async function POST(_: NextRequest, { params }: {
                 some: {
                     permission: "OWNER",
                     author: {
-                        user: {
-                            email: session.user.email
-                        }
+                        id: session.user.id
                     }
                 }
             }
@@ -35,36 +33,28 @@ export async function POST(_: NextRequest, { params }: {
     if (!pad) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
 
 
-    const isAuthor: boolean = !!await prisma.author.findFirst({ // check if user to be included is an author
+    const authorExists: boolean = !!await prisma.author.findUnique({ // check if the author exists
         where: {
-            user: {
-                email: params.mail
-            }
+            username: params.username
         }
     })
-    if (!isAuthor) return NextResponse.json({ message: 'given email does not belong to an author' }, { status: 400 })
+    if (!authorExists) return NextResponse.json({ message: 'username does not belong to an author' }, { status: 400 })
 
-
-    const user = await prisma.user.findUnique({
-        where: {
-            email: params.mail
-        }
-    })
 
     await prisma.authorsOnPads.upsert({
         where: {
             authorId_padId: {
-                authorId: user!.id,
+                authorId: session.user.id,
                 padId: pad.id
             }
         },
         create: {
             padId: pad.id,
-            authorId: user!.id,
-            permission: params.write
+            authorId: session.user.id,
+            permission: params.permission
         },
         update: {
-            permission: params.write
+            permission: params.permission
         }
     })
 

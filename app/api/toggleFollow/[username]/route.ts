@@ -6,30 +6,25 @@ import { authOptions } from "../../auth/[...nextauth]/route"
 export async function POST(_: NextRequest, { params }: { params: { username: string } }) {
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session) {
         return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
     }
 
     const following = await prisma.user.findFirst({
         where: {
-            AND: [{
-                email: session.user.email
-            },
-            {
-                following: {
-                    some: {
-                        username: params.username
-                    }
+            id: session.user.id,
+            following: {
+                some: {
+                    username: params.username
                 }
-            }]
+            }
         }
     })
-
 
     if (!following) {
         await prisma.user.update({
             where: {
-                email: session.user.email
+                id: session.user.id
             }, data: {
                 following: {
                     connect: {
@@ -41,7 +36,7 @@ export async function POST(_: NextRequest, { params }: { params: { username: str
     } else {
         await prisma.user.update({
             where: {
-                email: session.user.email
+                id: session.user.id
             }, data: {
                 following: {
                     disconnect: {

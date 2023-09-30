@@ -22,19 +22,15 @@ export default async function Page({ params }: { params: { username: string } })
 
     let following: boolean | undefined
 
-    if (session && session.user && session.user.email) {
+    if (session) {
         following = !!await prisma.user.findFirst({
             where: {
-                AND: [{
-                    email: session.user.email
-                },
-                {
-                    following: {
-                        some: {
-                            username: params.username
-                        }
+                id: session.user.id,
+                following: {
+                    some: {
+                        username: params.username
                     }
-                }]
+                }
             }
         })
     }
