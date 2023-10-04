@@ -1,26 +1,26 @@
-import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../../auth/[...nextauth]/route"
+import { NextResponse } from "next/server"
 import { prisma } from "@/app/db"
-import { etherApiReq, getPadPermission } from "@/app/api/etherpad/etherApi"
+import { getPadPermission } from "@/app/api/etherpad/etherApi"
 
-
-export async function DELETE(_: Request, { params }: { params: { padId: string } }) {
+export async function POST(_: Request, { params }: { params: { padId: string } }) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({}, { status: 401 })
 
   const permission = await getPadPermission(params.padId, session.user.id)
   if (permission !== 'OWNER') return NextResponse.json({}, { status: 403 })
 
-  await etherApiReq('deletePad', `padID=${params.padId}`)
-
-  await prisma.authorsOnPads.deleteMany({
+  const pad = await prisma.pad.findUniqueOrThrow({
     where: {
-      padId: params.padId
+      id: params.padId
     }
   })
 
-  await prisma.pad.delete({
+  await prisma.pad.update({
+    data: {
+      published: !pad.published
+    },
     where: {
       id: params.padId
     }

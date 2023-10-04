@@ -4,20 +4,19 @@ import { Avatar } from "flowbite-react"
 
 export function ArticleAuthors({ authors }: {
     authors: {
+        username: string;
+        id: string;
         user: {
             image: string | null;
-            name: string | null;
         };
-        username: string;
     }[]
 }) {
     return <div>
         {authors.map((author) =>
-            <div>
+            <div key={author.id}>
                 <Avatar img={author.user.image!} rounded />
-                {author.user.name}
+                {author.username}
             </div>
         )}
-
     </div>
 }

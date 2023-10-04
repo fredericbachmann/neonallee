@@ -1,9 +1,18 @@
 import { Alert, Button, Label, Modal, TextInput } from "flowbite-react";
 import { FormEvent, useRef, useState } from "react";
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
-export default function Share({ padID }: { padID: string }) {
-    const [openModal, setOpenModal] = useState(false)
+export default function Share({members, updateMembers}: {
+    members: {
+        id: string
+        username: string;
+        permission: 'OWNER' | 'READ' | 'WRITE';
+        image: string | null;
+    }[],
+    updateMembers: Function
+}) {
+    const { padID }: { padID: string } = useParams()
+
     const [permission, setPermission] = useState<'READ' | 'WRITE'>('READ')
     const [status, setStatus] = useState<number | undefined>()
 
@@ -16,46 +25,48 @@ export default function Share({ padID }: { padID: string }) {
         const res = await fetch(`/api/etherpad/share/${padID}/${username}/${permission}`, { method: 'POST' }) // call the internal api
         setStatus(res.status)
         if (res.status === 401) router.push('/api/auth/signin')
-        if (res.status === 200 && !!usernameInputRef.current) usernameInputRef.current.value = "" // success, clear input field
+        if (res.status === 200) {
+            updateMembers(true)
+            if (usernameInputRef.current) usernameInputRef.current.value = ""
+        } // success, clear input field
     }
 
     return <>
-        <Button onClick={() => setOpenModal(true)} color='success' >Teilen</Button>
-        <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
-            <Modal.Header>Anderer Person Zugriff geben</Modal.Header>
-            <form onSubmit={handleShare}>
-                <Modal.Body>
-                    <Label htmlFor="username" value="Nutzername" />
-                    <TextInput id="usermane" name="username" placeholder="HeinzHerrmann482" ref={usernameInputRef} />
-                    <br />
-                    <Label value="Berechtigung" />
-                    <br />
-                    <Button.Group>
-                        <Button color={permission === 'READ' ? 'blue' : 'gray'} onClick={() => setPermission('READ')}>Lesen</Button>
-                        <Button color={permission === 'WRITE' ? 'blue' : 'gray'} onClick={() => setPermission('WRITE')}>Schreiben</Button>
-                    </Button.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="submit">Freigeben</Button>
-                </Modal.Footer>
-            </form>
+        <form onSubmit={handleShare}>
+            <Modal.Body>
+                <div className="flex space-x-2">
+                    <div className="grow">
+                        <Label htmlFor="username" value="Nutzername" />
+                        <TextInput id="usermane" name="username" placeholder="HeinzHerrmann482" ref={usernameInputRef} />
+                    </div>
+                    <div>
+                        <br />
+                        <Button.Group>
+                            <Button color={permission === 'READ' ? 'blue' : 'gray'} onClick={() => setPermission('READ')}>Lesen</Button>
+                            <Button color={permission === 'WRITE' ? 'blue' : 'gray'} onClick={() => setPermission('WRITE')}>Schreiben</Button>
+                        </Button.Group>
+                    </div>
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button type="submit">Freigeben</Button>
+            </Modal.Footer>
+        </form>
 
-            {status === 200 &&
-                <Alert color="info">
-                    Das hat geklappt!
-                </Alert>
-            }
-            {status === 400 &&
-                <Alert color="failure">
-                    Die Mail-Adresse ist nicht registriert, bzw. gehört nicht zu einem Autor!
-                </Alert>
-            }
-            {status === 403 &&
-                <Alert color="failure">
-                    Du hast nicht die Berechtigungen dafür!
-                </Alert>
-            }
-
-        </Modal>
+        {status === 200 &&
+            <Alert color="info">
+                Das hat geklappt!
+            </Alert>
+        }
+        {status === 400 &&
+            <Alert color="failure">
+                Diesen Nutzernamen gibt es nicht.
+            </Alert>
+        }
+        {status === 403 &&
+            <Alert color="failure">
+                Du hast nicht die Berechtigungen dafür!
+            </Alert>
+        }
     </>
 }

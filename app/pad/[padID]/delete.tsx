@@ -1,10 +1,11 @@
 import { Button, Modal } from 'flowbite-react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { MdDelete } from 'react-icons/md'
 
-export default function Delete({ padID }: { padID: string }) {
+export default function Delete() {
+    const { padID }: { padID: string } = useParams()
     const [openModal, setOpenModal] = useState(false)
     const router = useRouter()
 

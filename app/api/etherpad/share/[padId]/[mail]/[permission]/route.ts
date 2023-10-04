@@ -2,38 +2,23 @@ import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/db"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getPadPermission } from "@/app/api/etherpad/etherApi"
 
 export async function POST(_: NextRequest, { params }: {
     params: {
-        padID: string,
+        padId: string,
         username: string,
         permission: 'READ' | 'WRITE'
     }
 }) {
-
     const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({}, { status: 401 })
 
-    if (!session) {
-        return NextResponse.json({ message: 'Invalid login' }, { status: 401 })
-    }
-
-    const pad = await prisma.pad.findFirst({ // find the pad for the given ID (if user has access)
-        where: {
-            id: params.padID,
-            members: {
-                some: {
-                    permission: "OWNER",
-                    author: {
-                        id: session.user.id
-                    }
-                }
-            }
-        }
-    })
-    if (!pad) return NextResponse.json({ message: 'Access denied' }, { status: 403 })
+    const permission = await getPadPermission(params.padId, session.user.id)
+    if (permission !== 'OWNER') return NextResponse.json({}, { status: 403 })
 
 
-    const authorExists: boolean = !!await prisma.author.findUnique({ // check if the author exists
+    const authorExists = !!await prisma.author.findUnique({ // check if the author exists
         where: {
             username: params.username
         }
@@ -45,11 +30,11 @@ export async function POST(_: NextRequest, { params }: {
         where: {
             authorId_padId: {
                 authorId: session.user.id,
-                padId: pad.id
+                padId: params.padId
             }
         },
         create: {
-            padId: pad.id,
+            padId: params.padId,
             authorId: session.user.id,
             permission: params.permission
         },
@@ -58,5 +43,5 @@ export async function POST(_: NextRequest, { params }: {
         }
     })
 
-    return NextResponse.json({ message: 'Success' }, { status: 200 })
+    return NextResponse.json({}, { status: 200 })
 }
