@@ -10,10 +10,10 @@ export default function ActionBar({ children }: ActionBarProps) {
 
     return (
         <Navbar fluid className='shadow'>
-            <Navbar.Brand href='/'>
+            <Navbar.Brand href='/' className='space-x-4'>
                 [LOGO]
-            </Navbar.Brand>
             <TextInput />
+            </Navbar.Brand>
             <div className='flex space-x-4 items-center'>
                 {children}
                 <Profile />
