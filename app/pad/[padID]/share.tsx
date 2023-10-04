@@ -11,7 +11,7 @@ export default function Share({members, updateMembers}: {
     }[],
     updateMembers: Function
 }) {
-    const { padID }: { padID: string } = useParams()
+    const { padId }: { padId: string } = useParams()
 
     const [permission, setPermission] = useState<'READ' | 'WRITE'>('READ')
     const [status, setStatus] = useState<number | undefined>()
@@ -22,7 +22,7 @@ export default function Share({members, updateMembers}: {
     async function handleShare(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const username = usernameInputRef.current?.value
-        const res = await fetch(`/api/etherpad/share/${padID}/${username}/${permission}`, { method: 'POST' }) // call the internal api
+        const res = await fetch(`/api/etherpad/share/${padId}/${username}/${permission}`, { method: 'POST' }) // call the internal api
         setStatus(res.status)
         if (res.status === 401) router.push('/api/auth/signin')
         if (res.status === 200) {

@@ -17,25 +17,24 @@ export async function POST(_: NextRequest, { params }: {
     const permission = await getPadPermission(params.padId, session.user.id)
     if (permission !== 'OWNER') return NextResponse.json({}, { status: 403 })
 
-
-    const authorExists = !!await prisma.author.findUnique({ // check if the author exists
+    const author = await prisma.author.findUnique({ // check if the author exists
         where: {
             username: params.username
         }
     })
-    if (!authorExists) return NextResponse.json({ message: 'username does not belong to an author' }, { status: 400 })
+    if (!author) return NextResponse.json({ message: 'username does not belong to an author' }, { status: 400 })
 
 
     await prisma.authorsOnPads.upsert({
         where: {
             authorId_padId: {
-                authorId: session.user.id,
+                authorId: author.id,
                 padId: params.padId
             }
         },
         create: {
             padId: params.padId,
-            authorId: session.user.id,
+            authorId: author.id,
             permission: params.permission
         },
         update: {

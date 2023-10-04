@@ -3,14 +3,14 @@ import { useState } from "react";
 import { useParams, useRouter } from 'next/navigation'
 
 export default function Publish({ isPublished }: { isPublished: Boolean }) {
-    const { padID }: { padID: string } = useParams()
+    const { padId }: { padId: string } = useParams()
     const [published, setPublished] = useState<Boolean>(isPublished)
     const [openModal, setOpenModal] = useState<'publish' | 'private' | undefined>(undefined)
     const router = useRouter()
 
 
     async function togglePublish() {
-        const res = await fetch(`/api/etherpad/togglePublish/${padID}`, { method: 'POST' })
+        const res = await fetch(`/api/etherpad/togglePublish/${padId}`, { method: 'POST' })
         if (res.status === 401) router.push('/api/auth/signin')
         if (res.status === 200) setPublished(!published)
         setOpenModal(undefined)

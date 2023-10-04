@@ -5,7 +5,7 @@ import Share from "./share";
 import { useParams } from "next/navigation";
 
 export default function Members({ displayShare }: { displayShare: Boolean }) {
-    const params = useParams()
+    const { padId }: { padId: string } = useParams()
     const [openModal, setOpenModal] = useState(false)
     const [members, setMembers] = useState<{
         id: string;
@@ -17,7 +17,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
     const [updateMembers, setUpdateMembers] = useState(false)
     useEffect(() => {
         setUpdateMembers(false)
-        fetch(`/api/etherpad/getMembers/${params.padID}`).then(res => {
+        fetch(`/api/etherpad/getMembers/${padId}`).then(res => {
             if (!res.ok) return
             res.json().then(({ members }) => {
                 setMembers(members)

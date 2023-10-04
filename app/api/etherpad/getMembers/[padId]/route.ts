@@ -4,16 +4,16 @@ import { prisma } from "@/app/db";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function GET(_: Request, { params }: { params: { padID: string } }) {
+export async function GET(_: Request, { params }: { params: { padId: string } }) {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({}, { status: 401 })
 
-    const permission = await getPadPermission(params.padID, session.user.id)
+    const permission = await getPadPermission(params.padId, session.user.id)
     if (!permission) return NextResponse.json({}, { status: 403 })
 
     const members = await prisma.authorsOnPads.findMany({
         where: {
-            padId: params.padID
+            padId: params.padId
         },
         select: {
             permission: true,
@@ -33,6 +33,7 @@ export async function GET(_: Request, { params }: { params: { padID: string } })
 
     const flattenedMembers = members.map(item => {
         return {
+            id: item.author.id,
             username: item.author.username,
             permission: item.permission,
             image: item.author.user.image

@@ -3,7 +3,6 @@ import "server-only"
 import PadAppBar from "./app-bar"
 import { prisma } from "@/app/db"
 import { notFound } from 'next/navigation'
-import { getPadPermission } from "@/app/api/etherpad/etherApi"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
@@ -21,10 +20,10 @@ export default async function page({ params }: { params: { padId: string } }) {
 
     if (!pad || // pad doesn't exist
         !session && !pad.published || // user isn't logged in and pad isn't published
-        session && !pad.members.some(member => { member.authorId === session.user.id }) // user logged in, but isn't a member of the pad
+        session && !pad.members.some(member => {return member.authorId === session.user.id }) // user logged in, but isn't a member of the pad
     ) notFound()
 
-    const isOwner = !!session && pad.members.some(member => { member.authorId === session.user.id && member.permission === 'OWNER' })
+    const isOwner = !!session && pad.members.some(member => {return member.authorId === session.user.id && member.permission === 'OWNER' })
 
     return <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <PadAppBar isPublished={pad.published} isOwner={isOwner} />

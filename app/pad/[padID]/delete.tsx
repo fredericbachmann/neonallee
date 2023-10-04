@@ -5,12 +5,12 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { MdDelete } from 'react-icons/md'
 
 export default function Delete() {
-    const { padID }: { padID: string } = useParams()
+    const { padId }: { padId: string } = useParams()
     const [openModal, setOpenModal] = useState(false)
     const router = useRouter()
 
     async function handleDelete() {
-        const res = await fetch(`/api/etherpad/delete/${padID}`, { method: 'DELETE' })
+        const res = await fetch(`/api/etherpad/delete/${padId}`, { method: 'DELETE' })
         if (res.status === 401) router.push('/api/auth/signin')
         if (res.status === 200) router.push('/user-pads')
     }

@@ -7,7 +7,7 @@ import { getPadPermission } from "@/app/api/etherpad/etherApi"
 export async function POST(_: Request, { params }: { params: { padId: string } }) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({}, { status: 401 })
-
+  
   const permission = await getPadPermission(params.padId, session.user.id)
   if (permission !== 'OWNER') return NextResponse.json({}, { status: 403 })
 
