@@ -2,7 +2,7 @@ import { Alert, Button, Label, Modal, TextInput } from "flowbite-react";
 import { FormEvent, useRef, useState } from "react";
 import { useParams, useRouter } from 'next/navigation'
 
-export default function Share({members, updateMembers}: {
+export default function Share({ members, updateMembers }: {
     members: {
         id: string
         username: string;
@@ -32,8 +32,11 @@ export default function Share({members, updateMembers}: {
     }
 
     return <>
-        <form onSubmit={handleShare}>
-            <Modal.Body>
+        <Modal.Body>
+            <hr />
+            <p className="text-lg">Lade andere AutorInnen ein!</p>
+            <br />
+            <form onSubmit={handleShare}>
                 <div className="flex space-x-2">
                     <div className="grow">
                         <Label htmlFor="username" value="Nutzername" />
@@ -47,24 +50,22 @@ export default function Share({members, updateMembers}: {
                         </Button.Group>
                     </div>
                 </div>
-            </Modal.Body>
-            <Modal.Footer>
+                <br />
                 <Button type="submit">Freigeben</Button>
-            </Modal.Footer>
-        </form>
-
+            </form>
+        </Modal.Body>
         {status === 200 &&
-            <Alert color="info">
+            <Alert onDismiss={()=> setStatus(undefined)} color="info">
                 Das hat geklappt!
             </Alert>
         }
         {status === 400 &&
-            <Alert color="failure">
+            <Alert onDismiss={()=> setStatus(undefined)} color="failure">
                 Diesen Nutzernamen gibt es nicht.
             </Alert>
         }
         {status === 403 &&
-            <Alert color="failure">
+            <Alert onDismiss={()=> setStatus(undefined)} color="failure">
                 Du hast nicht die Berechtigungen dafür!
             </Alert>
         }

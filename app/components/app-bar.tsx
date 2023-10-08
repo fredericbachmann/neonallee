@@ -12,7 +12,6 @@ export default function ActionBar({ children }: ActionBarProps) {
         <Navbar fluid className='shadow'>
             <Navbar.Brand href='/' className='space-x-4'>
                 [LOGO]
-            <TextInput />
             </Navbar.Brand>
             <div className='flex space-x-4 items-center'>
                 {children}

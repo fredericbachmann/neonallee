@@ -14,7 +14,7 @@ export default function Profile() {
                 <span className='block truncate'>{session.user.email}</span>
             </Dropdown.Header>
             <Dropdown.Item>
-                <Link href='/user-pads' >meine Dokumente</Link>
+                <Link href='/user-pads'>meine Dokumente</Link>
             </Dropdown.Item>
             <Dropdown.Item onClick={() => { signOut(); }} >
                 Logout

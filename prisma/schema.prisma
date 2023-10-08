@@ -39,11 +39,12 @@ enum Permission {
 }
 
 model Author {
-  user      User            @relation(fields: [id], references: [id], name: "user")
-  id        String          @id
-  username  String          @unique
-  pads      AuthorsOnPads[]
-  followers User[]          @relation(name: "follow")
+  user       User            @relation(fields: [id], references: [id], name: "user")
+  id         String          @id
+  username   String          @unique
+  artistname String
+  pads       AuthorsOnPads[]
+  followers  User[]          @relation(name: "follow")
 }
 
 // Next-auth:

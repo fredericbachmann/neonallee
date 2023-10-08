@@ -29,7 +29,7 @@ export default function Publish({ isPublished }: { isPublished: Boolean }) {
             <Modal.Header>Dokument veröffentlichen</Modal.Header>
             <Modal.Body>
                 Das Dokument wird veröffentlicht, also allen zugänglich gemacht.
-                Sie können es weiterhin bearbeiten.
+                Du kannst es aber weiterhin bearbeiten.
             </Modal.Body>
             <Modal.Footer>
                 <div className='flex gap-4'>
@@ -42,7 +42,7 @@ export default function Publish({ isPublished }: { isPublished: Boolean }) {
             <Modal.Header>Dokument auf Privat stellen</Modal.Header>
             <Modal.Body>
                 Das Dokument wird auf 'Privat' umgestellt, 
-                niemand außer den mitbearbeitenden Autoren kann es also mehr einsehen.
+                niemand außer den Co-AutorInnen kann es also mehr einsehen.
             </Modal.Body>
             <Modal.Footer>
                 <div className='flex gap-4'>

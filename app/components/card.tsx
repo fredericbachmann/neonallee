@@ -4,7 +4,7 @@ import { Card } from "flowbite-react"
 import Link from "next/link"
 
 export default function ReadArticleCard(props: {pad: Pad}) {
-    return <Link href={`/pad/${props.pad.id}`}>
+    return <Link href={`/article/${props.pad.id}`}>
     <Card className="my-5">
       
       <hr />

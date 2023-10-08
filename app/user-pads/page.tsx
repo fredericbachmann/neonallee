@@ -1,9 +1,8 @@
 import { getServerSession } from "next-auth";
 import UserPadsAppBar from "./app-bar";
-import ArticleCard from "./card";
+import AuthorPadCard from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
-import { Pad } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
@@ -25,6 +24,18 @@ export default async function Page() {
           authorId: session.user.id
         }
       }
+    },
+    select: {
+      id: true,
+      name: true,
+      members: {
+        where: {
+          authorId: session.user.id
+        },
+        select: {
+          permission: true
+        }
+      }
     }
   }
   )
@@ -36,7 +47,7 @@ export default async function Page() {
         {
           pads.map((pad) => {
             return <div className="p-5" key={pad.id}>
-              <ArticleCard pad={pad} />
+              <AuthorPadCard pad={pad} />
             </div>
           })}
       </div>

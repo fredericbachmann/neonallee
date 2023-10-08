@@ -28,7 +28,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
     return <>
         <Button onClick={() => setOpenModal(true)} color='success' >Nutzer</Button>
         <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
-            <Modal.Header>Mitbearbeiter</Modal.Header>
+            <Modal.Header>Co-AutorInnen</Modal.Header>
             <Modal.Body>
                 <div className="space-y-2">
                     {members.map(member =>
@@ -42,9 +42,9 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
                     )}
                 </div>
             </Modal.Body>
-            {displayShare &&
-                <Share members={members} updateMembers={setUpdateMembers} />
-            }
+                {displayShare &&
+                    <Share members={members} updateMembers={setUpdateMembers} />
+                }
         </Modal>
 
     </>
