@@ -1,6 +1,7 @@
 import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import { useParams, useRouter } from 'next/navigation'
+import { signIn } from "next-auth/react";
 
 export default function Publish({ isPublished }: { isPublished: Boolean }) {
     const { padId }: { padId: string } = useParams()
@@ -11,7 +12,7 @@ export default function Publish({ isPublished }: { isPublished: Boolean }) {
 
     async function togglePublish() {
         const res = await fetch(`/api/etherpad/togglePublish/${padId}`, { method: 'POST' })
-        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 401) signIn('google')
         if (res.status === 200) setPublished(!published)
         setOpenModal(undefined)
     }

@@ -1,6 +1,7 @@
 import { Alert, Button, Label, Modal, TextInput } from "flowbite-react";
 import { FormEvent, useRef, useState } from "react";
 import { useParams, useRouter } from 'next/navigation'
+import { signIn } from "next-auth/react";
 
 export default function Share({ members, updateMembers }: {
     members: {
@@ -24,7 +25,7 @@ export default function Share({ members, updateMembers }: {
         const username = usernameInputRef.current?.value
         const res = await fetch(`/api/etherpad/share/${padId}/${username}/${permission}`, { method: 'POST' }) // call the internal api
         setStatus(res.status)
-        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 401) signIn('google')
         if (res.status === 200) {
             updateMembers(true)
             if (usernameInputRef.current) usernameInputRef.current.value = ""

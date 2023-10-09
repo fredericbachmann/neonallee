@@ -1,5 +1,13 @@
+'use client'
+import { Button } from "flowbite-react"
+import { useState } from "react"
+import SignInModal from "../components/sign-in"
+
 export default function Page() {
-    return <div className="align-text-bottom border text-center ">
-        <p>Test!</p>
+    const [showModal, setShowModal] = useState(false)
+
+    return <div className="">
+        <Button onClick={() => setShowModal(true)} >login</Button>
+        <SignInModal showModal={showModal} setShowModal={setShowModal} />
     </div>
 }

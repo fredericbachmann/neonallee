@@ -1,4 +1,5 @@
 import { Button, Modal } from 'flowbite-react'
+import { signIn } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
@@ -11,7 +12,7 @@ export default function Delete() {
 
     async function handleDelete() {
         const res = await fetch(`/api/etherpad/delete/${padId}`, { method: 'DELETE' })
-        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 401) signIn('google')
         if (res.status === 200) router.push('/user-pads')
     }
 

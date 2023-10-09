@@ -1,6 +1,7 @@
 'use client'
 import ActionBar from "@/app/components/app-bar";
 import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
@@ -14,7 +15,7 @@ export default function UserPadsAppBar() {
         event.preventDefault()
         const padName = padNameInputRef.current?.value ? padNameInputRef.current?.value: 'Unbenannt'
         const res = await fetch(`/api/etherpad/create/${padName}`, { method: 'POST' })
-        if (res.status === 401) router.push('/api/auth/signin')
+        if (res.status === 401) signIn('google')
         if (res.status === 200) {
             const json: { url: string } = await res.json()
             router.push(json.url)

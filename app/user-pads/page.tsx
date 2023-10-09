@@ -4,10 +4,11 @@ import AuthorPadCard from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
 import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
-  if (!session) redirect('/api/auth/signin')
+  if (!session) return signIn('google')
 
   const isAuthor = !!await prisma.author.findUnique({ // checking if logged in user is marked as author
     where: {
@@ -40,18 +41,15 @@ export default async function Page() {
   }
   )
 
-  return (
-    <center>
-      <UserPadsAppBar />
-      <div className="flex flex-wrap justify-center">
-        {
-          pads.map((pad) => {
-            return <div className="p-5" key={pad.id}>
-              <AuthorPadCard pad={pad} />
-            </div>
-          })}
-      </div>
-    </center>
+  return (<>
+    <UserPadsAppBar />
+        <div className="flex flex-wrap justify-center">
+          {
+            pads.map((pad) => {
+              return <AuthorPadCard pad={pad} key={pad.id}/>
+            })}
+        </div>
+  </>
   )
 }
 
