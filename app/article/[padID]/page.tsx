@@ -3,11 +3,14 @@ import ActionBar from "../../components/app-bar";
 import { notFound } from "next/navigation";
 import { ArticleAuthors } from "./author";
 import { etherApiReq } from "@/app/api/etherpad/etherApi";
+import { Comment, CommentSection, LoginForComment, WriteComment } from "./comment";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default async function page({ params }: { params: { padID: string } }) {
+export default async function page({ params }: { params: { padId: string } }) {
     const pad = await prisma.pad.findFirst({ // test if pad exists AND is marked as published
         where: {
-            id: params.padID,
+            id: params.padId,
             published: true
         }
     })
@@ -20,7 +23,7 @@ export default async function page({ params }: { params: { padID: string } }) {
                     permission: {
                         in: ['OWNER', 'WRITE']
                     },
-                    pad: pad
+                    padId: params.padId
                 }
             }
         },
@@ -40,15 +43,40 @@ export default async function page({ params }: { params: { padID: string } }) {
     const data = await etherApiReq('getHTML', `padID=${pad.id}`)
     const text: string = data.html
 
+    const comments = await prisma.comment.findMany({
+        where: {
+            padId: params.padId
+        },
+        include: {
+            user: {
+                select: {
+                    name: true,
+                    image: true
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
+
+    const session = await getServerSession(authOptions)
+    const isAdmin = !!session && !!await prisma.user.findFirst({
+        where: {
+            id: session.user.id,
+            role: 'ADMIN'
+        }
+    })
 
     return <>
         <ActionBar />
-        <div className="max-w-3xl mx-auto p-5">
+        <div className="max-w-3xl mx-auto p-5 flex flex-col space-y-7">
             <ArticleAuthors authors={authors} />
-            <br />
             <div className="text-5xl font-semibold">{pad.name}</div>
-            <br />
             <div dangerouslySetInnerHTML={{ __html: text }} />
+            <br />
+            <hr />
+            <CommentSection isAdmin={isAdmin} commentsProp={comments}/>
         </div>
     </>
 }

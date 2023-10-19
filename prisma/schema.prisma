@@ -15,6 +15,17 @@ model Pad {
   name      String
   members   AuthorsOnPads[]
   published Boolean         @default(false)
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  text      String
+  pad       Pad      @relation(fields: [padId], references: [id])
+  padId     String
 }
 
 model AuthorsOnPads {
@@ -61,6 +72,7 @@ model User {
   role          Role      @default(USER)
   following     Author[]  @relation(name: "follow")
   author        Author?   @relation(name: "user")
+  comments      Comment[]
 }
 
 model Account {

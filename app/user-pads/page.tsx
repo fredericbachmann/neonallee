@@ -15,7 +15,7 @@ export default async function Page() {
       id: session.user.id
     }
   })
-  if (!isAuthor) redirect('/becomeAuthor') // ... if not, redirect to author sign-up
+  if (!isAuthor) redirect('/author-signup') // ... if not, redirect to author sign-up
 
 
   const pads = await prisma.pad.findMany({ // every pad the author has access to
