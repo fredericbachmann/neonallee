@@ -3,6 +3,7 @@ import { Avatar, Button, Modal } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import Share from "./share";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 
 export default function Members({ displayShare }: { displayShare: Boolean }) {
     const { padId }: { padId: string } = useParams()
@@ -33,18 +34,26 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
                 <div className="space-y-2">
                     {members.map(member =>
                         <div key={member.id} className="flex items-center space-x-3">
-                            <Avatar img={member.image!} rounded className="" />
-                            <div className="flex-1 text-xl">
-                                {member.username}
-                            </div>
-                            <div>{member.permission}</div>
+                            <img src={member.image!}
+                                alt="Image of the author"
+                                width={35}
+                                height={35}
+                                className="rounded-full" />
+                            <p className="text-lg flex-1">{member.username}</p>
+                            <p className="text-sm text-slate-700">{
+                                {
+                                    'READ': 'Leser',
+                                    'WRITE': 'Schreiber',
+                                    'OWNER': 'Inhaber'
+                                }[member.permission]
+                            }</p>
                         </div>
                     )}
                 </div>
             </Modal.Body>
-                {displayShare &&
-                    <Share members={members} updateMembers={setUpdateMembers} />
-                }
+            {displayShare &&
+                <Share members={members} updateMembers={setUpdateMembers} />
+            }
         </Modal>
 
     </>
