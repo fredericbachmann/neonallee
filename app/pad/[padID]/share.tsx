@@ -18,7 +18,6 @@ export default function Share({ members, updateMembers }: {
     const [status, setStatus] = useState<number | undefined>()
 
     const usernameInputRef = useRef<HTMLInputElement>(null)
-    const router = useRouter()
 
     async function handleShare(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
