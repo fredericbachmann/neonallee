@@ -4,7 +4,7 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-export default function Profile() {
+export default function ProfileDropdown() {
     const { data: session, status } = useSession()
     const router = useRouter()
 
@@ -13,11 +13,14 @@ export default function Profile() {
     if (session && session.user.image) return (
         <Dropdown inline label={<Avatar img={session.user.image} rounded />}>
             <Dropdown.Header>
-                <p className='text-lg'>{session.user.name}</p>
-                <p className='truncate'>{session.user.email}</p>
+                <p className='text-slate-950'>{session.user.name}</p>
+                <p className='truncate text-slate-700'>{session.user.email}</p>
             </Dropdown.Header>
             <Dropdown.Item onClick={() => router.push('/user-pads')}>
-                meine Dokumente
+                Meine Dokumente
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => router.push('/edit-profile')}>
+                Profil Einstellungen
             </Dropdown.Item>
             <Dropdown.Item onClick={signOut} >
                 Logout

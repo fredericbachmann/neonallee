@@ -1,5 +1,5 @@
 'use client'
-import Profile from './profile'
+import ProfileDropdown from './profile'
 import { Navbar, TextInput } from 'flowbite-react'
 
 interface ActionBarProps {
@@ -15,7 +15,7 @@ export default function ActionBar({ children }: ActionBarProps) {
             </Navbar.Brand>
             <div className='flex space-x-4 items-center'>
                 {children}
-                <Profile />
+                <ProfileDropdown />
             </div>
         </Navbar>
     )

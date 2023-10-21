@@ -44,12 +44,14 @@ export async function POST(request: NextRequest) {
         if (!isAuthor) return NextResponse.json({}, { status: 400 })
 
         if (fieldToChange === 'username') {
-            const usernameExists = !!await prisma.author.findUnique({
+            const userWithUsername = await prisma.author.findUnique({
                 where: {
                     username: newValue
                 }
             })
-            if (usernameExists) return NextResponse.json({ code: 'username-exists' }, { status: 409 })
+            if (userWithUsername && userWithUsername.id !== session.user.id) {
+                return NextResponse.json({ code: 'username-exists' }, { status: 409 })
+            }
         }
 
         await prisma.author.update({
