@@ -5,7 +5,7 @@ import { signIn, useSession } from "next-auth/react"
 import { useParams } from "next/navigation"
 import { FormEvent, useRef, useState } from "react"
 import { HiOutlineTrash } from "react-icons/hi"
-import { HiPaperAirplane } from "react-icons/hi2"
+import { HiPaperAirplane, HiTrash } from "react-icons/hi2"
 
 export function CommentSection({ isAdmin, commentsProp }: {
     isAdmin: boolean
@@ -77,6 +77,8 @@ export function LoginForComment() {
 
 export function Comment({ comment, showDelete, removeComment }: { comment: any, showDelete: boolean, removeComment: Function }) {
     const [hover, setHover] = useState(false)
+    const [hoverTrash, setHoverTrash] = useState(false)
+
     const options = {
         year: '2-digit',
         month: 'numeric',
@@ -85,20 +87,28 @@ export function Comment({ comment, showDelete, removeComment }: { comment: any, 
         minute: '2-digit',
     }
 
+    async function deleteComment() {
+        const res = await fetch(`/api/comment/delete?commentId=${comment.id}`, { method: 'DELETE' })
+        if (res.ok) removeComment(comment.id)
+    }
+
     return <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="flex items-center">
         <div className="flex flex-col flex-1">
             <div className="flex space-x-1 items-center">
                 <img src={comment.user.image!} width={30} height={30} className="rounded-full" />
                 <p className="text-slate-950">{comment.user.name}</p>
                 <p className="text-slate-500 text-sm">{comment.createdAt.toLocaleString('de-DE', options)}</p>
-                
+
             </div>
             <p className="text-slate-700">{comment.text}</p>
         </div>
         {hover && showDelete &&
-            <HiOutlineTrash onClick={async () => {
-                const res = await fetch(`/api/comment/delete?commentId=${comment.id}`, { method: 'DELETE' })
-                if (res.ok) removeComment(comment.id)
-            }} className="h-5 w-5 cursor-pointer" />}
+            <div className="cursor-pointer" onMouseEnter={() => setHoverTrash(true)} onMouseLeave={() => setHoverTrash(false)}>
+
+                {hoverTrash
+                    ? <HiTrash onClick={deleteComment} className="h-5 w-5" />
+                    : <HiOutlineTrash onClick={deleteComment} className="h-5 w-5" />}
+            </div>
+        }
     </div>
 }

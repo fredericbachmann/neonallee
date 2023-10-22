@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Pad {
-  id        String          @id @default(cuid())
-  name      String
-  members   AuthorsOnPads[]
-  published Boolean         @default(false)
-  comments  Comment[]
+  id          String          @id @default(cuid())
+  name        String
+  members     AuthorsOnPads[]
+  published   Boolean         @default(false)
+  comments    Comment[]
+  description String          @default("")
 }
 
 model Comment {

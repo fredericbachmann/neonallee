@@ -2,17 +2,16 @@
 import { Pad } from "@prisma/client"
 import { Card } from "flowbite-react"
 import Link from "next/link"
-import Image from 'next/image'
 
 export default function ReadArticleCard({ pad }: { pad: Pad }) {
   return <Link href={`/article/${pad.id}`}>
     <Card>
       <div className="flex">
-        <div className="text-left">
+        <div className="text-left flex-1">
           <h6 className="text-3xl tracking-tight">{pad.name}</h6>
-          <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p className="text-gray-700">{pad.description === '' ? 'AutorIn hat keine Beschreibung angegeben...' : pad.description}</p>
         </div>
-        <img src={`https://picsum.photos/100?${pad.id}`} width={100} /> {/* Hack for disabling cache */}
+        <img src={`https://picsum.photos/100?${pad.id}`} className="w-24 h-24" /> {/* Hack for disabling cache */}
       </div>
     </Card>
   </Link>

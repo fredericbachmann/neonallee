@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import ActionBar from "@/app/components/app-bar"
 import ReadArticleCard from "@/app/components/card"
-import UserAvatar from "./avatar"
 
 
 
@@ -64,23 +63,27 @@ export default async function Page({ params }: { params: { username: string } })
 
     return <>
         <ActionBar />
-        <div className="flex flex-col items-center p-5">
-            <div className="grid grid-rows-2 grid-flow-col space-x-2">
-                <div className="row-span-2">
-                    <UserAvatar img={author.user.image!} />
-                </div>
+        <div className="flex flex-col space-y-8 max-w-3xl items-center mx-auto p-5">
+            <div className="grid grid-rows-2 grid-flow-col space-x-2 max-w-3xl">
+                <img src={author.user.image!} className="rounded-full w-20 h-20 row-span-2" />
                 <p className="text-3xl place-self-end">{author.artistname}</p>
                 <p className="text-sm place-self-start">@{author.username}</p>
             </div>
-            <br />
-            <FollowToggle username={params.username} isFollowing={following} />
-            <p className="text-lg">{followerCount} Follower</p>
-            <br />
+            <div className="flex items-center divide-gray-700 divide-x-2">
+                <div className="pr-2">
+                    <FollowToggle username={params.username} isFollowing={following} />
+                </div>
+                <p className="text-lg text-slate-700 pl-2">{followerCount} Follower</p>
+            </div>
+            <div>
+                <p className="text-2xl text-slate-700 place-self-start">Über mich:</p>
+                <p>{author.about}</p>
+            </div>
             {
                 pads.length > 0
                     ?
-                    <div className="flex flex-col max-w-3xl space-y-5">
-                        <p className="text-3xl place-self-start">Veröffentlichte Artikel:</p>
+                    <div>
+                        <p className="text-3xl text-slate-700 place-self-start">Veröffentlichte Artikel:</p>
                         {pads.map((pad, index) =>
                             <ReadArticleCard pad={pad} key={index} />
                         )}
