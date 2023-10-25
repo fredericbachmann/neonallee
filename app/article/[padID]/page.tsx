@@ -3,7 +3,7 @@ import ActionBar from "../../components/app-bar";
 import { notFound } from "next/navigation";
 import { ArticleAuthors } from "./author";
 import { etherApiReq } from "@/app/api/etherpad/etherApi";
-import { Comment, CommentSection, LoginForComment, WriteComment } from "./comment";
+import { CommentSection } from "./comment";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 

@@ -29,7 +29,7 @@ export default async function page({ params }: { params: { padId: string } }) {
         <div style={{ flex: 1, display: 'flex' }}>
             <iframe
                 name="embed_readwrite"
-                src={`http://localhost:9001/p/${params.padId}?userName=${session ? session.user.name : 'Gast'}`}
+                src={`http://localhost:9001/p/${params.padId}`}
                 style={{ width: '100%', border: 0 }}
             />
         </div>
