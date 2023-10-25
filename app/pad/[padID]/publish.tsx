@@ -42,7 +42,7 @@ export default function Publish({ isPublished }: { isPublished: Boolean }) {
         <Modal dismissible show={openModal === 'private'} onClose={() => setOpenModal(undefined)}>
             <Modal.Header>Dokument auf Privat stellen</Modal.Header>
             <Modal.Body>
-                Das Dokument wird auf 'Privat' umgestellt, 
+                Das Dokument wird auf &apos;Privat&apos; umgestellt, 
                 niemand außer den Co-AutorInnen kann es also mehr einsehen.
             </Modal.Body>
             <Modal.Footer>

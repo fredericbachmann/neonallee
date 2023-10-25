@@ -2,6 +2,7 @@
 
 import { Author, User } from "@prisma/client"
 import { Alert, TextInput } from "flowbite-react"
+import Image from "next/image"
 import { useRef, useState } from "react"
 import { HiCheck, HiPencil } from "react-icons/hi"
 
@@ -25,7 +26,7 @@ export function ProfileCustomization({ user }: { user: User & { author: Author |
 
     return <div className="flex justify-center p-5">
         <div className="max-w-2xl grow flex flex-col space-y-5">
-            <img src={user.image!} className="rounded-full w-36 h-36 self-center" />
+            <Image alt="profile picture" src={user.image!} height={144} width={144} className="rounded-full self-center" />
             <br />
             {Object.entries(rows).map((data, index) =>
                 <Row

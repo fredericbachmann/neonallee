@@ -2,6 +2,7 @@
 
 import { Button, TextInput } from "flowbite-react"
 import { signIn, useSession } from "next-auth/react"
+import Image from "next/image"
 import { useParams } from "next/navigation"
 import { FormEvent, useRef, useState } from "react"
 import { HiOutlineTrash } from "react-icons/hi"
@@ -95,7 +96,7 @@ export function Comment({ comment, showDelete, removeComment }: { comment: any, 
     return <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="flex items-center">
         <div className="flex flex-col flex-1">
             <div className="flex space-x-1 items-center">
-                <img src={comment.user.image!} width={30} height={30} className="rounded-full" />
+                <Image src={comment.user.image!} alt="Image of the writer of the comment" width={30} height={30} className="rounded-full" />
                 <p className="text-slate-950">{comment.user.name}</p>
                 <p className="text-slate-500 text-sm">{comment.createdAt.toLocaleString('de-DE', options)}</p>
 

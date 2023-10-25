@@ -1,6 +1,7 @@
 
 import { Avatar, Dropdown, Button } from 'flowbite-react'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -11,7 +12,7 @@ export default function ProfileDropdown() {
     if (status === 'loading') return <Avatar rounded />
 
     if (session && session.user.image) return (
-        <Dropdown inline label={<Avatar img={session.user.image} rounded />}>
+        <Dropdown inline label={<Image alt='profile picture' src={session.user.image!} height={40} width={40} className='rounded-full' />}>
             <Dropdown.Header>
                 <p className='text-slate-950'>{session.user.name}</p>
                 <p className='truncate text-slate-700'>{session.user.email}</p>

@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import ActionBar from "@/app/components/app-bar"
 import ReadArticleCard from "@/app/components/card"
+import Image from "next/image"
 
 
 
@@ -65,7 +66,7 @@ export default async function Page({ params }: { params: { username: string } })
         <ActionBar />
         <div className="flex flex-col space-y-8 max-w-3xl mx-auto p-5">
             <div className="grid grid-flow-col space-x-2 self-center">
-                <img src={author.user.image!} className="rounded-full w-20 h-20 row-span-2 place-self-end" />
+                <Image alt="profile picture" src={author.user.image!} height={80} width={80} className="rounded-full row-span-2 place-self-end" />
                 <p className="text-3xl self-end">{author.artistname}</p>
                 <p className="text-sm">@{author.username}</p>
             </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar } from "flowbite-react"
+import Image from "next/image";
 import Link from "next/link";
 
 export function ArticleAuthors({ authors }: {
@@ -17,7 +17,7 @@ export function ArticleAuthors({ authors }: {
             <div key={author.id} className="max-w-fit">
                 <Link href={`/profile/${author.username}`}>
                     <div className="flex space-x-3 place-items-center">
-                        <Avatar img={author.user.image!} rounded />
+                        <Image alt="avatar of author" src={author.user.image!} height={40} width={40} className="rounded-full" />
                         <div>{author.username}</div>
                     </div>
                 </Link>

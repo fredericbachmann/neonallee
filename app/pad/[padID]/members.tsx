@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Button, Modal } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import Share from "./share";
 import { useParams } from "next/navigation";
@@ -24,7 +24,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
                 setMembers(members)
             })
         })
-    }, [updateMembers])
+    }, [updateMembers, padId])
 
     return <>
         <Button onClick={() => setOpenModal(true)} color='success' >Nutzer</Button>
@@ -34,7 +34,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
                 <div className="space-y-2">
                     {members.map(member =>
                         <div key={member.id} className="flex items-center space-x-3">
-                            <img src={member.image!}
+                            <Image src={member.image!}
                                 alt="Image of the author"
                                 width={35}
                                 height={35}
