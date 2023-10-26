@@ -60,7 +60,7 @@ export function WriteComment() {
     }
 
     return <div>
-        <p className="text-xl">Was denkst du über diesen Text?</p>
+        <p className="text-xl">Was denkst du?</p>
         <form className="flex space-x-1" onSubmit={postComment}>
             <TextInput type="input" className="flex-1" ref={commentRef} />
             <Button className="h-10" type="submit">
