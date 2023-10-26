@@ -29,7 +29,7 @@ export default async function page({ params }: { params: { padId: string } }) {
         <div style={{ flex: 1, display: 'flex' }}>
             <iframe
                 name="embed_readwrite"
-                src={`http://localhost:9001/p/${params.padId}`}
+                src={`${process.env.ETHERPAD_EXTERNAL_URL}/p/${params.padId}`}
                 style={{ width: '100%', border: 0 }}
             />
         </div>
