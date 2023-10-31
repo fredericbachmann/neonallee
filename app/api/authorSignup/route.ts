@@ -2,12 +2,17 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/app/db";
+import { checkInput } from "@/app/input-checks";
 
 export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const artistname = searchParams.get('artistname')
     const username = searchParams.get('username')
     if (!artistname || !username) return NextResponse.json({}, { status: 400 })
+    if (!checkInput('username', username).valid ||
+        !checkInput('artistname', artistname).valid) {
+        return NextResponse.json({}, { status: 400 })
+    }
 
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({}, { status: 401 })
@@ -18,7 +23,7 @@ export async function POST(request: NextRequest) {
         }
     })
     if (usernameExists) {
-        return NextResponse.json({ code: 'username-exists' }, { status: 409 })
+        return NextResponse.json({ code: 'username-taken' }, { status: 409 })
     }
 
     await prisma.author.create({

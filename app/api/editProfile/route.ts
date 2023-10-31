@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route"
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/db";
+import { checkInput } from "@/app/input-checks";
 
 export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions)
@@ -10,7 +11,15 @@ export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const fieldToChange = searchParams.get('field')
     const newValue = searchParams.get('value')
-    if (!fieldToChange || !newValue) return NextResponse.json({}, { status: 400 })
+    if (!(
+        fieldToChange &&
+        newValue &&
+        ['name', 'city', 'email', 'username', 'artistname', 'about'].includes(fieldToChange))
+    ) return NextResponse.json({}, { status: 400 })
+
+    if (!checkInput(fieldToChange as 'name' | 'city' | 'email' | 'username' | 'artistname' | 'about', newValue)) {
+        return NextResponse.json({}, { status: 400 })
+    }
 
     if (['name', 'city', 'email'].includes(fieldToChange)) {
         if (fieldToChange === 'email') {
@@ -50,7 +59,7 @@ export async function POST(request: NextRequest) {
                 }
             })
             if (userWithUsername && userWithUsername.id !== session.user.id) {
-                return NextResponse.json({ code: 'username-exists' }, { status: 409 })
+                return NextResponse.json({ code: 'username-taken' }, { status: 409 })
             }
         }
 

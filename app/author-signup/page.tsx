@@ -20,8 +20,8 @@ export default async function page() {
         <div className="flex flex-col items-center p-5">
             {isAuthor
                 ? <p className="text-4xl">Du bist bereits ein Autor!</p>
-                : <div className="text-2xl font-bold">
-                    Werde ein*e Autor*in!
+                : <div className="text-2xl font-bold flex flex-col max-w-3xl">
+                    Werde Autor*in!
                     <BecomeAuthorForm />
                 </div>}
         </div>

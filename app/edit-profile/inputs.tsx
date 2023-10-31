@@ -1,10 +1,14 @@
 'use client'
 
 import { Author, User } from "@prisma/client"
-import { Alert, TextInput } from "flowbite-react"
+import { Alert, Button, TextInput } from "flowbite-react"
 import Image from "next/image"
 import { useRef, useState } from "react"
 import { HiCheck, HiPencil } from "react-icons/hi"
+import { checkInput } from "../input-checks"
+
+type Names = 'name' | 'city' | 'email' | 'username' | 'artistname' | 'about'
+
 
 export function ProfileCustomization({ user }: { user: User & { author: Author | null } }) {
     const [focus, setFocus] = useState<undefined | string>(undefined) // defines where the text field should be shown
@@ -31,7 +35,7 @@ export function ProfileCustomization({ user }: { user: User & { author: Author |
             {Object.entries(rows).map((data, index) =>
                 <Row
                     key={index}
-                    name={data[0]}
+                    name={data[0] as Names}
                     data={data[1]}
                     focus={focus}
                     setFocus={setFocus}
@@ -40,7 +44,7 @@ export function ProfileCustomization({ user }: { user: User & { author: Author |
             )}
         </div>
         {alert === 'success' &&
-            <Alert color='success' onDismiss={()=>setAlert(undefined)} className="fixed bottom-5">
+            <Alert color='success' onDismiss={() => setAlert(undefined)} className="fixed bottom-5">
                 <p className="text-lg">Änderungen gespeichert!</p>
             </Alert>
         }
@@ -54,7 +58,7 @@ export function ProfileCustomization({ user }: { user: User & { author: Author |
 
 
 function Row({ name, data, focus, setFocus, setAlert }: {
-    name: string,
+    name: Names,
     data: { ui: string, value: string },
     focus: string | undefined,
     setFocus: Function,
@@ -74,7 +78,7 @@ function Row({ name, data, focus, setFocus, setAlert }: {
             {focus === name ? // wheather the edit box should be displayed
                 <InputField
                     name={name}
-                    value={value}
+                    storedValue={value}
                     onSuccess={changeValue}
                     setAlert={setAlert}
                 />
@@ -89,36 +93,57 @@ function Row({ name, data, focus, setFocus, setAlert }: {
 }
 
 
-function InputField({ name, value, onSuccess, setAlert }: {
-    name: string,
-    value: string,
+function InputField({ name, storedValue, onSuccess, setAlert }: {
+    name: Names,
+    storedValue: string,
     onSuccess: Function,
     setAlert: Function
 }) {
-    const inputRef = useRef<HTMLInputElement>(null)
     const [error, setError] = useState<string | undefined>(undefined)
-    async function handleChangeAttribute(field: string) {
-        const newValue = inputRef.current?.value ?? ''
-        const res = await fetch(`/api/editProfile?field=${field}&value=${newValue}`, { method: 'POST' })
+    const [value, setValue] = useState(storedValue)
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (name === 'email') {
+            setValue(e.target.value)
+            return
+        }
+
+        const inputState = checkInput(name, e.target.value)
+        if (inputState.valid) {
+            setError(undefined)
+            setValue(e.target.value)
+        } else setError(inputState.message)
+    }
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        const newValue = value
+        const res = await fetch(`/api/editProfile?field=${name}&value=${newValue}`, { method: 'POST' })
 
         if (res.ok) {
             onSuccess(newValue)
+        } else if (res.status === 409) {
+            setError('Der Nutzername ist schon vergeben. Versuche einen anderen!')
         } else {
-            setError(field)
-            setAlert('username-taken')
+            setError('Ein unerwarteter Fehler ist aufgetreten.')
         }
     }
 
-    return <div className="grow flex space-x-3 items-center">
-        <TextInput
-            addon={name === 'username' && '@'}
-            className="grow"
-            autoFocus
-            defaultValue={value}
-            ref={inputRef}
-            onSubmit={() => handleChangeAttribute(name)}
-            color={error === name ? 'failure' : ''}
-        />
-        <HiCheck className="w-6 h-6" onClick={() => handleChangeAttribute(name)} />
-    </div>
+    return <form onSubmit={handleSubmit} className="grow flex space-x-2 items-center">
+        <div className="flex-1">
+            <TextInput
+                addon={name === 'username' && '@'}
+                value={value}
+                type={name === 'email' ? 'email' : 'text'}
+                autoFocus
+                required
+                color={error && 'failure'}
+                helperText={error}
+                onChange={handleChange}
+            />
+        </div>
+        <Button type="submit" >
+            <HiCheck />
+        </Button>
+    </form>
 }

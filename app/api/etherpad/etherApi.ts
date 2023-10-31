@@ -17,6 +17,14 @@ export async function etherApiReq(method: string, params: string) {
 }
 
 export async function getPadPermission(padId: string, authorId: string) {
+    const isAdmin = !!await prisma.user.findFirst({
+        where: {
+            id: authorId,
+            role: 'ADMIN'
+        }
+    })
+    if(isAdmin) return 'OWNER'
+    
     const entry = await prisma.authorsOnPads.findUnique({
         where: {
             authorId_padId: {
