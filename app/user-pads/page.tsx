@@ -4,11 +4,10 @@ import AuthorPadCard from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
 import { redirect } from "next/navigation";
-import { signIn } from "next-auth/react";
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
-  if (!session) return signIn('google')
+  if (!session) redirect('/api/auth/signin')
 
   const isAuthor = !!await prisma.author.findUnique({ // checking if logged in user is marked as author
     where: {

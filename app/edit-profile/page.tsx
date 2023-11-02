@@ -1,13 +1,13 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "../api/auth/[...nextauth]/route"
-import { signIn } from "next-auth/react"
 import { prisma } from "../db"
 import ActionBar from "../components/app-bar"
 import { ProfileCustomization } from "./inputs"
+import { redirect } from "next/navigation"
 
 export default async function page() {
     const session = await getServerSession(authOptions)
-    if (!session) return signIn("google")
+    if (!session) redirect('/api/auth/signin')
 
     const user = await prisma.user.findUniqueOrThrow({
         where: {

@@ -28,7 +28,7 @@ export default function UserPadsAppBar() {
             <form onSubmit={handleCreate}>
                 <Modal.Body>
                     <Label htmlFor="padName" value="Name" />
-                    <TextInput id="padName" name="padName" placeholder="Unbenannt" ref={padNameInputRef} />
+                    <TextInput id="padName" placeholder="Unbenannt" ref={padNameInputRef} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit">Erstellen</Button>

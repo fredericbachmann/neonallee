@@ -40,7 +40,7 @@ export default function Share({ members, updateMembers }: {
                 <div className="flex space-x-2">
                     <div className="grow">
                         <Label htmlFor="username" value="Nutzername" />
-                        <TextInput id="usermane" name="username" placeholder="HeinzHerrmann482" ref={usernameInputRef} />
+                        <TextInput id="username" placeholder="HeinzHerrmann482" ref={usernameInputRef} autoComplete="off"/>
                     </div>
                     <div>
                         <br />

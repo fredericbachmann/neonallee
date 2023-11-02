@@ -3,7 +3,7 @@
 import { Button, Label, TextInput } from "flowbite-react"
 import { useRouter } from 'next/navigation'
 import { useState } from "react"
-import { checkInput } from "../input-checks"
+import { handleInputChange } from "../user-input"
 
 export function BecomeAuthorForm() {
     const router = useRouter()
@@ -19,31 +19,13 @@ export function BecomeAuthorForm() {
         if (res.status === 409) setUsernameError('Der Nutzername existiert bereits')
     }
 
-    function handleArtistnameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const artistnameState = checkInput('artistname', e.target.value)
-        if (artistnameState.valid) {
-            setArtistnameError(undefined)
-            setArtistname(e.target.value)
-        } else setArtistnameError(artistnameState.message)
-    }
-
-    function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const usernameState = checkInput('username', e.target.value)
-        if (usernameState.valid) {
-            setUsernameError(undefined)
-            setUsername(e.target.value)
-        } else setUsernameError(usernameState.message)
-    }
-
-
     return <form onSubmit={handleSubmit} className="w-72">
         <Label htmlFor="artistname" value="Dein Künstlername" />
         <TextInput
             id="artistname"
-            name="artistname"
             required
             value={artistname}
-            onChange={handleArtistnameChange}
+            onChange={(e) => handleInputChange(e, 'artistname', setArtistname, setArtistnameError)}
             color={artistnameError && 'failure'}
             helperText={artistnameError}
             className="flex-1"
@@ -51,10 +33,9 @@ export function BecomeAuthorForm() {
         <Label htmlFor="username" value="Dein Nutzername" />
         <TextInput
             id="username"
-            name="username"
             required
             value={username}
-            onChange={handleUsernameChange}
+            onChange={(e) => handleInputChange(e, 'username', setUsername, setUsernameError)}
             color={usernameError && 'failure'}
             helperText={usernameError}
         />

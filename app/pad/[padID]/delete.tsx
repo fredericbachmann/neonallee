@@ -18,8 +18,8 @@ export default function Delete() {
 
 
     return <>
-        <Button onClick={() => setOpenModal(true)}>
-            <MdDelete className='w-5 h-5' />
+        <Button outline color='failure' onClick={() => setOpenModal(true)}>
+            Dieses Dokument löschen
         </Button>
         <Modal dismissible show={openModal} size='md' popup onClose={() => setOpenModal(false)}>
             <Modal.Header />

@@ -3,9 +3,9 @@
 import { Author, User } from "@prisma/client"
 import { Alert, Button, TextInput } from "flowbite-react"
 import Image from "next/image"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { HiCheck, HiPencil } from "react-icons/hi"
-import { checkInput } from "../input-checks"
+import { checkInput, handleInputChange } from "../user-input"
 
 type Names = 'name' | 'city' | 'email' | 'username' | 'artistname' | 'about'
 
@@ -108,11 +108,7 @@ function InputField({ name, storedValue, onSuccess, setAlert }: {
             return
         }
 
-        const inputState = checkInput(name, e.target.value)
-        if (inputState.valid) {
-            setError(undefined)
-            setValue(e.target.value)
-        } else setError(inputState.message)
+        handleInputChange(e, name, setValue, setError)
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
