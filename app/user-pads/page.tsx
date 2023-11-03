@@ -28,6 +28,7 @@ export default async function Page() {
     select: {
       id: true,
       name: true,
+      published: true,
       members: {
         where: {
           authorId: session.user.id

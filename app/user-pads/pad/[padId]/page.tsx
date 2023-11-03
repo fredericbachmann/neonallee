@@ -26,7 +26,7 @@ export default async function page({ params }: { params: { padId: string } }) {
     const isOwner = !!session && pad.members.some(member => { return member.authorId === session.user.id && member.permission === 'OWNER' })
 
     return <div className="flex flex-col h-screen">
-        <PadAppBar isPublished={pad.published} isOwner={isOwner} padName={pad.name} />
+        <PadAppBar isOwner={isOwner} pad={pad} />
         <iframe
             name="embed_readwrite"
             src={`${process.env.ETHERPAD_EXTERNAL_URL}/p/${params.padId}`}
