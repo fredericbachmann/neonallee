@@ -16,7 +16,7 @@ export default function FollowToggle({ username, isFollowing }: { username: stri
         }
     }
 
-    return <Button outline color="success" onClick={() => handleFollow()}>
-        {following ? "Entfolgen" : "Folgen"}
+    return <Button outline color={following ? 'light' : 'success'} onClick={() => handleFollow()}>
+        {following ? 'Entfolgen' : 'Folgen'}
     </Button>
 }

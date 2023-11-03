@@ -4,7 +4,7 @@ import { Button, TextInput } from "flowbite-react"
 import { signIn, useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
-import { FormEvent, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { HiOutlineTrash } from "react-icons/hi"
 import { HiPaperAirplane, HiTrash } from "react-icons/hi2"
 
@@ -21,7 +21,7 @@ export function CommentSection({ isAdmin, commentsProp }: {
         }
     }[]
 }) {
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     const [comments, setComments] = useState(commentsProp)
 
     function removeComment(commentId: string) {
@@ -29,9 +29,13 @@ export function CommentSection({ isAdmin, commentsProp }: {
     }
 
     return <div className="flex-col space-y-5">
-        {session
-            ? <WriteComment />
-            : <LoginForComment />
+        {{
+            'loading': <div className="animate-pulse">
+                <div className="bg-slate-300 h-10 rounded"></div>
+            </div>,
+            'unauthenticated': <LoginForComment />,
+            'authenticated': <WriteComment />
+        }[status]
         }
         {
             comments.map((comment, index) =>
@@ -72,7 +76,9 @@ export function WriteComment() {
 
 
 export function LoginForComment() {
-    return <Button />
+    return <Button outline gradientDuoTone='greenToBlue' onClick={() => signIn('google')}>
+        Einloggen, um zu kommentieren
+    </Button>
 }
 
 
