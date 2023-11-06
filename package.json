@@ -21,11 +21,11 @@
     "flowbite-react": "^0.4.11",
     "next": "^14.0.1",
     "next-auth": "^4.22.1",
-    "prisma": "^4.16.2",
+    "prisma": "^5.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
-    "server-only": "^0.0.1"
+    "react-movable": "^3.0.4"
   },
   "devDependencies": {
     "@types/cookies": "^0.7.7",

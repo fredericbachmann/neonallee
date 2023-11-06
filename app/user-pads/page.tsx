@@ -29,6 +29,7 @@ export default async function Page() {
       id: true,
       name: true,
       published: true,
+      description: true,
       members: {
         where: {
           authorId: session.user.id
@@ -41,14 +42,22 @@ export default async function Page() {
   }
   )
 
+  const flattenedPads = pads.map((item) => {
+    const { members, ...rest } = item // remove members property
+    return {
+      ...rest,
+      permission: item.members[0].permission // de-nest permission of current user
+    }
+  })
+
   return (<>
-    <UserPadsAppBar />
-        <div className="flex flex-wrap justify-center">
-          {
-            pads.map((pad) => {
-              return <AuthorPadCard pad={pad} key={pad.id}/>
-            })}
-        </div>
+    <UserPadsAppBar pads={pads}/>
+    <div className="flex flex-wrap justify-center">
+      {
+        flattenedPads.map((pad) => {
+          return <AuthorPadCard pad={pad} key={pad.id} />
+        })}
+    </div>
   </>
   )
 }

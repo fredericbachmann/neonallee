@@ -1,17 +1,21 @@
 'use client';
-import Delete from './delete';
+import Delete from './pad/[padId]/delete';
 import { Button, Label, Modal, TextInput, ToggleSwitch } from "flowbite-react";
 import { HiCheck, HiOutlineCog } from "react-icons/hi";
 import { useState } from 'react';
 import { handleInputChange } from '@/app/user-input';
 import { signIn } from 'next-auth/react';
 
-export function PadSettings({ pad }: {
+type UpdatePad = (name?: string, published?: boolean, description?: string) => void
+
+export function PadSettings({ pad, updatePad }: {
     pad: {
-        id: string,
-        name: string,
+        id: string
+        name: string
         published: boolean
+        description: string
     }
+    updatePad?: UpdatePad
 }) {
     const [showModal, setShowModal] = useState(false);
 
@@ -21,15 +25,15 @@ export function PadSettings({ pad }: {
     }
 
     return <>
-        <HiOutlineCog onClick={handleGearClick} className="h-full w-full cursor-pointer rounded-full hover:bg-slate-300" />
+        <HiOutlineCog onClick={handleGearClick} className="h-full w-full cursor-pointer rounded-full bg-white hover:bg-gray-400" />
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)}>
             <Modal.Header>
                 Einstellungen
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-8">
-                    <ChangePadName pad={pad} />
-                    <PublishPad pad={pad} />
+                    <ChangePadName pad={pad} updatePad={updatePad} />
+                    <PublishPad pad={pad} updatePad={updatePad} />
                     <Delete />
                 </div>
             </Modal.Body>
@@ -37,13 +41,14 @@ export function PadSettings({ pad }: {
     </>;
 }
 
-function ChangePadName({ pad }: {
+function ChangePadName({ pad, updatePad }: {
     pad: {
         id: string
         name: string
     }
+    updatePad?: UpdatePad
 }) {
-
+    const [showCheck, setShowCheck] = useState(false)
     const [padName, setPadName] = useState(pad.name)
     const [padNameError, setPadNameError] = useState<undefined | string>()
 
@@ -51,40 +56,63 @@ function ChangePadName({ pad }: {
         e.preventDefault()
         const res = await fetch(`/api/etherpad/changePadName?padId=${pad.id}&padName=${padName}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
+        if (res.ok) {
+            if (updatePad) {
+                updatePad(padName)
+            }
+            setShowCheck(false)
+        }
     }
 
 
     return <form onSubmit={handlePadNameSubmit}>
-        <Label htmlFor="padName">
-            Name
-        </Label>
+        <Label htmlFor="padName">Name</Label>
         <div className="flex items-center space-x-2">
             <TextInput
                 id="padName"
+                onFocus={() => setShowCheck(true)}
+                onBlur={() => { if (pad.name === padName) setShowCheck(false) }}
                 value={padName}
                 onChange={(e) => handleInputChange(e, 'padName', setPadName, setPadNameError)}
                 color={padNameError && 'failure'}
                 helperText={padNameError}
                 className="flex-1" />
-            <Button type='submit' outline color='success'>
-                <HiCheck />
-            </Button>
+            {showCheck &&
+                <Button type='submit' outline color='success'>
+                    <HiCheck />
+                </Button>}
         </div>
     </form>
 }
 
-function PublishPad({ pad }: {
+function PadDescription({ pad, updatePad }: {
+    pad: {
+        id: string
+        description: string
+    }
+    updatePad?: UpdatePad
+}) {
+    //TODO
+}
+
+function PublishPad({ pad, updatePad }: {
     pad: {
         id: string
         published: boolean
     }
+    updatePad?: UpdatePad
 }) {
     const [published, setPublished] = useState(pad.published)
 
     async function togglePublish() {
         const res = await fetch(`/api/etherpad/togglePublish/${pad.id}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
-        if (res.status === 200) setPublished(!published)
+        if (res.status === 200) {
+            setPublished(!published)
+            if (updatePad) {
+                updatePad(undefined, published)
+            }
+        }
     }
 
     return <div>

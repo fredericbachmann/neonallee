@@ -46,5 +46,5 @@ export async function POST(_: NextRequest, { params }: { params: { padName: stri
   await etherApiReq('createPad', `padID=${padId}&authorId=${author}`) // creating a new Pad
 
 
-  return NextResponse.json({ url: `/pad/${padId}` }, { status: 200 })
+  return NextResponse.json({ url: `/user-pads/pad/${padId}` }, { status: 200 })
 }

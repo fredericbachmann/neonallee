@@ -1,4 +1,3 @@
-import "server-only"
 import { prisma } from "@/app/db"
 import { notFound, redirect } from 'next/navigation'
 import { getServerSession } from "next-auth"

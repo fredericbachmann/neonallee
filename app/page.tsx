@@ -1,4 +1,3 @@
-import 'server-only'
 import ActionBar from "./components/app-bar"
 import ReadArticleCard from './components/card'
 import { prisma } from './db'
