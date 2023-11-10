@@ -12,13 +12,13 @@ datasource db {
 }
 
 model Pad {
-  id           String          @id @default(cuid())
-  name         String
-  members      AuthorsOnPads[]
-  published    Boolean         @default(false)
-  comments     Comment[]
-  description  String          @default("")
-  PadsOnSeries PadsOnSeries[]
+  id          String          @id @default(cuid())
+  name        String
+  members     AuthorsOnPads[]
+  published   Boolean         @default(false)
+  comments    Comment[]
+  description String          @default("")
+  series      PadsOnSeries?
 }
 
 model Comment {
@@ -32,12 +32,19 @@ model Comment {
 }
 
 model PadsOnSeries {
-  id            String @default(cuid())
-  indexInSeries Int    
   pad           Pad    @relation(fields: [padId], references: [id])
   padId         String @unique
+  series        Series @relation(fields: [seriesId], references: [id])
+  seriesId      String
+  indexInSeries Int
 
-  @@id([id, indexInSeries])
+  @@id([padId, seriesId])
+}
+
+model Series {
+  id   String         @id @default(cuid())
+  name String
+  pads PadsOnSeries[]
 }
 
 model AuthorsOnPads {

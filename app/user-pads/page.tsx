@@ -4,6 +4,7 @@ import AuthorPadCard from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
 import { redirect } from "next/navigation";
+import { Series } from "@prisma/client";
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
@@ -17,8 +18,25 @@ export default async function Page() {
   if (!isAuthor) redirect('/author-signup') // ... if not, redirect to author sign-up
 
 
-  const pads = await prisma.pad.findMany({ // every pad the author has access to
+  const series = await prisma.series.findMany({ // every series the author has access to
     where: {
+      pads: {
+        some: {
+          pad: {
+            members: {
+              some: {
+                authorId: session.user.id
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+
+  const pads = await prisma.pad.findMany({ // every pad the author has access to, that is not in a series
+    where: {
+      series: null,
       members: {
         some: {
           authorId: session.user.id
@@ -51,14 +69,25 @@ export default async function Page() {
   })
 
   return (<>
-    <UserPadsAppBar pads={pads}/>
+    <UserPadsAppBar pads={pads} />
     <div className="flex flex-wrap justify-center">
       {
-        flattenedPads.map((pad) => {
-          return <AuthorPadCard pad={pad} key={pad.id} />
-        })}
+        series.map((series) =>
+          <div>
+            <p>{series.name}</p>
+          </div>
+        )
+      }
+      {
+        flattenedPads.map((pad) =>
+          <AuthorPadCard pad={pad} key={pad.id} />
+        )}
     </div>
   </>
   )
 }
 
+
+function UserPadsSeries({series}: {series: Series}) {
+
+}

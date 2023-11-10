@@ -4,7 +4,7 @@ import { Button, Dropdown, Label, Modal, TextInput } from "flowbite-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { HiDocumentText, HiMinus, HiOutlineXCircle, HiPlus, HiSquare2Stack, HiXCircle } from "react-icons/hi2";
+import { HiDocumentText, HiOutlineXCircle, HiPlus, HiSquare2Stack } from "react-icons/hi2";
 import { handleInputChange } from '../user-input';
 import { List, arrayMove } from 'react-movable';
 
@@ -83,14 +83,16 @@ function NewRow({ pads }: {
                 values={includedPads}
                 onChange={({ oldIndex, newIndex }) => setIncludedPads(arrayMove(includedPads, oldIndex, newIndex))}
                 renderList={({ children, props }) => <div {...props}>{children}</div>}
-                renderItem={({ value, props }) =>
-                    <div {...props} key={value.id} className='flex items-center p-3 m-2 border-2 rounded-lg border-gray-500 z-50 list-none'>
-                        <p className='flex-1'>{value.name}</p>
-                        <button><HiOutlineXCircle className='h-8 w-8' onClick={(e) => {
-                            setIncludedPads(includedPads.filter(pad => pad !== value))
-                            setNotIncludedPads([...notIncludedPads, value])
-                        }} /></button>
-
+                renderItem={({ value, props, index }) =>
+                    <div className='flex items-center m-2'>  {/* TODO: change the format to a grid with static displayed indexes */}
+                        <p className='text-xl w-8'>{typeof index !== 'undefined' && index + 1}</p>
+                        <div {...props} key={value.id} className='flex-1 flex items-center p-3 border-2 rounded-lg border-gray-500 z-50'>
+                            <p className='flex-1'>{value.name}</p>
+                            <button><HiOutlineXCircle className='h-8 w-8' onClick={(e) => {
+                                setIncludedPads(includedPads.filter(pad => pad !== value))
+                                setNotIncludedPads([...notIncludedPads, value])
+                            }} /></button>
+                        </div>
                     </div>}
             />
             <br />
@@ -101,8 +103,8 @@ function NewRow({ pads }: {
                         setNotIncludedPads(notIncludedPads.filter(pad => pad !== value))
                         setIncludedPads([...includedPads, value])
                     }}>
-                            <p className=''>{value.name}</p>
-                            <HiPlus className='h-8 w-8' />
+                        <p className=''>{value.name}</p>
+                        <HiPlus className='h-8 w-8' />
                     </button>
                 </div>
             )}
