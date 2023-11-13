@@ -1,9 +1,11 @@
 'use client'
-import { Card } from 'flowbite-react'
+import { Card, Modal } from 'flowbite-react'
 import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
 import { PadSettings } from './pad-settings'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Pad, PadsOnSeries, Series } from '@prisma/client'
+import { HiFolder } from 'react-icons/hi'
 
 export default function AuthorPadCard({ pad: padParam }: {
     pad: {
@@ -47,8 +49,35 @@ export default function AuthorPadCard({ pad: padParam }: {
             </div>
         </Link>
         {pad.permission === 'OWNER' &&
-            <div className='h-7 w-7 absolute top-2 right-2' onClick={(e) => e.stopPropagation()}>
+            <div className='h-7 w-7 absolute top-2 right-2'>
                 <PadSettings pad={pad} updatePad={updatePad} />
             </div>}
     </div>
+}
+
+
+
+export function UserPadsSeries({ series }: {
+    series: Series & {
+        pads: (PadsOnSeries & {
+            pad: Pad
+        })[]
+    }
+}) {
+    const [showModal, setShowModal] = useState(false)
+
+    return <><button onClick={() => setShowModal(true)}>
+        <HiFolder className='h-96 w-96' />
+    </button>
+
+        <Modal size='7xl' show={showModal} dismissible onClose={() => setShowModal(false)}>
+            <Modal.Header>{series.name}</Modal.Header>
+            <Modal.Body className='flex flex-wrap justify-center'>
+                {series.pads.map((pad, index) =>
+                    <AuthorPadCard pad={{ ...pad.pad, permission: 'OWNER' }} key={index} />
+                )}
+            </Modal.Body>
+        </Modal>
+
+    </>
 }

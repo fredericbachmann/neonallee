@@ -1,10 +1,11 @@
 import { getServerSession } from "next-auth";
 import UserPadsAppBar from "./app-bar";
-import AuthorPadCard from "./card";
+import AuthorPadCard, { UserPadsSeries } from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
 import { redirect } from "next/navigation";
 import { Series } from "@prisma/client";
+import { HiFolder } from "react-icons/hi2";
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
@@ -29,6 +30,13 @@ export default async function Page() {
               }
             }
           }
+        }
+      }
+    },
+    include: {
+      pads: {
+        include: {
+          pad: true
         }
       }
     }
@@ -72,9 +80,9 @@ export default async function Page() {
     <UserPadsAppBar pads={pads} />
     <div className="flex flex-wrap justify-center">
       {
-        series.map((series) =>
-          <div>
-            <p>{series.name}</p>
+        series.map((series, index) =>
+          <div key={index}>
+            <UserPadsSeries series={series} />
           </div>
         )
       }
@@ -87,7 +95,3 @@ export default async function Page() {
   )
 }
 
-
-function UserPadsSeries({series}: {series: Series}) {
-
-}

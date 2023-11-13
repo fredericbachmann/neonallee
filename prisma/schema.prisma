@@ -38,7 +38,7 @@ model PadsOnSeries {
   seriesId      String
   indexInSeries Int
 
-  @@id([padId, seriesId])
+  @@id([seriesId, indexInSeries])
 }
 
 model Series {
