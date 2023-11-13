@@ -21,17 +21,23 @@ export default async function Page() {
 
   const series = await prisma.series.findMany({ // every series the author has access to
     where: {
-      pads: {
-        some: {
-          pad: {
-            members: {
-              some: {
-                authorId: session.user.id
+      OR: [{
+        pads: {
+          some: {
+            pad: {
+              members: {
+                some: {
+                  authorId: session.user.id
+                }
               }
             }
           }
         }
+      },
+      {
+        ownerId: session.user.id
       }
+      ]
     },
     include: {
       pads: {

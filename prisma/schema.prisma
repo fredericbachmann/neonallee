@@ -42,9 +42,11 @@ model PadsOnSeries {
 }
 
 model Series {
-  id   String         @id @default(cuid())
-  name String
-  pads PadsOnSeries[]
+  id      String         @id @default(cuid())
+  name    String
+  pads    PadsOnSeries[]
+  owner   Author         @relation(fields: [ownerId], references: [id])
+  ownerId String
 }
 
 model AuthorsOnPads {
@@ -76,6 +78,7 @@ model Author {
   pads       AuthorsOnPads[]
   followers  User[]          @relation(name: "follow")
   about      String          @default("")
+  Series     Series[]
 }
 
 // Next-auth:

@@ -56,7 +56,7 @@ export function WriteComment() {
 
     async function postComment() {
         const comment = commentRef.current?.value
-        const res = await fetch(`/api/comment/write?padId=${params.padId}&comment=${comment}`, { method: 'POST' }) // call the internal api
+        const res = await fetch(`/api/comment?padId=${params.padId}&comment=${comment}`, { method: 'POST' }) // call the internal api
         if (res.status === 401) signIn('google')
         if (res.status === 200) {
             if (commentRef.current) commentRef.current.value = ""
@@ -95,7 +95,7 @@ export function Comment({ comment, showDelete, removeComment }: { comment: any, 
     }
 
     async function deleteComment() {
-        const res = await fetch(`/api/comment/delete?commentId=${comment.id}`, { method: 'DELETE' })
+        const res = await fetch(`/api/comment?commentId=${comment.id}`, { method: 'DELETE' })
         if (res.ok) removeComment(comment.id)
     }
 

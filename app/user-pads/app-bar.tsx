@@ -8,7 +8,7 @@ import { HiDocumentText, HiOutlineXCircle, HiPlus, HiSquare2Stack } from "react-
 import { handleInputChange } from '../user-input';
 import { List, arrayMove } from 'react-movable';
 
-
+/** The app bar for the user-pads page */
 export default function UserPadsAppBar({ pads }: {
     pads: {
         id: string
@@ -26,12 +26,12 @@ export default function UserPadsAppBar({ pads }: {
             <NewPad />
         </Modal>
         <Modal dismissible show={openModal === 'newRow'} onClose={() => setOpenModal(undefined)}>
-            <NewRow pads={pads} />
+            <NewRow />
         </Modal>
     </ActionBar>
 }
 
-
+/** form inside the modal for a new pad */
 function NewPad() {
     const [padName, setPadName] = useState('Unbenannt')
     const [padNameError, setPadNameError] = useState<string | undefined>()
@@ -66,7 +66,39 @@ function NewPad() {
 }
 
 
-function NewRow({ pads }: {
+function NewRow() {
+    const [value, setValue] = useState('')
+    const [error, setError] = useState<string | undefined>()
+    const router = useRouter()
+
+    async function handleCreate(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        const res = await fetch(`/api/series?name=${value}`, { method: 'POST' })
+        if (res.status === 401) signIn('google')
+        if (res.status === 200) {
+            router.refresh()
+        }
+    }
+    return <form onSubmit={handleCreate}>
+        <Modal.Header>Neue Serie</Modal.Header>
+        <Modal.Body>
+            <Label htmlFor="seriesName" value="Name" />
+            <TextInput
+                autoFocus
+                id="seriesName"
+                value={value}
+                onChange={(e) => handleInputChange(e, 'padName', setValue, setError)}   //TODO
+                color={error && 'failure'}
+                helperText={error}
+            />
+        </Modal.Body>
+        <Modal.Footer>
+            <Button type="submit">Erstellen</Button>
+        </Modal.Footer>
+    </form>
+}
+
+function NewRow2({ pads }: {
     pads: {
         id: string
         name: string
