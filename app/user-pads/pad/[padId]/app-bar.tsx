@@ -10,7 +10,7 @@ export function PadAppBar({ isOwner, pad }: {
         name: string
         published: boolean
         description: string
-    }
+    } //TODO: series
 }) {
 
     return <ActionBar>

@@ -71,14 +71,14 @@ enum Permission {
 }
 
 model Author {
-  user       User            @relation(fields: [id], references: [id], name: "user")
-  id         String          @id
-  username   String          @unique
-  artistname String
-  pads       AuthorsOnPads[]
-  followers  User[]          @relation(name: "follow")
-  about      String          @default("")
-  Series     Series[]
+  user        User            @relation(fields: [id], references: [id], name: "user")
+  id          String          @id
+  username    String          @unique
+  artistname  String
+  pads        AuthorsOnPads[]
+  followers   User[]          @relation(name: "follow")
+  about       String          @default("")
+  ownedSeries Series[]
 }
 
 // Next-auth:

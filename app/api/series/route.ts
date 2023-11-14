@@ -38,41 +38,38 @@ export async function PATCH(req: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session) return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
 
-    const isAuthor = !!await prisma.author.findUnique({
-        where: { id: session.user.id }
-    })
-    if (!isAuthor) return NextResponse.json({ message: 'Only Available for authors' }, { status: 403 })
-
-    const isSeriesOwner = !!await prisma.series.findFirst({
+    const isPadAndSeriesOwner = !!await prisma.author.findFirst({
         where: {
-            id: seriesId,
-            ownerId: session.user.id
-        }
-    })
-    if (!isSeriesOwner) return NextResponse.json({ message: 'Not the owner of the series' }, { status: 403 })
-
-    const isPadOwner = !!await prisma.authorsOnPads.findFirst({
-        where: {
-            authorId: session.user.id,
-            padId: padId,
-            permission: 'OWNER'
-        }
-    })
-    if (!isPadOwner) return NextResponse.json({ message: 'Not the owner of the pad' }, { status: 403 })
-
-    const result = await prisma.series.update({
-        where: {
-            id: seriesId,
-        },
-        data: {
+            id: session.user.id,
+            ownedSeries: {
+                some: { id: seriesId }
+            },
             pads: {
-                connect: {
+                some: {
+                    permission: 'OWNER',
                     padId: padId
                 }
             }
         }
     })
-    console.log(result)
+    if (!isPadAndSeriesOwner) return NextResponse.json({ message: 'Not authorized' }, { status: 403 })
+
+    const indexResult = await prisma.padsOnSeries.findMany({
+        where: {
+            seriesId: seriesId
+        },
+        orderBy: { indexInSeries: 'desc' }
+    })
+    const lastIndex = indexResult.length > 0 ? indexResult[0].indexInSeries : 0
+
+    const result = await prisma.padsOnSeries.create({
+        data: {
+            padId: padId,
+            seriesId: seriesId,
+            indexInSeries: lastIndex + 1
+        }
+    })
+    if (!result) return NextResponse.json({ message: 'Unexpected error' }, { status: 500 })
 
     return NextResponse.json({ message: 'Success' }, { status: 200 })
 }

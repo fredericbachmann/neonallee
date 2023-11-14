@@ -1,20 +1,16 @@
 import { getServerSession } from "next-auth";
 import UserPadsAppBar from "./app-bar";
-import AuthorPadCard, { UserPadsSeries } from "./card";
+import { PadsGrid } from "./card";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { prisma } from "../db";
 import { redirect } from "next/navigation";
-import { Series } from "@prisma/client";
-import { HiFolder } from "react-icons/hi2";
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/api/auth/signin')
 
   const isAuthor = !!await prisma.author.findUnique({ // checking if logged in user is marked as author
-    where: {
-      id: session.user.id
-    }
+    where: { id: session.user.id }
   })
   if (!isAuthor) redirect('/author-signup') // ... if not, redirect to author sign-up
 
@@ -25,11 +21,7 @@ export default async function Page() {
         pads: {
           some: {
             pad: {
-              members: {
-                some: {
-                  authorId: session.user.id
-                }
-              }
+              members: { some: { authorId: session.user.id } }
             }
           }
         }
@@ -40,11 +32,7 @@ export default async function Page() {
       ]
     },
     include: {
-      pads: {
-        include: {
-          pad: true
-        }
-      }
+      pads: true
     }
   })
 
@@ -57,24 +45,29 @@ export default async function Page() {
         }
       }
     },
-    select: {
-      id: true,
-      name: true,
-      published: true,
-      description: true,
+    select: { id: true }
+  }
+  )
+
+
+  const padDetails = await prisma.pad.findMany({
+    where: {
       members: {
-        where: {
+        some: {
           authorId: session.user.id
-        },
+        }
+      }
+    },
+    include: {
+      members: {
         select: {
           permission: true
         }
       }
     }
-  }
-  )
+  })
 
-  const flattenedPads = pads.map((item) => {
+  const flattenedPadDetails = padDetails.map((item) => {
     const { members, ...rest } = item // remove members property
     return {
       ...rest,
@@ -83,20 +76,8 @@ export default async function Page() {
   })
 
   return (<>
-    <UserPadsAppBar pads={pads} />
-    <div className="flex flex-wrap justify-center">
-      {
-        series.map((series, index) =>
-          <div key={index}>
-            <UserPadsSeries series={series} />
-          </div>
-        )
-      }
-      {
-        flattenedPads.map((pad) =>
-          <AuthorPadCard pad={pad} key={pad.id} />
-        )}
-    </div>
+    <UserPadsAppBar />
+    <PadsGrid pads={pads} series={series} padDetails={flattenedPadDetails}/>
   </>
   )
 }

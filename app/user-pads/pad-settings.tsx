@@ -2,21 +2,23 @@
 import Delete from './pad/[padId]/delete';
 import { Button, Label, Modal, TextInput, ToggleSwitch } from "flowbite-react";
 import { HiCheck, HiOutlineCog } from "react-icons/hi";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { handleInputChange } from '@/app/user-input';
 import { signIn } from 'next-auth/react';
+import { PadsOnSeries } from '@prisma/client';
+import { PadDetailsContext } from './card';
 
-type UpdatePad = (name?: string, published?: boolean, description?: string) => void
 
-export function PadSettings({ pad, updatePad }: {
+export function PadSettings({ pad }: {
     pad: {
         id: string
         name: string
         published: boolean
         description: string
+        series: PadsOnSeries | null
     }
-    updatePad?: UpdatePad
 }) {
+
     const [showModal, setShowModal] = useState(false);
 
     function handleGearClick(e: React.MouseEvent<SVGElement, globalThis.MouseEvent>) {
@@ -32,8 +34,8 @@ export function PadSettings({ pad, updatePad }: {
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-8">
-                    <ChangePadName pad={pad} updatePad={updatePad} />
-                    <PublishPad pad={pad} updatePad={updatePad} />
+                    <ChangePadName pad={pad} />
+                    <PublishPad pad={pad} />
                     <Delete />
                 </div>
             </Modal.Body>
@@ -41,13 +43,13 @@ export function PadSettings({ pad, updatePad }: {
     </>;
 }
 
-function ChangePadName({ pad, updatePad }: {
+function ChangePadName({ pad }: {
     pad: {
         id: string
         name: string
     }
-    updatePad?: UpdatePad
 }) {
+    const { updatePads } = useContext(PadDetailsContext)
     const [showCheck, setShowCheck] = useState(false)
     const [padName, setPadName] = useState(pad.name)
     const [padNameError, setPadNameError] = useState<undefined | string>()
@@ -57,9 +59,7 @@ function ChangePadName({ pad, updatePad }: {
         const res = await fetch(`/api/etherpad/changePadName?padId=${pad.id}&padName=${padName}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
         if (res.ok) {
-            if (updatePad) {
-                updatePad(padName)
-            }
+            updatePads({id: pad.id, name: padName})
             setShowCheck(false)
         }
     }
@@ -85,33 +85,30 @@ function ChangePadName({ pad, updatePad }: {
     </form>
 }
 
-function PadDescription({ pad, updatePad }: {
+function PadDescription({ pad }: {
     pad: {
         id: string
         description: string
     }
-    updatePad?: UpdatePad
 }) {
     //TODO
 }
 
-function PublishPad({ pad, updatePad }: {
+function PublishPad({ pad }: {
     pad: {
         id: string
         published: boolean
     }
-    updatePad?: UpdatePad
 }) {
     const [published, setPublished] = useState(pad.published)
+    const { updatePads } = useContext(PadDetailsContext)
 
     async function togglePublish() {
         const res = await fetch(`/api/etherpad/togglePublish/${pad.id}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
         if (res.status === 200) {
             setPublished(!published)
-            if (updatePad) {
-                updatePad(undefined, published)
-            }
+            updatePads({id: pad.id, published: published})
         }
     }
 
