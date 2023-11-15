@@ -90,17 +90,14 @@ export default function AuthorPadCard({ pad: padProp }: {
         }) | undefined
 }) {
     const [pad, setPad] = useState(padProp)
-
-    if (!pad) return <div>x</div>
-
     const router = useRouter()
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'pad',
-        canDrag: pad.permission === 'OWNER',
+        canDrag: pad && pad.permission === 'OWNER',
         end(item, monitor) {
             const dropResult = monitor.getDropResult<{ id: string }>()
-            if (item && dropResult) {
+            if (item && dropResult && pad) {
                 moveToSeries(pad.id, dropResult.id)
             }
         },
@@ -110,6 +107,7 @@ export default function AuthorPadCard({ pad: padProp }: {
         }),
     }))
 
+
     async function moveToSeries(padId: string, seriesId: string) {
         const res = await fetch(`/api/series?padId=${padId}&seriesId=${seriesId}`, { method: 'PATCH' })
         if (res.ok) {
@@ -117,6 +115,8 @@ export default function AuthorPadCard({ pad: padProp }: {
         }
     }
 
+
+    if (!pad) return <div>x</div>
 
     return <div ref={drag} className='w-96 relative m-3 cursor-pointer'>
         <Link href={`/user-pads/pad/${pad.id}`}>
