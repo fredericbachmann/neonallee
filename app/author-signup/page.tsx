@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth";
+import { auth } from "@/utils/auth";
 import ActionBar from "../components/app-bar";
 import { prisma } from "../db";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { BecomeAuthorForm } from "./form";
 import { redirect } from "next/navigation";
 
 export default async function page() {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) redirect('/api/auth/signin/')
 
     const isAuthor = !!await prisma.author.findUnique({

@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { auth } from "@/utils/auth";
 import { prisma } from "@/app/db";
 
 export async function POST(request: NextRequest) {
@@ -17,7 +16,7 @@ export async function POST(request: NextRequest) {
     })
     if (!padExistsAndPublished) return NextResponse.json({}, { status: 400 })
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({}, { status: 401 })
     // ------------- quite a few checks above -------------------
 
@@ -34,7 +33,7 @@ export async function POST(request: NextRequest) {
 
 
 export async function DELETE(request: NextRequest) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({}, { status: 401 })
 
     const searchParams = request.nextUrl.searchParams

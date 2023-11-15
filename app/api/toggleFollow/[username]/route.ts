@@ -1,10 +1,9 @@
 import { prisma } from "@/app/db"
-import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 
 export async function POST(_: NextRequest, { params }: { params: { username: string } }) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     if (!session) {
         return NextResponse.json({ message: 'Not logged in' }, { status: 401 })

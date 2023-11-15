@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../../auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 import { prisma } from "@/app/db"
 import { etherApiReq, getPadPermission } from "@/app/api/etherpad/etherApi"
 
 
 export async function DELETE(_: Request, { params }: { params: { padId: string } }) {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session) return NextResponse.json({}, { status: 401 })
 
   const permission = await getPadPermission(params.padId, session.user.id)

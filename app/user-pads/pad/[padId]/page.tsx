@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { PadAppBar } from "./app-bar"
 
 export default async function page({ params }: { params: { padId: string } }) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) redirect('/api/auth/signin')
 
     const pad = await prisma.pad.findUnique({

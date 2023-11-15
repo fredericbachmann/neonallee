@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const name = searchParams.get('name')
     if (!name) return NextResponse.json({ message: 'Wrong parameter format' }, { status: 400 })
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
 
     const isAuthor = !!await prisma.author.findUnique({
@@ -35,7 +35,7 @@ export async function PATCH(req: NextRequest) {
     const padId = searchParams.get('padId')
     if (!seriesId || !padId) return NextResponse.json({ message: 'Wrong parameter format' }, { status: 400 })
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
 
     const isPadAndSeriesOwner = !!await prisma.author.findFirst({

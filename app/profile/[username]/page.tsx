@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: { username: string } })
         }
     })
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     let following: boolean | undefined
 

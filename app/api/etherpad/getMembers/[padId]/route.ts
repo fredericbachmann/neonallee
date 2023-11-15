@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET(_: Request, { params }: { params: { padId: string } }) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({}, { status: 401 })
 
     const permission = await getPadPermission(params.padId, session.user.id)

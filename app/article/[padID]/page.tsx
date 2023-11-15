@@ -60,7 +60,7 @@ export default async function page({ params }: { params: { padId: string } }) {
         }
     })
 
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     const isAdmin = !!session && !!await prisma.user.findFirst({
         where: {
             id: session.user.id,

@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { auth } from "@/utils/auth";
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "../db";
 import ActionBar from "../components/app-bar";
 import { AdminTable } from "./row";
 
 export default async function Page() {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) redirect('/api/auth/signin/')
 
     const isAdmin = !!await prisma.user.findFirst({

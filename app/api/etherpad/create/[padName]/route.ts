@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../../auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 import { prisma } from "@/app/db"
 import { etherApiReq } from "@/app/api/etherpad/etherApi"
 
@@ -8,7 +7,7 @@ import { etherApiReq } from "@/app/api/etherpad/etherApi"
 export async function POST(_: NextRequest, { params }: { params: { padName: string } }) {
   const padName = params.padName ? params.padName : 'Unbenannt'
 
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session) return NextResponse.json({}, { status: 401 })
 
   const isAuthor = !!await prisma.author.findUnique({

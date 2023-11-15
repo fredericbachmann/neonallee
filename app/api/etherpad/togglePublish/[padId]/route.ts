@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "../../../auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 import { NextResponse } from "next/server"
 import { prisma } from "@/app/db"
 import { getPadPermission } from "@/app/api/etherpad/etherApi"
 
 export async function POST(_: Request, { params }: { params: { padId: string } }) {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session) return NextResponse.json({}, { status: 401 })
   
   const permission = await getPadPermission(params.padId, session.user.id)

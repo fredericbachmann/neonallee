@@ -11,7 +11,7 @@ export async function POST(_: NextRequest, { params }: {
         permission: 'READ' | 'WRITE'
     }
 }) {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
     if (!session) return NextResponse.json({}, { status: 401 })
 
     const permission = await getPadPermission(params.padId, session.user.id)
