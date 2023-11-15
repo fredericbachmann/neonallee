@@ -62,6 +62,9 @@ export default async function Page() {
       members: {
         select: {
           permission: true
+        },
+        where: {
+          authorId: session.user.id
         }
       }
     }
@@ -77,7 +80,7 @@ export default async function Page() {
 
   return (<>
     <UserPadsAppBar />
-    <PadsGrid pads={pads} series={series} padDetails={flattenedPadDetails}/>
+    <PadsGrid padsWithoutSeries={pads} series={series} pads={flattenedPadDetails}/>
   </>
   )
 }

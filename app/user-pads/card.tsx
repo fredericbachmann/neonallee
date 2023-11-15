@@ -13,58 +13,39 @@ import { useRouter } from 'next/navigation'
 type PadDetails = (Pad & {
     permission: Permission
 })
-type _Series = (Series & {   // No plural word for 'series' :(
+type _Series = (Series & {
     pads: PadsOnSeries[]
 })
 
-export const PadDetailsContext = createContext<{
-    getPad: (padId: string) => PadDetails | undefined,
-    updatePads: (changedPad: Partial<PadDetails>) => void
-}>({
-    getPad: () => { return undefined },
-    updatePads: () => { }
-}) // contains all information about the pads
-
-
-export function PadsGrid({ series, pads: padProps, padDetails }: {
+export function PadsGrid({ series, padsWithoutSeries, pads }: {
     series: _Series[],
-    pads: { id: string }[],
-    padDetails: PadDetails[]
+    padsWithoutSeries: { id: string }[],
+    pads: PadDetails[]
 }) {
-    const [pads, setPads] = useState(padDetails)
-
-    /** Updates the pad state in the root
-     * @param changedPad an object containing the id and some attributes
-     */
-    function updatePads(changedPad: Partial<PadDetails>) {
-        const index = pads.findIndex(pad => pad.id === changedPad.id)
-        const newPad = { ...pads[index], ...changedPad }
-        setPads(pads.map(pad => (pad.id === newPad.id ? newPad : pad)))
-    }
-    function getPad(padId: string) {
-        return pads.find(e => e.id === padId)
+    function getPadDetails(padId: string) {
+        const pad = pads.find(pad => pad.id === padId)
+        if (!pad) return undefined
+        return { ...pad, series: undefined }
     }
 
     return <DndProvider backend={HTML5Backend}>
-        <PadDetailsContext.Provider value={{ getPad, updatePads }}>
-            <div className="flex flex-wrap justify-center">
-                {
-                    series.map((series, index) =>
-                        <UserPadsSeries series={series} key={index} />
-                    )
-                }
-                {
-                    padProps.map((pad, index) =>
-                        <AuthorPadCard padId={pad.id} key={index} />
-                    )}
-            </div>
-        </PadDetailsContext.Provider>
+        <div className="flex flex-wrap justify-center">
+            {
+                series.map((series, index) =>
+                    <UserPadsSeries series={series} padDetails={pads} key={index} />
+                )
+            }
+            {
+                padsWithoutSeries.map((pad, index) =>
+                    <AuthorPadCard pad={getPadDetails(pad.id)} key={index} />
+                )}
+        </div>
     </DndProvider>
 }
 
 
 /** The representation of ONE series for the user-pads page */
-export function UserPadsSeries({ series }: { series: _Series }) {
+export function UserPadsSeries({ series, padDetails }: { series: _Series, padDetails: PadDetails[] }) {
     const [showModal, setShowModal] = useState(false)
 
     const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -76,6 +57,15 @@ export function UserPadsSeries({ series }: { series: _Series }) {
         }),
     }))
 
+    function getPadDetails(padId: string) {
+        const x = padDetails.find(e => e.id === padId)
+        if (!x) return undefined
+        return {
+            ...x,
+            series: series
+        }
+    }
+
     return <><button onClick={() => setShowModal(true)} ref={drop}>
         <HiFolder className='h-96 w-96' />
     </button>
@@ -84,7 +74,7 @@ export function UserPadsSeries({ series }: { series: _Series }) {
             <Modal.Header>{series.name}</Modal.Header>
             <Modal.Body className='flex flex-wrap justify-center'>
                 {series.pads.map((pad, index) =>
-                    <AuthorPadCard padId={pad.padId} key={index} />
+                    <AuthorPadCard pad={getPadDetails(pad.padId)} key={index} />
                 )}
             </Modal.Body>
         </Modal>
@@ -93,10 +83,15 @@ export function UserPadsSeries({ series }: { series: _Series }) {
 }
 
 /** representation card of ONE pad */
-export default function AuthorPadCard({ padId }: { padId: string }) {
-    const pad = useContext(PadDetailsContext).getPad(padId)
+export default function AuthorPadCard({ pad: padProp }: {
+    pad: (
+        PadDetails & {
+            series: Series | undefined
+        }) | undefined
+}) {
+    const [pad, setPad] = useState(padProp)
 
-    if (!pad) return <div></div>
+    if (!pad) return <div>x</div>
 
     const router = useRouter()
 
@@ -106,7 +101,7 @@ export default function AuthorPadCard({ padId }: { padId: string }) {
         end(item, monitor) {
             const dropResult = monitor.getDropResult<{ id: string }>()
             if (item && dropResult) {
-                moveToSeries(dropResult.id)
+                moveToSeries(pad.id, dropResult.id)
             }
         },
         collect: (monitor) => ({
@@ -115,7 +110,7 @@ export default function AuthorPadCard({ padId }: { padId: string }) {
         }),
     }))
 
-    async function moveToSeries(seriesId: string) {
+    async function moveToSeries(padId: string, seriesId: string) {
         const res = await fetch(`/api/series?padId=${padId}&seriesId=${seriesId}`, { method: 'PATCH' })
         if (res.ok) {
             router.refresh()
@@ -145,7 +140,7 @@ export default function AuthorPadCard({ padId }: { padId: string }) {
         </Link>
         {pad.permission === 'OWNER' &&
             <div className='h-7 w-7 absolute top-2 right-2'>
-                <PadSettings pad={pad} /> 
+                <PadSettings pad={pad} setPad={setPad} />
             </div>}
     </div>
 }

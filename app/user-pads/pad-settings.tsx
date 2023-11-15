@@ -5,37 +5,39 @@ import { HiCheck, HiOutlineCog } from "react-icons/hi";
 import { useContext, useState } from 'react';
 import { handleInputChange } from '@/app/user-input';
 import { signIn } from 'next-auth/react';
-import { PadsOnSeries } from '@prisma/client';
-import { PadDetailsContext } from './card';
+import { Series } from '@prisma/client';
 
+type _Pad = {
+    id: string
+    name: string
+    published: boolean
+    description: string
+    series: Series | undefined
+}
 
-export function PadSettings({ pad }: {
-    pad: {
-        id: string
-        name: string
-        published: boolean
-        description: string
-        series: PadsOnSeries | null
-    }
+export function PadSettings({ pad: padProp, setPad: setPadProp }: {
+    pad: _Pad,
+    setPad: Function | undefined
 }) {
+    const [pad, setPad] = (typeof setPadProp === 'undefined'  // if state is not managed higher
+        ? useState(padProp)  // create new one
+        : [padProp, setPadProp]  // use higher state
+    )
 
     const [showModal, setShowModal] = useState(false);
 
-    function handleGearClick(e: React.MouseEvent<SVGElement, globalThis.MouseEvent>) {
-        e.stopPropagation()
-        setShowModal(true)
-    }
-
     return <>
-        <HiOutlineCog onClick={handleGearClick} className="h-full w-full cursor-pointer rounded-full bg-white hover:bg-gray-400" />
+        <button onClick={() => setShowModal(true)} className="h-full w-full cursor-pointer" >
+            <HiOutlineCog className='h-full w-full rounded-full bg-white hover:bg-gray-400' />
+        </button>
         <Modal show={showModal} dismissible onClose={() => setShowModal(false)}>
             <Modal.Header>
                 Einstellungen
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-8">
-                    <ChangePadName pad={pad} />
-                    <PublishPad pad={pad} />
+                    <ChangePadName pad={pad} setPad={setPad} />
+                    <PublishPad pad={pad} setPad={setPad} />
                     <Delete />
                 </div>
             </Modal.Body>
@@ -43,13 +45,10 @@ export function PadSettings({ pad }: {
     </>;
 }
 
-function ChangePadName({ pad }: {
-    pad: {
-        id: string
-        name: string
-    }
+function ChangePadName({ pad, setPad }: {
+    pad: _Pad,
+    setPad: Function
 }) {
-    const { updatePads } = useContext(PadDetailsContext)
     const [showCheck, setShowCheck] = useState(false)
     const [padName, setPadName] = useState(pad.name)
     const [padNameError, setPadNameError] = useState<undefined | string>()
@@ -59,7 +58,7 @@ function ChangePadName({ pad }: {
         const res = await fetch(`/api/etherpad/changePadName?padId=${pad.id}&padName=${padName}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
         if (res.ok) {
-            updatePads({id: pad.id, name: padName})
+            setPad({ ...pad, name: padName })
             setShowCheck(false)
         }
     }
@@ -86,29 +85,23 @@ function ChangePadName({ pad }: {
 }
 
 function PadDescription({ pad }: {
-    pad: {
-        id: string
-        description: string
-    }
+    pad: _Pad
 }) {
     //TODO
 }
 
-function PublishPad({ pad }: {
-    pad: {
-        id: string
-        published: boolean
-    }
+function PublishPad({ pad, setPad }: {
+    pad: _Pad,
+    setPad: Function
 }) {
     const [published, setPublished] = useState(pad.published)
-    const { updatePads } = useContext(PadDetailsContext)
 
     async function togglePublish() {
         const res = await fetch(`/api/etherpad/togglePublish/${pad.id}`, { method: 'POST' })
         if (res.status === 401) signIn('google')
         if (res.status === 200) {
             setPublished(!published)
-            updatePads({id: pad.id, published: published})
+            setPad({ ...pad, published: published })
         }
     }
 
