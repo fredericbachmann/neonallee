@@ -19,8 +19,9 @@ export function PadSettings({ pad: padProp, setPad: setPadProp }: {
     pad: _Pad,
     setPad: Function | undefined
 }) {
+    const [state, setState] = useState(padProp)
     const [pad, setPad] = (typeof setPadProp === 'undefined'  // if state is not managed higher
-        ? useState(padProp)  // create new one
+        ? [state, setState]  // create new one
         : [padProp, setPadProp]  // use higher state
     )
 
