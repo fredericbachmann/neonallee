@@ -1,7 +1,6 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getPadPermission } from "@/app/api/etherpad/etherApi";
 import { prisma } from "@/app/db";
-import { getServerSession } from "next-auth";
+import { auth } from "@/utils/auth";
 import { NextResponse } from "next/server";
 
 export async function GET(_: Request, { params }: { params: { padId: string } }) {

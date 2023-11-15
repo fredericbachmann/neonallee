@@ -1,8 +1,7 @@
 import { prisma } from "@/app/db"
 import { notFound } from "next/navigation"
 import FollowToggle from "./FollowToggle"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 import ActionBar from "@/app/components/app-bar"
 import ReadArticleCard from "@/app/components/card"
 import Image from "next/image"

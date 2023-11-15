@@ -1,7 +1,6 @@
-import { getServerSession } from "next-auth"
+import { auth } from "@/utils/auth";
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/db"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getPadPermission } from "@/app/api/etherpad/etherApi"
 
 export async function POST(_: NextRequest, { params }: {

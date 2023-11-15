@@ -10,6 +10,12 @@ export function PadAppBar({ isOwner, pad }: {
         name: string
         published: boolean
         description: string
+        series: {
+            id: string
+            name: string
+            ownerId: string
+
+        } | undefined
     } //TODO: series
 }) {
 

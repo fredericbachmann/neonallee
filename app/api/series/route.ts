@@ -1,6 +1,5 @@
-import { getServerSession } from 'next-auth';
+import { auth } from "@/utils/auth";
 import { NextRequest, NextResponse } from 'next/server';
-import { authOptions } from '../auth/[...nextauth]/route';
 import { prisma } from '@/app/db';
 
 /** Creates a new Series */

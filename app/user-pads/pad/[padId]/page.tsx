@@ -1,7 +1,6 @@
 import { prisma } from "@/app/db"
 import { notFound, redirect } from 'next/navigation'
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { auth } from "@/utils/auth";
 import { PadAppBar } from "./app-bar"
 
 export default async function page({ params }: { params: { padId: string } }) {
@@ -13,7 +12,12 @@ export default async function page({ params }: { params: { padId: string } }) {
             id: params.padId
         },
         include: {
-            members: true
+            members: true,
+            series: {
+                select: {
+                    series: true
+                }
+            }
         }
     })
 
@@ -25,7 +29,7 @@ export default async function page({ params }: { params: { padId: string } }) {
     const isOwner = !!session && pad.members.some(member => { return member.authorId === session.user.id && member.permission === 'OWNER' })
 
     return <div className="flex flex-col h-screen">
-        <PadAppBar isOwner={isOwner} pad={pad} />
+        <PadAppBar isOwner={isOwner} pad={{ ...pad, series: pad.series ? pad.series.series : undefined }} />
         <iframe
             name="embed_readwrite"
             src={`${process.env.ETHERPAD_EXTERNAL_URL}/p/${params.padId}`}

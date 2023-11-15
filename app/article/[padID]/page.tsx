@@ -4,8 +4,7 @@ import { notFound } from "next/navigation";
 import { ArticleAuthors } from "./author";
 import { etherApiReq } from "@/app/api/etherpad/etherApi";
 import { CommentSection } from "./comment";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/utils/auth";
 
 export default async function page({ params }: { params: { padId: string } }) {
     const pad = await prisma.pad.findFirst({ // test if pad exists AND is marked as published
