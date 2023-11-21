@@ -1,20 +1,21 @@
 'use client'
-import { Card, Modal } from 'flowbite-react'
+import { Card } from 'flowbite-react'
 import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
 import { PadSettings } from './pad-settings'
 import Link from 'next/link'
-import { createContext, useContext, useState } from 'react'
+import { useState } from 'react'
 import { Pad, PadsOnSeries, Permission, Series } from '@prisma/client'
-import { HiFolder } from 'react-icons/hi'
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
+import { DndProvider, useDrag } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { useRouter } from 'next/navigation'
+import { UserPadsSeries } from './series'
 
-type PadDetails = (Pad & {
+export type PadDetails = (Pad & {
     permission: Permission
 })
-type _Series = (Series & {
-    pads: PadsOnSeries[]
+export type _Series = (Series & {
+    pads: PadsOnSeries[],
+    isOwner: boolean
 })
 
 export function PadsGrid({ series, padsWithoutSeries, pads }: {
@@ -44,50 +45,13 @@ export function PadsGrid({ series, padsWithoutSeries, pads }: {
 }
 
 
-/** The representation of ONE series for the user-pads page */
-export function UserPadsSeries({ series, padDetails }: { series: _Series, padDetails: PadDetails[] }) {
-    const [showModal, setShowModal] = useState(false)
-
-    const [{ canDrop, isOver }, drop] = useDrop(() => ({
-        accept: 'pad',
-        drop: () => ({ id: series.id }),
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
-        }),
-    }))
-
-    function getPadDetails(padId: string) {
-        const x = padDetails.find(e => e.id === padId)
-        if (!x) return undefined
-        return {
-            ...x,
-            series: series
-        }
-    }
-
-    return <><button onClick={() => setShowModal(true)} ref={drop}>
-        <HiFolder className='h-96 w-96' />
-    </button>
-
-        <Modal size='7xl' show={showModal} dismissible onClose={() => setShowModal(false)}>
-            <Modal.Header>{series.name}</Modal.Header>
-            <Modal.Body className='flex flex-wrap justify-center'>
-                {series.pads.map((pad, index) =>
-                    <AuthorPadCard pad={getPadDetails(pad.padId)} key={index} />
-                )}
-            </Modal.Body>
-        </Modal>
-
-    </>
-}
 
 /** representation card of ONE pad */
 export default function AuthorPadCard({ pad: padProp }: {
     pad: (
         PadDetails & {
             series: Series | undefined
-        }) | undefined
+        })
 }) {
     const [pad, setPad] = useState(padProp)
     const router = useRouter()

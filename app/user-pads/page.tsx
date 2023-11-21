@@ -50,7 +50,7 @@ export default async function Page() {
   )
 
 
-  const padDetails = await prisma.pad.findMany({
+  const padDetails = await prisma.pad.findMany({ // details for all pads the author has access to
     where: {
       members: {
         some: {
@@ -77,10 +77,12 @@ export default async function Page() {
       permission: item.members[0].permission // de-nest permission of current user
     }
   })
+  const seriesWithOwner = series.map((oneSeries) => {return {...oneSeries, isOwner: oneSeries.ownerId === session.user.id}})
 
+  
   return (<>
     <UserPadsAppBar />
-    <PadsGrid padsWithoutSeries={pads} series={series} pads={flattenedPadDetails}/>
+    <PadsGrid padsWithoutSeries={pads} series={seriesWithOwner} pads={flattenedPadDetails}/>
   </>
   )
 }

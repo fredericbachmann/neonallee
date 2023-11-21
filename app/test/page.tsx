@@ -1,42 +1,20 @@
-'use client'
-import { List, arrayMove } from 'react-movable';
-import { useState } from "react"
-import { Modal } from 'flowbite-react';
-import { DndProvider, useDrag } from 'react-dnd';
-import { HiMoon } from 'react-icons/hi';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+'use client';
 
-export default function Page() {
+import { ToggleSwitch } from 'flowbite-react';
+import { useState } from 'react';
 
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <Dnd />
-        </DndProvider>
-    )
-}
+export default function Component() {
+  const [switch1, setSwitch1] = useState(false);
+  const [switch2, setSwitch2] = useState(true);
+  const [switch3, setSwitch3] = useState(true);
 
-function Dnd() {
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'x',
-        end(item, monitor) {
-            console.log('end')
-            const dropResult = monitor.getDropResult<{ id: string }>()
-            if (item && dropResult) {
-                console.log('moved------------------------')
-            }
-        },
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-            handlerId: monitor.getHandlerId(),
-        }),
-    }))
-
-    return <div ref={drag} style={{
-        opacity: isDragging ? 0.5 : 1,
-        fontSize: 25,
-        fontWeight: 'bold',
-        cursor: 'move',
-      }}>
-        <HiMoon className='h-40 w-40' />
+  return (
+    <div className="flex max-w-md flex-col gap-4">
+      <ToggleSwitch checked={switch1} label="Toggle me" onChange={setSwitch1} />
+      <ToggleSwitch checked={switch2} label="Toggle me (checked)" onChange={setSwitch2} />
+      <ToggleSwitch checked={false} disabled label="Toggle me (disabled)" onChange={() => undefined} />
+      <ToggleSwitch checked={true} disabled label="Toggle me (disabled)" onChange={() => undefined} />
+      <ToggleSwitch checked={switch3} onChange={setSwitch3} label=''/>
     </div>
+  );
 }

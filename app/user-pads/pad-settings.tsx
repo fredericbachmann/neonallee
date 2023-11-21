@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 import { handleInputChange } from '@/app/user-input';
 import { signIn } from 'next-auth/react';
 import { Series } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 type _Pad = {
     id: string
@@ -39,6 +40,7 @@ export function PadSettings({ pad: padProp, setPad: setPadProp }: {
                 <div className="space-y-8">
                     <ChangePadName pad={pad} setPad={setPad} />
                     <PublishPad pad={pad} setPad={setPad} />
+                    <RemoveFromSeries pad={pad} setPad={setPad} />
                     <Delete />
                 </div>
             </Modal.Body>
@@ -89,6 +91,23 @@ function PadDescription({ pad }: {
     pad: _Pad
 }) {
     //TODO
+}
+
+function RemoveFromSeries({ pad, setPad }: { pad: _Pad, setPad: Function }) {
+    const router = useRouter()
+
+    async function handleClick() {
+        const res = await fetch(`/api/series/removePad?padId=${pad.id}`, { method: 'DELETE' })
+        if (res.ok) {
+            setPad({ ...pad, series: undefined })
+            router.refresh()
+        }
+    }
+
+    if (!pad.series) return <></>
+    return <Button onClick={handleClick} outline color={'gray'}>
+        <p>Aus der Serie "{pad.series.name}" entfernen</p>
+    </Button>
 }
 
 function PublishPad({ pad, setPad }: {

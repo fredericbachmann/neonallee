@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Success' }, { status: 200 })
 }
 
-/** Toggles wheather the pad belongs to the series */
+/** Adds a pad to the series */
 export async function PATCH(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const seriesId = searchParams.get('seriesId')
