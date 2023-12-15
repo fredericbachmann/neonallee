@@ -54,7 +54,11 @@ export function UserPadsSeries({ series }: { series: _Series }) {
         ) : (
           <Modal.Body className='flex flex-wrap justify-center'>
             {series.pads.map((pad, index) =>
-              pad.pad ? <AuthorPadCard pad={pad.pad} key={index} /> : <p key={index}>x</p>
+              pad.pad ? (
+                <AuthorPadCard pad={pad.pad} key={index} />
+              ) : (
+                <p key={index}>x</p>
+              )
             )}
           </Modal.Body>
         )}

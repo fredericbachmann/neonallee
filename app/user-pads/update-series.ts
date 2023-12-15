@@ -1,7 +1,7 @@
 'use server'
 
 import { auth } from '@/utils/auth'
-import { prisma } from '../db'
+import prisma from '../db'
 
 export async function serverEditSeries(
   seriesId: string,
