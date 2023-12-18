@@ -1,6 +1,7 @@
 import ActionBar from './components/app-bar'
 import ReadArticleCard from './components/card'
 import prisma from './db'
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const pads = await prisma.pad.findMany({
