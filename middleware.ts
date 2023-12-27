@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {
-    matcher: '/user-pads/pad/:path*'
+  matcher: '/user-pads/pad/:path*',
 }
 
 // for some reason etherpad will only work if the cookie is set...
 export function middleware() {
-    const response = NextResponse.next()
-    response.cookies.set('prefsHttp', '{}')
-    return response
+  const response = NextResponse.next()
+  response.cookies.set('prefsHttp', '{}', { sameSite: 'lax' })
+  return response
 }

@@ -1,20 +1,24 @@
-'use client';
+import ActionBar from '../components/app-bar'
+import { prisma } from '../db'
+import { Compartment } from './components'
 
-import { ToggleSwitch } from 'flowbite-react';
-import { useState } from 'react';
-
-export default function Component() {
-  const [switch1, setSwitch1] = useState(false);
-  const [switch2, setSwitch2] = useState(true);
-  const [switch3, setSwitch3] = useState(true);
+export default async function Component() {
+  const pads = await prisma.pad.findMany({
+    where: {
+      published: true,
+    },
+  })
 
   return (
-    <div className="flex max-w-md flex-col gap-4">
-      <ToggleSwitch checked={switch1} label="Toggle me" onChange={setSwitch1} />
-      <ToggleSwitch checked={switch2} label="Toggle me (checked)" onChange={setSwitch2} />
-      <ToggleSwitch checked={false} disabled label="Toggle me (disabled)" onChange={() => undefined} />
-      <ToggleSwitch checked={true} disabled label="Toggle me (disabled)" onChange={() => undefined} />
-      <ToggleSwitch checked={switch3} onChange={setSwitch3} label=''/>
-    </div>
-  );
+    <>
+      <ActionBar />
+      <div className='max-w-3xl mx-auto'>
+        <div className='grid grid-cols-3 gap-4'>
+          {pads.map((pad, i) => (
+            <Compartment index={i} pad={pad} key={i} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
 }
