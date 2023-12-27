@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server"
-import { auth } from "@/utils/auth";
-import { prisma } from "@/app/db"
-import { etherApiReq, getPadPermission } from "@/app/api/etherpad/etherApi"
+import { NextResponse } from 'next/server'
+import { auth } from '@/utils/auth'
+import prisma from '@/app/db'
+import { etherApiReq, getPadPermission } from '@/app/api/etherpad/etherApi'
 
-
-export async function DELETE(_: Request, { params }: { params: { padId: string } }) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: { padId: string } }
+) {
   const session = await auth()
   if (!session) return NextResponse.json({}, { status: 401 })
 
@@ -15,14 +17,14 @@ export async function DELETE(_: Request, { params }: { params: { padId: string }
 
   await prisma.authorsOnPads.deleteMany({
     where: {
-      padId: params.padId
-    }
+      padId: params.padId,
+    },
   })
 
   await prisma.pad.delete({
     where: {
-      id: params.padId
-    }
+      id: params.padId,
+    },
   })
 
   return NextResponse.json({}, { status: 200 })

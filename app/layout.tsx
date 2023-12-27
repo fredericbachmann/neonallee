@@ -1,10 +1,10 @@
 import './globals.css'
-import { Providers } from './providers';
+import { Providers } from './providers'
 import { Roboto_Slab } from 'next/font/google'
 
 const roboto = Roboto_Slab({
   subsets: ['latin'],
-  display: 'swap'
+  display: 'swap',
 })
 
 export const metadata = {
@@ -12,13 +12,15 @@ export const metadata = {
   description: '',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="de" className={roboto.className}>
+    <html lang='de' className={roboto.className}>
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
