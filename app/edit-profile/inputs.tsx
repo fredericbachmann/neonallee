@@ -5,7 +5,7 @@ import { Alert, Button, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { HiCheck, HiPencil } from 'react-icons/hi'
-import { checkInput, handleInputChange } from '../user-input'
+import { checkInput, handleInputChange } from '../../utils/user-input'
 
 type Names = 'name' | 'city' | 'email' | 'username' | 'artistname' | 'about'
 

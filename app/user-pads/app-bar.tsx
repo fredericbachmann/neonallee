@@ -10,7 +10,7 @@ import {
   HiPlus,
   HiSquare2Stack,
 } from 'react-icons/hi2'
-import { handleInputChange } from '../user-input'
+import { handleInputChange } from '../../utils/user-input'
 import { List, arrayMove } from 'react-movable'
 
 /** The app bar for the user-pads page */

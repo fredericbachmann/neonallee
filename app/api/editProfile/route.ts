@@ -1,7 +1,7 @@
 import { auth } from '@/utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/app/db'
-import { checkInput } from '@/app/user-input'
+import prisma from '@/utils/db'
+import { checkInput } from '@/utils/user-input'
 
 export async function POST(request: NextRequest) {
   const session = await auth()

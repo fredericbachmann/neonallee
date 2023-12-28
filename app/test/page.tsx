@@ -1,6 +1,6 @@
 import ActionBar from '../components/app-bar'
 import { Compartment } from './components'
-import prisma from '../db'
+import prisma from '../../utils/db'
 
 export default async function Component() {
   const pads = await prisma.pad.findMany({

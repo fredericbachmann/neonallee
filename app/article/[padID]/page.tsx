@@ -1,4 +1,4 @@
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 import ActionBar from '../../components/app-bar'
 import { notFound } from 'next/navigation'
 import { ArticleAuthors } from './author'

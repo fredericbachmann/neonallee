@@ -1,6 +1,6 @@
 import { auth } from '@/utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 
 /** Creates a new Series */
 export async function POST(request: NextRequest) {

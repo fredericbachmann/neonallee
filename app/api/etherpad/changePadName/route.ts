@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/utils/auth'
-import prisma from '@/app/db'
-import { checkInput } from '@/app/user-input'
+import prisma from '@/utils/db'
+import { checkInput } from '@/utils/user-input'
 import { getPadPermission } from '../etherApi'
 
 export async function POST(request: NextRequest) {

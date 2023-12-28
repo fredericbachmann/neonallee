@@ -1,4 +1,4 @@
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 import { auth } from '@/utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
 

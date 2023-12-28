@@ -1,4 +1,4 @@
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 import { notFound } from 'next/navigation'
 import FollowToggle from './FollowToggle'
 import { auth } from '@/utils/auth'

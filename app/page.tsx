@@ -1,6 +1,6 @@
 import ActionBar from './components/app-bar'
 import ReadArticleCard from './components/card'
-import prisma from './db'
+import prisma from '../utils/db'
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {

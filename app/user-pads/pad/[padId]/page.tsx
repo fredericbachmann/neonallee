@@ -1,4 +1,4 @@
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/utils/auth'
 import { PadAppBar } from './app-bar'

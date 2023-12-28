@@ -1,6 +1,6 @@
 import { auth } from '@/utils/auth'
 import { notFound, redirect } from 'next/navigation'
-import prisma from '../db'
+import prisma from '../../utils/db'
 import ActionBar from '../components/app-bar'
 import { AdminTable } from './row'
 

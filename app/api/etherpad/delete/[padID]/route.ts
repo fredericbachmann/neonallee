@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/utils/auth'
-import prisma from '@/app/db'
+import prisma from '@/utils/db'
 import { etherApiReq, getPadPermission } from '@/app/api/etherpad/etherApi'
 
 export async function DELETE(

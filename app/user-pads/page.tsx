@@ -1,7 +1,7 @@
 import { auth } from '@/utils/auth'
 import UserPadsAppBar from './app-bar'
 import { PadsGrid } from './card'
-import prisma from '../db'
+import prisma from '../../utils/db'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {

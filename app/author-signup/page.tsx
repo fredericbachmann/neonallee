@@ -1,6 +1,6 @@
 import { auth } from '@/utils/auth'
 import ActionBar from '../components/app-bar'
-import prisma from '../db'
+import prisma from '../../utils/db'
 import { BecomeAuthorForm } from './form'
 import { redirect } from 'next/navigation'
 

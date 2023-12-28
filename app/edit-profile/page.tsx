@@ -1,5 +1,5 @@
 import { auth } from '@/utils/auth'
-import prisma from '../db'
+import prisma from '../../utils/db'
 import ActionBar from '../components/app-bar'
 import { ProfileCustomization } from './inputs'
 import { redirect } from 'next/navigation'
