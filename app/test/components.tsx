@@ -1,40 +1,46 @@
 'use client'
 import { Pad } from '@prisma/client'
-import { Card } from 'flowbite-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
 export function Compartment({ index, pad }: { index: number; pad: Pad }) {
-  const rand = Math.random() < 0.5
-  const [showDescription, setShowDescription] = useState(false)
+  const [expanded, setExpanded] = useState(false)
 
   return (
     <button
       onClick={() => {
-        setShowDescription(!showDescription)
+        if (expanded) alert('Weiterleiten zum Text')
+        else setExpanded(!expanded)
       }}
-      className={`${showDescription ? 'h-96 row-span-2' : 'h-48'}`}
+      className={`${expanded && 'row-span-2'} flex flex-col align-top`}
     >
-      <Expanded pad={pad} />
+      <Card pad={pad} index={index} expanded={expanded} />
     </button>
   )
 }
 
-function Description({ pad }: { pad: Pad }) {
-  return <p>{pad.name}</p>
-}
+function Card({
+  pad,
+  index,
+  expanded,
+}: {
+  pad: Pad
+  index: number
+  expanded: boolean
+}) {
+  const imageHeight = expanded ? 300 : 150
 
-function Expanded({ pad }: { pad: Pad }) {
   return (
-    <div className='w-full h-full'>
+    <div>
       <Image
         alt=''
-        src={`https://picsum.photos/200/100?${pad.id}`}
-        width={200}
-        height={100}
+        src={`https://picsum.photos/300/${imageHeight}?${index}`}
+        width={300}
+        height={imageHeight}
         className='rounded-lg'
       />
-      <p className=''>{pad.name}</p>
+      <p className='text-xl'>{pad.name}</p>
+      {expanded && <p className='text-slate-700'>{pad.description}</p>}
     </div>
   )
 }
