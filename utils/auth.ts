@@ -3,6 +3,10 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { AuthOptions, getServerSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
+const useSecureCookies = process.env.NEXTAUTH_URL!.startsWith('https://')
+const cookiePrefix = useSecureCookies ? '__Secure-' : ''
+const hostName = new URL(process.env.NEXTAUTH_URL!).hostname
+
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -15,6 +19,18 @@ export const authOptions: AuthOptions = {
     async session({ session, token, user }) {
       session.user.id = user.id
       return session
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+        domain: hostName == 'localhost' ? hostName : '.' + hostName, // add a . in front so that subdomains are included
+      },
     },
   },
 }

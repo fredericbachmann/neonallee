@@ -46,7 +46,7 @@ export function PadSettings({
             <ChangePadName pad={pad} setPad={setPad} />
             <PublishPad pad={pad} setPad={setPad} />
             <RemoveFromSeries pad={pad} setPad={setPad} />
-            <Delete />
+            <Delete _padId={pad.id} />
           </div>
         </Modal.Body>
       </Modal>

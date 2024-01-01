@@ -3,10 +3,9 @@ import { signIn } from 'next-auth/react'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
-import { MdDelete } from 'react-icons/md'
 
-export default function Delete() {
-  const { padId }: { padId: string } = useParams()
+export default function Delete({ _padId }: { _padId?: string }) {
+  const padId = useParams().padId || _padId
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
 
