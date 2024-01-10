@@ -1,5 +1,5 @@
 import prisma from '@/utils/db'
-import { PrismaAdapter } from '@auth/prisma-adapter'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { AuthOptions, getServerSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
@@ -8,6 +8,7 @@ const cookiePrefix = useSecureCookies ? '__Secure-' : ''
 const hostName = new URL(process.env.NEXTAUTH_URL!).hostname
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
