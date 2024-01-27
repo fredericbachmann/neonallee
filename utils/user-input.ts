@@ -108,7 +108,7 @@ function checkPadName(value: string) {
       valid: false,
       message: 'Maximal 20 Buchstaben',
     }
-  else if (!value.match('^[a-zA-Z0-9 ]*$'))
+  else if (!value.match('^[a-zA-Z0-9 öÖüÜäÄß]*$'))
     return {
       valid: false,
       message: 'Keine Sonderzeichen erlaubt.',
