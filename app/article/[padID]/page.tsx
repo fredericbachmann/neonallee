@@ -72,6 +72,11 @@ export default async function page({ params }: { params: { padId: string } }) {
         select: {
           name: true,
           image: true,
+          author: {
+            select: {
+              username: true,
+            },
+          },
         },
       },
     },

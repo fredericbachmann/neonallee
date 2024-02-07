@@ -3,29 +3,35 @@
 import { Button, TextInput } from 'flowbite-react'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { HiOutlineTrash } from 'react-icons/hi'
 import { HiPaperAirplane, HiTrash } from 'react-icons/hi2'
+
+type Comment = {
+  text: string
+  id: string
+  userId: string
+  createdAt: Date
+  user: {
+    name: string | null
+    image: string | null
+    author: {
+      username: string
+    } | null
+  }
+}
 
 export function CommentSection({
   isAdmin,
   commentsProp,
 }: {
   isAdmin: boolean
-  commentsProp: {
-    text: string
-    id: string
-    userId: string
-    createdAt: Date
-    user: {
-      name: string | null
-      image: string | null
-    }
-  }[]
+  commentsProp: Comment[]
 }) {
   const { data: session, status } = useSession()
-  const [comments, setComments] = useState(commentsProp)
+  const [comments, setComments] = useState(commentsProp) // use state so it can be altered without reload
 
   function removeComment(commentId: string) {
     setComments(comments.filter((el) => el.id !== commentId))
@@ -59,7 +65,7 @@ export function CommentSection({
   )
 }
 
-export function WriteComment() {
+function WriteComment() {
   const params = useParams()
   const commentRef = useRef<HTMLInputElement>(null)
 
@@ -88,7 +94,7 @@ export function WriteComment() {
   )
 }
 
-export function LoginForComment() {
+function LoginForComment() {
   return (
     <Button
       outline
@@ -100,17 +106,18 @@ export function LoginForComment() {
   )
 }
 
-export function Comment({
+function Comment({
   comment,
   showDelete,
   removeComment,
 }: {
-  comment: any
+  comment: Comment
   showDelete: boolean
   removeComment: Function
 }) {
   const [hover, setHover] = useState(false)
   const [hoverTrash, setHoverTrash] = useState(false)
+  const router = useRouter()
 
   const options = {
     year: '2-digit',
@@ -118,7 +125,7 @@ export function Comment({
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  }
+  } as const
 
   async function deleteComment() {
     const res = await fetch(`/api/comment?commentId=${comment.id}`, {
@@ -135,14 +142,22 @@ export function Comment({
     >
       <div className='flex flex-col flex-1'>
         <div className='flex space-x-1 items-center'>
-          <Image
-            src={comment.user.image!}
-            alt='Image of the writer of the comment'
-            width={30}
-            height={30}
-            className='rounded-full'
-          />
-          <p className='text-slate-950'>{comment.user.name}</p>
+          <button
+            className='flex space-x-1 items-center'
+            onClick={() =>
+              comment.user.author &&
+              router.push(`/profile/${comment.user.author.username}`)
+            }
+          >
+            <Image
+              src={comment.user.image!}
+              alt='Image of the writer of the comment'
+              width={30}
+              height={30}
+              className='rounded-full'
+            />
+            <p className='text-slate-950'>{comment.user.name}</p>
+          </button>
           <p className='text-slate-500 text-sm'>
             {comment.createdAt.toLocaleString('de-DE', options)}
           </p>
