@@ -1,6 +1,6 @@
 import { getPadPermission } from '@/app/api/etherpad/etherApi'
-import prisma from '@/utils/db'
-import { auth } from '@/utils/auth'
+import prisma from '@/app/_utils/db'
+import { auth } from '@/app/_utils/auth'
 import { NextResponse } from 'next/server'
 
 export async function GET(

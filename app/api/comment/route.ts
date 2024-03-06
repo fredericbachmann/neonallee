@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/utils/auth'
-import prisma from '@/utils/db'
+import { auth } from '@/app/_utils/auth'
+import prisma from '@/app/_utils/db'
 
 export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams

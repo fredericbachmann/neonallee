@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/utils/auth'
-import prisma from '@/utils/db'
-import { checkInput } from '@/utils/user-input'
+import { auth } from '@/app/_utils/auth'
+import prisma from '@/app/_utils/db'
+import { checkInput } from '@/app/_utils/user-input'
 
 export async function POST(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams

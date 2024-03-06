@@ -1,5 +1,5 @@
-import prisma from '@/utils/db'
-import { auth } from '@/utils/auth'
+import prisma from '@/app/_utils/db'
+import { auth } from '@/app/_utils/auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(req: NextRequest) {

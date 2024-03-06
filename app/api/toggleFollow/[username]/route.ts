@@ -1,6 +1,6 @@
-import prisma from '@/utils/db'
+import prisma from '@/app/_utils/db'
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/utils/auth'
+import { auth } from '@/app/_utils/auth'
 
 export async function POST(
   _: NextRequest,

@@ -1,4 +1,4 @@
-import prisma from '../../../utils/db'
+import prisma from '@/app/_utils/db'
 
 export async function etherApiReq(method: string, params: string) {
   const url = `${process.env.ETHERPAD_URL}/api/1.2.15/${method}?apikey=${process.env.ETHERPAD_API_KEY}&${params}`
