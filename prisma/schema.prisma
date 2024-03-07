@@ -11,54 +11,6 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
-model Pad {
-  id          String          @id @default(cuid())
-  name        String
-  members     AuthorsOnPads[]
-  published   Boolean         @default(false)
-  comments    Comment[]
-  description String          @default("")
-  series      PadsOnSeries?
-}
-
-model Comment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  text      String
-  pad       Pad      @relation(fields: [padId], references: [id])
-  padId     String
-}
-
-model PadsOnSeries {
-  pad           Pad    @relation(fields: [padId], references: [id])
-  padId         String @unique
-  series        Series @relation(fields: [seriesId], references: [id])
-  seriesId      String
-  indexInSeries Int
-
-  @@id([seriesId, indexInSeries])
-}
-
-model Series {
-  id      String         @id @default(cuid())
-  name    String
-  pads    PadsOnSeries[]
-  owner   Author         @relation(fields: [ownerId], references: [id])
-  ownerId String
-}
-
-model AuthorsOnPads {
-  author     Author     @relation(fields: [authorId], references: [id])
-  authorId   String
-  pad        Pad        @relation(fields: [padId], references: [id])
-  padId      String
-  permission Permission @default(READ)
-
-  @@id([authorId, padId])
-}
-
 enum Role {
   USER
   ADMIN
@@ -70,8 +22,56 @@ enum Permission {
   OWNER
 }
 
+model Pad {
+  id          String          @id @default(cuid())
+  name        String
+  members     AuthorsOnPads[]
+  published   Boolean         @default(false)
+  comments    Comment[]
+  description String          @default("")
+  series      PadsOnSeries?
+}
+
+model PadsOnSeries {
+  pad           Pad    @relation(fields: [padId], references: [id], onDelete: Cascade)
+  padId         String @unique
+  series        Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  seriesId      String
+  indexInSeries Int
+
+  @@id([seriesId, indexInSeries])
+}
+
+model Series {
+  id      String         @id @default(cuid())
+  name    String
+  pads    PadsOnSeries[]
+  owner   Author         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  text      String
+  pad       Pad      @relation(fields: [padId], references: [id], onDelete: Cascade)
+  padId     String
+}
+
+model AuthorsOnPads {
+  author     Author     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  pad        Pad        @relation(fields: [padId], references: [id], onDelete: Cascade)
+  padId      String
+  permission Permission @default(READ)
+
+  @@id([authorId, padId])
+}
+
 model Author {
-  user        User            @relation(fields: [id], references: [id], name: "user")
+  user        User            @relation(fields: [id], references: [id], name: "user", onDelete: Cascade)
   id          String          @id
   username    String          @unique
   artistname  String
