@@ -1,6 +1,6 @@
 import { authOrRedirect } from '@/app/_utils/auth'
-import UserPadsAppBar from './app-bar'
-import { PadsGrid } from './card'
+import UserPadsAppBar from './_components/app-bar'
+import { PadsGrid } from './_components/grid/top-level-dnd'
 import prisma from '@/app/_utils/db'
 import { redirect } from 'next/navigation'
 

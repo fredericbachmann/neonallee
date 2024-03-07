@@ -1,7 +1,7 @@
 'use client'
 import ActionBar from '@/app/_components/app-bar'
 import Members from './members'
-import { PadSettings } from '../../_components/pad-settings/pad-settings'
+import { PadSettings } from '../../../_components/pad-settings/pad-settings'
 
 export function PadAppBar({
   isOwner,

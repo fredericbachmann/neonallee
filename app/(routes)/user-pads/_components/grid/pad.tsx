@@ -1,60 +1,24 @@
 'use client'
 import { Card } from 'flowbite-react'
 import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
-import { PadSettings } from './_components/pad-settings/pad-settings'
+import { PadSettings } from '../pad-settings/pad-settings'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Pad, Permission, Series } from '@prisma/client'
-import { DndProvider, useDrag } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Series } from '@prisma/client'
+import { useDrag } from 'react-dnd'
 import { useRouter } from 'next/navigation'
-import { UserPadsSeries } from './series'
+import { PadWithPermission } from './top-level-dnd'
 
-export type PadWithPermission = Pad & {
-  members: {
-    permission: Permission
-  }[]
-}
-
-export type _Series = Series & {
-  pads: {
-    indexInSeries: number
-    pad?: PadWithPermission
-  }[]
-  isOwner: boolean
-}
-
-export function PadsGrid({
-  series,
-  pads,
-}: {
-  series: _Series[]
-  pads: PadWithPermission[]
-}) {
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div className='flex flex-wrap justify-center'>
-        {series.map((series, index) => (
-          <UserPadsSeries series={series} key={index} />
-        ))}
-        {pads.map((pad, index) => (
-          <AuthorPadCard pad={pad} key={index} />
-        ))}
-      </div>
-    </DndProvider>
-  )
-}
-
-/** representation card of ONE pad */
-export function AuthorPadCard({
+/** representation card of ONE pad for user-pads */
+export function UserPadsPad({
   pad: padProp,
   series,
 }: {
   pad: PadWithPermission
   series?: Series
 }) {
-  const [pad, setPad] = useState(padProp)
   const router = useRouter()
+  const [pad, setPad] = useState(padProp)
   const permission = pad.members[0].permission
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -91,10 +55,7 @@ export function AuthorPadCard({
               {pad.name}
             </p>
           </div>
-          <p className='text-gray-700'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-            bibendum venenatis tincidunt..
-          </p>
+          <p className='text-gray-700'>{pad.description}</p>
         </Card>
         <div className='absolute top-1 left-1 flex place-items-center p-1 space-x-1 rounded-md bg-green-500'>
           {

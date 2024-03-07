@@ -1,5 +1,4 @@
 import ActionBar from '@/app/_components/app-bar'
-import { Compartment } from './components'
 
 export default async function Component() {
   const pad = {
@@ -14,12 +13,14 @@ export default async function Component() {
   return (
     <>
       <ActionBar />
-      <div className='max-w-4xl mx-auto m-5'>
-        <div className='grid grid-cols-3 gap-8'>
-          {pads.map((pad, i) => (
-            <Compartment index={i} pad={pad} key={i} />
-          ))}
-        </div>
+      <div className='grid grid-cols-3 gap-8'>
+        {pads.map((_, i) => (
+          <img
+            src='https://picsum.photos/400/200'
+            key={i}
+            className='min-w-80 max-w-lg w-full'
+          />
+        ))}
       </div>
     </>
   )

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { AuthorPadCard, _Series } from './card'
+import { UserPadsPad } from './pad'
+import { _Series } from './top-level-dnd'
 import { useDrop } from 'react-dnd'
 import { HiFolder, HiOutlineXCircle } from 'react-icons/hi2'
 import { Button, Modal } from 'flowbite-react'
 import { List, arrayMove } from 'react-movable'
-import { serverEditSeries } from './update-series'
+import { serverEditSeries } from '../../update-series'
 
 /** The representation of ONE series for the user-pads page */
 export function UserPadsSeries({ series }: { series: _Series }) {
@@ -55,7 +56,7 @@ export function UserPadsSeries({ series }: { series: _Series }) {
           <Modal.Body className='flex flex-wrap justify-center'>
             {series.pads.map((pad, index) =>
               pad.pad ? (
-                <AuthorPadCard pad={pad.pad} key={index} />
+                <UserPadsPad pad={pad.pad} key={index} />
               ) : (
                 <p key={index}>x</p>
               )

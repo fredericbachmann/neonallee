@@ -1,7 +1,7 @@
 import prisma from '@/app/_utils/db'
 import { notFound, redirect } from 'next/navigation'
 import { authOrRedirect } from '@/app/_utils/auth'
-import { PadAppBar } from './app-bar'
+import { PadAppBar } from './_components/app-bar'
 
 export default async function page({ params }: { params: { padId: string } }) {
   const session = await authOrRedirect()
