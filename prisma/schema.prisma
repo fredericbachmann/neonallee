@@ -22,6 +22,8 @@ enum Permission {
   OWNER
 }
 
+// ------------------------- Pads and related Stuff ----------------------------
+
 model Pad {
   id          String          @id @default(cuid())
   name        String
@@ -30,6 +32,13 @@ model Pad {
   comments    Comment[]
   description String          @default("")
   series      PadsOnSeries?
+  tags        Tag[]
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String
+  pads Pad[]
 }
 
 model PadsOnSeries {
@@ -59,6 +68,8 @@ model Comment {
   pad       Pad      @relation(fields: [padId], references: [id], onDelete: Cascade)
   padId     String
 }
+
+// ----------------------------------------------------------------------
 
 model AuthorsOnPads {
   author     Author     @relation(fields: [authorId], references: [id], onDelete: Cascade)

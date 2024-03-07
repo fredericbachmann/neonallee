@@ -3,10 +3,11 @@ import Delete from './delete'
 import { Modal } from 'flowbite-react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { useState } from 'react'
-import { ChangePadName } from './change-name'
+import { ChangePadName } from './name'
 import { PublishPad } from './publish'
 import { RemoveFromSeries } from './remove-from-series'
 import { _Pad } from '../grid/top-level-dnd'
+import { ShowTags } from './tags'
 
 export function PadSettings({
   pad: padProp,
@@ -35,6 +36,7 @@ export function PadSettings({
         <Modal.Body>
           <div className='space-y-8'>
             <ChangePadName pad={pad} setPad={setPad} />
+            <ShowTags pad={pad} setPad={setPad} />
             <PublishPad pad={pad} setPad={setPad} />
             {pad.seriesName && (
               <RemoveFromSeries padId={pad.id} seriesName={pad.seriesName} />

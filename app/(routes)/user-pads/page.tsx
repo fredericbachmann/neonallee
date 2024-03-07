@@ -13,6 +13,19 @@ export default async function Page() {
   }))
   if (!isAuthor) redirect('/author-signup') // ... if not, redirect to author sign-up
 
+  const padInclude = {
+    // includes attributes required for _Pad type
+    members: {
+      select: {
+        permission: true,
+      },
+      where: {
+        authorId: session.user.id,
+      },
+    },
+    tags: true,
+  }
+
   // every pad that is not in a series
   const pads = await prisma.pad.findMany({
     where: {
@@ -21,16 +34,7 @@ export default async function Page() {
       },
       series: null,
     },
-    include: {
-      members: {
-        select: {
-          permission: true,
-        },
-        where: {
-          authorId: session.user.id,
-        },
-      },
-    },
+    include: padInclude,
   })
 
   // every series the author has access to
@@ -49,14 +53,7 @@ export default async function Page() {
       pads: {
         select: {
           indexInSeries: true,
-          pad: {
-            include: {
-              members: {
-                select: { permission: true },
-                where: { authorId: session.user.id },
-              },
-            },
-          },
+          pad: { include: padInclude },
         },
         where: {
           pad: { members: { some: { authorId: session.user.id } } },
