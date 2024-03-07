@@ -34,7 +34,7 @@ export default async function Page() {
   })
 
   // every series the author has access to
-  const series = await prisma.series.findMany({
+  const serieses = await prisma.series.findMany({
     where: {
       OR: [
         {
@@ -42,9 +42,7 @@ export default async function Page() {
             some: { pad: { members: { some: { authorId: session.user.id } } } },
           },
         },
-        {
-          ownerId: session.user.id,
-        },
+        { ownerId: session.user.id },
       ],
     },
     include: {
@@ -54,20 +52,14 @@ export default async function Page() {
           pad: {
             include: {
               members: {
-                select: {
-                  permission: true,
-                },
-                where: {
-                  authorId: session.user.id,
-                },
+                select: { permission: true },
+                where: { authorId: session.user.id },
               },
             },
           },
         },
         where: {
-          pad: {
-            members: { some: { authorId: session.user.id } },
-          },
+          pad: { members: { some: { authorId: session.user.id } } },
         },
         orderBy: {
           indexInSeries: 'asc',
@@ -76,7 +68,7 @@ export default async function Page() {
     },
   })
 
-  const seriesWithOwner = series.map((oneSeries) => {
+  const seriesWithOwnerAttribute = serieses.map((oneSeries) => {
     return {
       ...oneSeries,
       isOwner: oneSeries.ownerId === session.user.id,
@@ -86,7 +78,7 @@ export default async function Page() {
   return (
     <>
       <UserPadsAppBar />
-      <PadsGrid series={seriesWithOwner} pads={pads} />
+      <PadsGrid series={seriesWithOwnerAttribute} pads={pads} />
     </>
   )
 }

@@ -6,16 +6,17 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { UserPadsSeries } from './series'
 import { Pad, Permission, Series } from '@prisma/client'
 
-export type PadWithPermission = Pad & {
+export type _Pad = Pad & {
   members: {
     permission: Permission
   }[]
+  seriesName?: string
 }
 
 export type _Series = Series & {
   pads: {
     indexInSeries: number
-    pad?: PadWithPermission
+    pad?: _Pad
   }[]
   isOwner: boolean
 }
@@ -25,7 +26,7 @@ export function PadsGrid({
   pads,
 }: {
   series: _Series[]
-  pads: PadWithPermission[]
+  pads: _Pad[]
 }) {
   return (
     <DndProvider backend={HTML5Backend}>

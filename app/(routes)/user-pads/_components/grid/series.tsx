@@ -56,7 +56,10 @@ export function UserPadsSeries({ series }: { series: _Series }) {
           <Modal.Body className='flex flex-wrap justify-center'>
             {series.pads.map((pad, index) =>
               pad.pad ? (
-                <UserPadsPad pad={pad.pad} key={index} />
+                <UserPadsPad
+                  pad={{ ...pad.pad, seriesName: series.name }}
+                  key={index}
+                />
               ) : (
                 <p key={index}>x</p>
               )
@@ -92,7 +95,6 @@ function EditSeries({
           renderList={({ children, props }) => <div {...props}>{children}</div>}
           renderItem={({ value, props, index }) => (
             <div className='flex items-center m-2' key={index}>
-              {' '}
               {/* TODO: change the format to a grid with static displayed indexes */}
               <p className='text-xl w-8'>
                 {typeof index !== 'undefined' && index + 1}

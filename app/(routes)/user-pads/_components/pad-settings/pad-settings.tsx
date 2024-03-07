@@ -3,18 +3,10 @@ import Delete from './delete'
 import { Modal } from 'flowbite-react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { useState } from 'react'
-import { Series } from '@prisma/client'
 import { ChangePadName } from './change-name'
 import { PublishPad } from './publish'
 import { RemoveFromSeries } from './remove-from-series'
-
-export type _Pad = {
-  id: string
-  name: string
-  published: boolean
-  description: string
-  series?: Series
-}
+import { _Pad } from '../grid/top-level-dnd'
 
 export function PadSettings({
   pad: padProp,
@@ -23,10 +15,9 @@ export function PadSettings({
   pad: _Pad
   setPad?: Function
 }) {
-  const [state, setState] = useState(padProp)
   const [pad, setPad] =
     typeof setPadProp === 'undefined' // if state is not managed higher
-      ? [state, setState] // create new one
+      ? useState(padProp) // create new one
       : [padProp, setPadProp] // use higher state
 
   const [showModal, setShowModal] = useState(false)
@@ -45,7 +36,9 @@ export function PadSettings({
           <div className='space-y-8'>
             <ChangePadName pad={pad} setPad={setPad} />
             <PublishPad pad={pad} setPad={setPad} />
-            <RemoveFromSeries pad={pad} setPad={setPad} />
+            {pad.seriesName && (
+              <RemoveFromSeries padId={pad.id} seriesName={pad.seriesName} />
+            )}
             <Delete _padId={pad.id} />
           </div>
         </Modal.Body>

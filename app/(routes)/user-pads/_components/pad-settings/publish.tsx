@@ -2,7 +2,7 @@
 import { ToggleSwitch } from 'flowbite-react'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { _Pad } from './pad-settings'
+import { _Pad } from '../grid/top-level-dnd'
 
 export function PublishPad({ pad, setPad }: { pad: _Pad; setPad: Function }) {
   const [published, setPublished] = useState(pad.published)

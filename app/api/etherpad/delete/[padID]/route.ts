@@ -13,7 +13,13 @@ export async function DELETE(
   const permission = await getPadPermission(params.padId, session.user.id)
   if (permission !== 'OWNER') return NextResponse.json({}, { status: 403 })
 
-  await etherApiReq('deletePad', `padID=${params.padId}`)
+  try {
+    await etherApiReq('deletePad', `padID=${params.padId}`)
+  } catch (err) {
+    // if for some reason the pad doesn't exist on etherpad
+    if (!(err instanceof Error && err.cause === 'padID does not exist'))
+      throw err
+  }
 
   await prisma.authorsOnPads.deleteMany({
     where: {

@@ -3,10 +3,11 @@ import prisma from '@/app/_utils/db'
 export async function etherApiReq(method: string, params: string) {
   const url = `${process.env.ETHERPAD_URL}/api/1.2.15/${method}?apikey=${process.env.ETHERPAD_API_KEY}&${params}`
   const res = await fetch(url, { cache: 'no-cache' })
-  if (!res.ok)
-    throw new Error(`Failed to fetch data, response: ${JSON.stringify(res)}
-  Request URL was: ${url}
-  `)
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch data, at ${url}, response:${JSON.stringify(res)}`
+    )
+  }
 
   const json: {
     code: number
@@ -15,9 +16,9 @@ export async function etherApiReq(method: string, params: string) {
   } = await res.json()
 
   if (json.code != 0)
-    throw new Error(
-      `Failed to fetch data at URL ${url}, response: ${JSON.stringify(json)}`
-    )
+    throw new Error(`Failed to fetch data at URL ${url}`, {
+      cause: json.message,
+    })
 
   return json.data
 }

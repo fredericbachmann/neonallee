@@ -4,9 +4,15 @@ import { HiCheck } from 'react-icons/hi'
 import { useState } from 'react'
 import { handleInputChange } from '@/app/_utils/user-input'
 import { signIn } from 'next-auth/react'
-import { Pad } from '@prisma/client'
+import { _Pad } from '../grid/top-level-dnd'
 
-export function ChangePadName({ pad, setPad }: { pad: Pad; setPad: Function }) {
+export function ChangePadName({
+  pad,
+  setPad,
+}: {
+  pad: _Pad
+  setPad: Function
+}) {
   const [showCheck, setShowCheck] = useState(false)
   const [padName, setPadName] = useState(pad.name)
   const [padNameError, setPadNameError] = useState<undefined | string>()

@@ -1,6 +1,7 @@
 'use client'
-import { _Pad } from './pad-settings'
 
-function PadDescription({ pad }: { pad: _Pad }) {
+import { Pad } from '@prisma/client'
+
+function PadDescription({ pad }: { pad: Pad }) {
   //TODO
 }

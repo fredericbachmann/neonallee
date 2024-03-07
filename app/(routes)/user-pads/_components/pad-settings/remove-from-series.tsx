@@ -1,31 +1,29 @@
 'use client'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/navigation'
-import { _Pad } from './pad-settings'
+import { _Pad } from '../grid/top-level-dnd'
 
 export function RemoveFromSeries({
-  pad,
-  setPad,
+  padId,
+  seriesName,
 }: {
-  pad: _Pad
-  setPad: Function
+  padId: string
+  seriesName: string
 }) {
   const router = useRouter()
 
   async function handleClick() {
-    const res = await fetch(`/api/series/removePad?padId=${pad.id}`, {
+    const res = await fetch(`/api/series/removePad?padId=${padId}`, {
       method: 'DELETE',
     })
     if (res.ok) {
-      setPad({ ...pad, series: undefined })
       router.refresh()
     }
   }
 
-  if (!pad.series) return <></>
   return (
     <Button onClick={handleClick} outline color={'gray'}>
-      <p>Aus der Serie {pad.series.name} entfernen</p>
+      <p>Aus der Serie {seriesName} entfernen</p>
     </Button>
   )
 }

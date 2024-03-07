@@ -4,19 +4,12 @@ import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
 import { PadSettings } from '../pad-settings/pad-settings'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Series } from '@prisma/client'
 import { useDrag } from 'react-dnd'
 import { useRouter } from 'next/navigation'
-import { PadWithPermission } from './top-level-dnd'
+import { _Pad } from './top-level-dnd'
 
 /** representation card of ONE pad for user-pads */
-export function UserPadsPad({
-  pad: padProp,
-  series,
-}: {
-  pad: PadWithPermission
-  series?: Series
-}) {
+export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
   const router = useRouter()
   const [pad, setPad] = useState(padProp)
   const permission = pad.members[0].permission
@@ -84,7 +77,10 @@ export function UserPadsPad({
       </Link>
       {permission === 'OWNER' && (
         <div className='h-7 w-7 absolute top-2 right-2'>
-          <PadSettings pad={{ ...pad, series: series }} setPad={setPad} />
+          <PadSettings
+            pad={{ ...pad, seriesName: pad.seriesName }}
+            setPad={setPad}
+          />
         </div>
       )}
     </div>
