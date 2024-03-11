@@ -1,5 +1,6 @@
-import { Button } from 'flowbite-react'
+import { Button, ListGroup } from 'flowbite-react'
 import { _Pad } from '../grid/top-level-dnd'
+import { Tag } from '@prisma/client'
 
 export function ShowTags({ pad, setPad }: { pad: _Pad; setPad: Function }) {
   return (
@@ -9,10 +10,26 @@ export function ShowTags({ pad, setPad }: { pad: _Pad; setPad: Function }) {
         {pad.tags.map((tag) => (
           <p>{tag.name}</p>
         ))}
-        <button>+</button>
       </div>
     </div>
   )
 }
 
-function EditTags({ pad, setPad }: { pad: _Pad; setPad: Function }) {}
+function EditTags({
+  pad,
+  setPad,
+  tags,
+}: {
+  pad: _Pad
+  setPad: Function
+  tags: Tag[]
+}) {
+  const tagList = (
+    <ListGroup>
+      {tags.map((tag) => (
+        <ListGroup.Item>{tag.name}</ListGroup.Item>
+      ))}
+    </ListGroup>
+  )
+  return
+}
