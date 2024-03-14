@@ -16,7 +16,7 @@ export function Profile({
 }) {
   return (
     <div className='flex flex-col space-y-8 max-w-3xl mx-auto p-5'>
-      <div className='grid grid-flow-col space-x-2 self-center'>
+      <div className='grid grid-flow-col space-x-2'>
         <Image
           alt='profile picture'
           src={author.user.image!}

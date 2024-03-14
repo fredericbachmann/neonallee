@@ -1,7 +1,7 @@
 'use client'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/navigation'
-import { _Pad } from '../grid/top-level-dnd'
+import { _Pad } from '../../types'
 
 export function RemoveFromSeries({
   padId,

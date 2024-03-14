@@ -6,9 +6,17 @@ import { useState } from 'react'
 import { ChangePadName } from './name'
 import { PublishPad } from './publish'
 import { RemoveFromSeries } from './remove-from-series'
-import { _Pad } from '../grid/top-level-dnd'
+import { _Pad } from '../../types'
 import { ShowTags } from './tags'
+import { Tag } from '@prisma/client'
 
+/** currently being used in:
+ * a) the user-pads page
+ *  - for standalone pads
+ *  - for pads inside a series
+ *
+ * b) the pad view (/user-pads/pad/....)
+ */
 export function PadSettings({
   pad: padProp,
   setPad: setPadProp,
@@ -18,7 +26,7 @@ export function PadSettings({
 }) {
   const [pad, setPad] =
     typeof setPadProp === 'undefined' // if state is not managed higher
-      ? useState(padProp) // create new one
+      ? useState(padProp) // create new state
       : [padProp, setPadProp] // use higher state
 
   const [showModal, setShowModal] = useState(false)
@@ -41,7 +49,7 @@ export function PadSettings({
             {pad.seriesName && (
               <RemoveFromSeries padId={pad.id} seriesName={pad.seriesName} />
             )}
-            <Delete _padId={pad.id} />
+            <Delete padId={pad.id} />
           </div>
         </Modal.Body>
       </Modal>

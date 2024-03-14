@@ -4,14 +4,8 @@ import { Button, Dropdown, Label, Modal, TextInput } from 'flowbite-react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
-import {
-  HiDocumentText,
-  HiOutlineXCircle,
-  HiPlus,
-  HiSquare2Stack,
-} from 'react-icons/hi2'
+import { HiDocumentText, HiSquare2Stack } from 'react-icons/hi2'
 import { handleInputChange } from '@/app/_utils/user-input'
-import { List, arrayMove } from 'react-movable'
 
 /** The app bar for the user-pads page */
 export default function UserPadsAppBar() {
@@ -127,49 +121,3 @@ function NewRow() {
     </form>
   )
 }
-
-// function NewRow2({ pads }: {
-//     pads: {
-//         id: string
-//         name: string
-//     }[]
-// }) {
-//     const [notIncludedPads, setNotIncludedPads] = useState(pads)
-//     const [includedPads, setIncludedPads] = useState<{ id: string, name: string }[]>([])
-
-//     return <div>
-//         <Modal.Header>Neue Serie</Modal.Header>
-//         <Modal.Body>
-//             <List
-//                 transitionDuration={0}
-//                 values={includedPads}
-//                 onChange={({ oldIndex, newIndex }) => setIncludedPads(arrayMove(includedPads, oldIndex, newIndex))}
-//                 renderList={({ children, props }) => <div {...props}>{children}</div>}
-//                 renderItem={({ value, props, index }) =>
-//                     <div className='flex items-center m-2'>  {/* TODO: change the format to a grid with static displayed indexes */}
-//                         <p className='text-xl w-8'>{typeof index !== 'undefined' && index + 1}</p>
-//                         <div {...props} key={value.id} className='flex-1 flex items-center p-3 border-2 rounded-lg border-gray-500 z-50'>
-//                             <p className='flex-1'>{value.name}</p>
-//                             <button><HiOutlineXCircle className='h-8 w-8' onClick={(e) => {
-//                                 setIncludedPads(includedPads.filter(pad => pad !== value))
-//                                 setNotIncludedPads([...notIncludedPads, value])
-//                             }} /></button>
-//                         </div>
-//                     </div>}
-//             />
-//             <br />
-//             <p className='text-lg text-gray-600'>Dokumente hinzufügen:</p>
-//             {notIncludedPads.map((value, index) =>
-//                 <div key={index} className='m-2 border-2 rounded-lg border-gray-500'>
-//                     <button className='p-3 w-full flex items-center justify-between' onClick={() => {
-//                         setNotIncludedPads(notIncludedPads.filter(pad => pad !== value))
-//                         setIncludedPads([...includedPads, value])
-//                     }}>
-//                         <p className=''>{value.name}</p>
-//                         <HiPlus className='h-8 w-8' />
-//                     </button>
-//                 </div>
-//             )}
-//         </Modal.Body>
-//     </div>
-// }

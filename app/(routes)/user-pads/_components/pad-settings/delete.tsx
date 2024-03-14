@@ -4,12 +4,11 @@ import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
-export default function Delete({ _padId }: { _padId?: string }) {
-  const padId = useParams().padId || _padId
+export default function Delete({ padId }: { padId: string }) {
   const [openModal, setOpenModal] = useState(false)
   const router = useRouter()
-
   async function handleDelete() {
+    console.log(padId)
     const res = await fetch(`/api/etherpad/delete/${padId}`, {
       method: 'DELETE',
     })

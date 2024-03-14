@@ -21,12 +21,6 @@ export async function DELETE(
       throw err
   }
 
-  await prisma.authorsOnPads.deleteMany({
-    where: {
-      padId: params.padId,
-    },
-  })
-
   await prisma.pad.delete({
     where: {
       id: params.padId,

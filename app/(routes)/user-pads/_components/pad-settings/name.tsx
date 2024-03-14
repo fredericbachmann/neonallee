@@ -4,7 +4,7 @@ import { HiCheck } from 'react-icons/hi'
 import { useState } from 'react'
 import { handleInputChange } from '@/app/_utils/user-input'
 import { signIn } from 'next-auth/react'
-import { _Pad } from '../grid/top-level-dnd'
+import { _Pad } from '../../types'
 
 export function ChangePadName({
   pad,

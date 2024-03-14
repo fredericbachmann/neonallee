@@ -2,26 +2,9 @@
 import ActionBar from '@/app/_components/app-bar'
 import Members from './members'
 import { PadSettings } from '../../../_components/pad-settings/pad-settings'
+import { _Pad } from '../../../types'
 
-export function PadAppBar({
-  isOwner,
-  pad,
-}: {
-  isOwner: boolean
-  pad: {
-    id: string
-    name: string
-    published: boolean
-    description: string
-    series:
-      | {
-          id: string
-          name: string
-          ownerId: string
-        }
-      | undefined
-  } //TODO: series
-}) {
+export function PadAppBar({ isOwner, pad }: { isOwner: boolean; pad: _Pad }) {
   return (
     <ActionBar>
       {isOwner && (

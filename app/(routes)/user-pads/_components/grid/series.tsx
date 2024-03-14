@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { UserPadsPad } from './pad'
-import { _Series } from './top-level-dnd'
+import { _Series } from '../../types'
 import { useDrop } from 'react-dnd'
 import { HiFolder, HiOutlineXCircle } from 'react-icons/hi2'
 import { Button, Modal } from 'flowbite-react'
 import { List, arrayMove } from 'react-movable'
-import { serverEditSeries } from '../../update-series'
+import { serverEditSeries } from '../../_server-actions/update-series'
 
 /** The representation of ONE series for the user-pads page */
 export function UserPadsSeries({ series }: { series: _Series }) {

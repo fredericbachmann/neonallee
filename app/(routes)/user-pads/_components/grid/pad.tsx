@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useRouter } from 'next/navigation'
-import { _Pad } from './top-level-dnd'
+import { _Pad } from '../../types'
 
 /** representation card of ONE pad for user-pads */
 export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
@@ -77,10 +77,7 @@ export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
       </Link>
       {permission === 'OWNER' && (
         <div className='h-7 w-7 absolute top-2 right-2'>
-          <PadSettings
-            pad={{ ...pad, seriesName: pad.seriesName }}
-            setPad={setPad}
-          />
+          <PadSettings pad={pad} setPad={setPad} />
         </div>
       )}
     </div>

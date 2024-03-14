@@ -4,23 +4,7 @@ import { UserPadsPad } from './pad'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { UserPadsSeries } from './series'
-import { Pad, Permission, Series, Tag } from '@prisma/client'
-
-export type _Pad = Pad & {
-  members: {
-    permission: Permission
-  }[]
-  seriesName?: string
-  tags: Tag[]
-}
-
-export type _Series = Series & {
-  pads: {
-    indexInSeries: number
-    pad?: _Pad
-  }[]
-  isOwner: boolean
-}
+import { _Series, _Pad } from '../../types'
 
 export function PadsGrid({
   series,
