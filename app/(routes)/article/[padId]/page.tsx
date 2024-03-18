@@ -60,8 +60,13 @@ export default async function page({ params }: { params: { padId: string } }) {
     },
   })
 
-  const data = await etherApiReq('getHTML', `padID=${pad.id}`)
-  const text: string = data.html // Author may be able to put malicious code
+  let text: string
+  try {
+    const data = await etherApiReq('getHTML', `padID=${pad.id}`)
+    text = data.html // TODO: Author may be able to put malicious code
+  } catch (error) {
+    text = 'Es konnte keine Verbindung zu Etherpad hergestellt werden.'
+  }
 
   const comments = await prisma.comment.findMany({
     where: {

@@ -8,7 +8,6 @@ import { PublishPad } from './publish'
 import { RemoveFromSeries } from './remove-from-series'
 import { _Pad } from '../../types'
 import { ShowTags } from './tags'
-import { Tag } from '@prisma/client'
 
 /** currently being used in:
  * a) the user-pads page
