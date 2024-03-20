@@ -2,7 +2,7 @@ import prisma from '@/app/_utils/db'
 import { notFound } from 'next/navigation'
 import { auth } from '@/app/_utils/auth'
 import ActionBar from '@/app/_components/app-bar'
-import { Profile } from './_components/profile'
+import { Profile, Profile2 } from './_components/profile'
 
 export default async function Page({
   params,
@@ -65,7 +65,7 @@ export default async function Page({
   return (
     <>
       <ActionBar />
-      <Profile
+      <Profile2
         author={author}
         followerCount={followerCount}
         following={following}

@@ -52,3 +52,43 @@ export function Profile({
     </div>
   )
 }
+
+export function Profile2({
+  author,
+  following,
+  followerCount,
+  pads,
+}: {
+  author: Author & { user: { image: string | null } }
+  following: boolean | undefined
+  followerCount: number
+  pads: Pad[]
+}) {
+  return (
+    <div>
+      <Image
+        src='https://picsum.photos/1500/1000'
+        alt=''
+        width={1500}
+        height={1000}
+        className='w-screen'
+      />
+      <Tile title={pads[0].name} artistname={author.artistname} />
+    </div>
+  )
+}
+
+function Tile({ title, artistname }: { title: string; artistname: string }) {
+  return (
+    <div className='bg-profile-purple w-36 h-36 flex flex-col'>
+      <div className='mt-auto p-2'>
+        <p className='text-profile-yellow-400 font-semibold'>
+          {title.toUpperCase()}
+        </p>
+        <p className='text-white text-sm font-medium'>
+          {artistname.toUpperCase()}
+        </p>
+      </div>
+    </div>
+  )
+}

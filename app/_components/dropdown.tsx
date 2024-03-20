@@ -1,12 +1,11 @@
 import { Dropdown, Button } from 'flowbite-react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import React from 'react'
 
 export default function ProfileDropdown() {
   const { data: session, status } = useSession()
-  const router = useRouter()
 
   if (status === 'loading')
     return <div className='w-11 h-11 rounded-full animate-pulse bg-slate-300' />
@@ -15,8 +14,8 @@ export default function ProfileDropdown() {
     return (
       <Dropdown
         inline
-        label=''
-        renderTrigger={() => (
+        arrowIcon={false}
+        label={
           <Image
             alt='profile picture'
             src={session.user.image!}
@@ -24,17 +23,14 @@ export default function ProfileDropdown() {
             width={44}
             className='rounded-full cursor-pointer'
           />
-        )}
+        }
       >
         <Dropdown.Header>
           <p className='text-slate-950'>{session.user.name}</p>
           <p className='truncate text-slate-700'>{session.user.email}</p>
         </Dropdown.Header>
-        <Dropdown.Item onClick={() => router.push('/user-pads')}>
-          Meine Dokumente
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => router.push('/edit-profile')}>
-          Profil Einstellungen
+        <Dropdown.Item as={Link} href='/edit-profile'>
+          Einstellungen
         </Dropdown.Item>
         <Dropdown.Item onClick={signOut}>Logout</Dropdown.Item>
       </Dropdown>
