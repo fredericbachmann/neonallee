@@ -10,10 +10,10 @@ export default async function Page() {
       SELECT "authorId" FROM "AuthorsOnPads"
       WHERE permission != 'READ' 
       AND "padId" IN (
-        SELECT id FROM "Pad" WHERE published
+        SELECT id FROM "Pad" WHERE published IS NOT NULL
     )) 
     ORDER BY RANDOM() LIMIT 5`
-  ) // five random authors that have already published (prisma doesn't support random order)
+  ) // five random authors that have already published (sql query because prisma doesn't support random order)
 
   const tags = await prisma.tag.findMany({
     take: 10,

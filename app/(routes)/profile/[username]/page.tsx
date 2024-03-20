@@ -24,7 +24,7 @@ export default async function Page({
   const pads = await prisma.pad.findMany({
     // every pad the author published
     where: {
-      published: true,
+      NOT: { published: null },
       members: {
         some: {
           author: {

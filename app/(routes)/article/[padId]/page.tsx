@@ -12,7 +12,7 @@ export default async function page({ params }: { params: { padId: string } }) {
   const pad = await prisma.pad.findFirst({
     where: {
       id: params.padId,
-      published: true,
+      NOT: { published: null },
     },
     include: {
       series: { select: { seriesId: true } },
@@ -30,7 +30,7 @@ export default async function page({ params }: { params: { padId: string } }) {
         pads: {
           where: {
             pad: {
-              published: true,
+              NOT: { published: null },
             },
           },
         },

@@ -28,7 +28,7 @@ model Pad {
   id          String          @id @default(cuid())
   name        String
   members     AuthorsOnPads[]
-  published   Boolean         @default(false)
+  published   DateTime?
   comments    Comment[]
   description String          @default("")
   series      PadsOnSeries?

@@ -19,14 +19,25 @@ export async function POST(
     },
   })
 
-  await prisma.pad.update({
-    data: {
-      published: !pad.published,
-    },
-    where: {
-      id: params.padId,
-    },
-  })
+  if (!!pad.published) {
+    await prisma.pad.update({
+      data: {
+        published: null,
+      },
+      where: {
+        id: params.padId,
+      },
+    })
+  } else {
+    await prisma.pad.update({
+      data: {
+        published: new Date().toISOString(),
+      },
+      where: {
+        id: params.padId,
+      },
+    })
+  }
 
   return NextResponse.json({}, { status: 200 })
 }

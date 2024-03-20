@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const padExistsAndPublished = !!(await prisma.pad.findFirst({
     where: {
       id: padId,
-      published: true,
+      NOT: { published: null },
     },
   }))
   if (!padExistsAndPublished) return NextResponse.json({}, { status: 400 })
