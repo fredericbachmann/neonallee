@@ -11,14 +11,14 @@ export default function FollowToggle({
   isFollowing: boolean | undefined
 }) {
   const [following, setFollowing] = useState(isFollowing)
-  const { data: session } = useSession()
 
   async function handleFollow() {
-    if (session) {
+    if (typeof isFollowing === 'undefined') {
+      // user is not signed in
+      signIn('google')
+    } else {
       await fetch(`/api/toggleFollow/${username}`, { method: 'POST' })
       setFollowing(!following)
-    } else {
-      signIn('google')
     }
   }
 
