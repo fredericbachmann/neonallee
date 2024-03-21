@@ -1,0 +1,51 @@
+'use client'
+
+import { Pad, Series } from '@prisma/client'
+import { Modal } from 'flowbite-react'
+import React, { useState } from 'react'
+import { Tile } from './profile'
+import Link from 'next/link'
+
+export function SeriesButton({
+  series,
+  artistname,
+}: {
+  series: Series & {
+    pads: { padId: string; indexInSeries: number; pad: { name: string } }[]
+  }
+  artistname: string
+}) {
+  const [showModal, setShowModal] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setShowModal(true)}>
+        <Tile artistname={artistname} title={series.name} />
+      </button>
+      <Modal
+        dismissible
+        popup
+        show={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div className='bg-profile-blue-100 rounded-md'>
+          <Modal.Header />
+          <Modal.Body className='flex justify-center'>
+            <div className='grid grid-cols-2 gap-y-3'>
+              {series.pads.map((pad) => (
+                <React.Fragment key={pad.padId}>
+                  <p className='text-4xl text-profile-blue-200 font-semibold text-center pt-2'>
+                    {`Teil ${pad.indexInSeries + 1}`}
+                  </p>
+                  <Link href={`/article/${pad.padId}`}>
+                    <Tile artistname={artistname} title={pad.pad.name} />
+                  </Link>
+                </React.Fragment>
+              ))}
+            </div>
+          </Modal.Body>
+        </div>
+      </Modal>
+    </>
+  )
+}

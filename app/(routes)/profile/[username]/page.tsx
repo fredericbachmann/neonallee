@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { auth } from '@/app/_utils/auth'
 import ActionBar from '@/app/_components/app-bar'
 import { Profile, Profile2 } from './_components/profile'
+import { Profile3 } from './_components/profileList'
 
 export default async function Page({
   params,
@@ -17,6 +18,7 @@ export default async function Page({
       user: {
         select: { image: true },
       },
+      _count: { select: { followers: true } },
     },
   })
   if (!author) notFound() // The username of the subdomain isn't registered as an author
@@ -30,16 +32,6 @@ export default async function Page({
           author: {
             username: params.username,
           },
-        },
-      },
-    },
-  })
-
-  const followerCount = await prisma.user.count({
-    where: {
-      following: {
-        some: {
-          id: author.id,
         },
       },
     },
@@ -65,9 +57,8 @@ export default async function Page({
   return (
     <>
       <ActionBar />
-      <Profile2
-        author={author}
-        followerCount={followerCount}
+      <Profile3
+        artist={{ ...author, user: { image: author.user.image! } }}
         following={following}
         pads={pads}
       />

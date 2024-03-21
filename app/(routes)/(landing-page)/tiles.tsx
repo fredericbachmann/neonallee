@@ -43,7 +43,7 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
   return (
     <div className='px-4 grid gap-2 items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'>
       <p className='text-3xl font-semibold text-center whitespace-pre'>
-        NEW{`\n`}ARTISTS
+        RANDOM{`\n`}ARTISTS
       </p>
       {artists.map((artist, index) => (
         <Link
