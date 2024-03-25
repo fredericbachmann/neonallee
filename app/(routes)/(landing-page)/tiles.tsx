@@ -29,7 +29,7 @@ export function Tags({ tags }: { tags: Tag[] }) {
       <p className='pr-5 text-3xl font-semibold'>GENRES</p>
       {tags.map((tag) => (
         <button
-          className='bg-light-purple px-10 py-5 text-5xl font-bold rounded-sm'
+          className='bg-highlight px-10 py-5 text-5xl font-bold rounded-sm'
           key={tag.id}
         >
           {tag.name}

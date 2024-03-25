@@ -55,13 +55,13 @@ export default async function Page({
   }
 
   return (
-    <>
+    <div className='bg-background min-h-screen'>
       <ActionBar />
       <Profile3
         artist={{ ...author, user: { image: author.user.image! } }}
         following={following}
         pads={pads}
       />
-    </>
+    </div>
   )
 }

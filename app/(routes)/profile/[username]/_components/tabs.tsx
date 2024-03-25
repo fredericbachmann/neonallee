@@ -17,13 +17,13 @@ export function ProfileTabs({
             <li key={index}>
               {activeTab === index ? (
                 <div className='relative'>
-                  <div className='absolute top-3 left-2 -z-10 w-full h-7 bg-profile-yellow-900' />
-                  <p className='underline'>{tab.title}</p>
+                  <div className='absolute top-3 left-2 w-full h-7 bg-highlight' />
+                  <p className='underline relative z-10'>{tab.title}</p>
                 </div>
               ) : (
                 <button
                   key={index}
-                  className='text-profile-blue-400 underline'
+                  className='text-gray-600 underline'
                   onClick={() => setActiveTab(index)}
                 >
                   {tab.title}
@@ -33,7 +33,7 @@ export function ProfileTabs({
           ))}
         </ul>
       </div>
-      <div className='p-5'>{tabs[activeTab].content}</div>
+      <ul className='p-5 flex flex-col space-y-8'>{tabs[activeTab].content}</ul>
     </>
   )
 }

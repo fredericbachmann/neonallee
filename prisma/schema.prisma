@@ -33,9 +33,17 @@ model Pad {
   description String          @default("")
   series      PadsOnSeries?
   tags        Tag[]
+  genre       Genre?          @relation(fields: [genreId], references: [id])
+  genreId     String?
 }
 
 model Tag {
+  id   String @id @default(cuid())
+  name String
+  pads Pad[]
+}
+
+model Genre {
   id   String @id @default(cuid())
   name String
   pads Pad[]

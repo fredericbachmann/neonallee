@@ -5,7 +5,7 @@ import ReadArticleCard from '@/app/(routes)/card'
 import Link from 'next/link'
 import prisma from '@/app/_utils/db'
 import { use } from 'react'
-import { SeriesButton } from './series'
+import { SeriesTiles } from './series'
 
 export function Profile({
   author,
@@ -32,12 +32,11 @@ export function Profile({
         <p className='text-sm'>@{author.username}</p>
       </div>
 
-      <div className='flex items-center self-center divide-gray-700 divide-x-2'>
-        <div className='pr-2'>
-          <FollowToggle username={author.username} isFollowing={following} />
-        </div>
-        <p className='text-lg text-slate-700 pl-2'>{followerCount} Follower</p>
-      </div>
+      <FollowToggle
+        username={author.username}
+        isFollowing={following}
+        followerCount={followerCount}
+      />
 
       <div>
         <p className='text-2xl text-slate-700 place-self-start'>Über mich:</p>
@@ -186,7 +185,7 @@ function Series({ artist }: { artist: Author }) {
   return (
     <Scrollable caption='SERIEN'>
       {serieses.map((series) => (
-        <SeriesButton
+        <SeriesTiles
           key={series.id}
           series={series}
           artistname={artist.artistname}

@@ -1,9 +1,9 @@
 import '../globals.css'
-import { Roboto_Slab } from 'next/font/google'
+import { Arimo } from 'next/font/google'
 import { Providers } from '@/app/_components/providers'
 import { ErrorAlert } from '../_components/error'
 
-const roboto = Roboto_Slab({
+const font = Arimo({
   subsets: ['latin'],
   display: 'swap',
 })
@@ -19,8 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='de'>
-      {/*className={roboto.className}>*/}
+    <html lang='de' className={font.className}>
       <body>
         <Providers>
           {children}

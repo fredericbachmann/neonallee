@@ -4,6 +4,9 @@ import Image from 'next/image'
 import { use } from 'react'
 import prisma from '@/app/_utils/db'
 import Link from 'next/link'
+import { SeriesList } from './series'
+import { BsFacebook, BsTwitterX, BsYoutube } from 'react-icons/bs'
+import FollowToggle from './FollowToggle'
 
 type _Author = Author & {
   user: { image: string }
@@ -21,22 +24,28 @@ export function Profile3({
 }) {
   const tabs = [
     { title: 'Neu', content: <NewReleases artist={artist} /> },
-    { title: "Author's Pick", content: <>2</> },
-    { title: 'Serien', content: <>3</> },
+    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
+    { title: 'Serien', content: <Serieses artist={artist} /> },
   ]
 
   return (
     <div className='flex flex-col p-3'>
-      <ProfileInfo artist={artist} />
+      <ProfileInfo artist={artist} isFollowing={following} />
       <ProfileTabs tabs={tabs} />
     </div>
   )
 }
 
-function ProfileInfo({ artist }: { artist: _Author }) {
+function ProfileInfo({
+  artist,
+  isFollowing,
+}: {
+  artist: _Author
+  isFollowing: boolean | undefined
+}) {
   return (
     <div className='flex space-x-5 p-2 pb-7'>
-      <div className='flex flex-col'>
+      <div className='flex flex-col space-y-5'>
         <Image
           src={artist.user.image}
           alt='profile picture'
@@ -44,18 +53,38 @@ function ProfileInfo({ artist }: { artist: _Author }) {
           height={160}
           className='rounded-full'
         />
-        <p>Social...</p>
+        <div className='flex space-x-5 justify-center'>
+          <BsTwitterX className='h-6 w-6' />
+          <BsYoutube className='h-6 w-6' />
+          <BsFacebook className='h-6 w-6' />
+        </div>
       </div>
       <div className='flex flex-col space-y-3'>
         <div className='relative w-min'>
-          <div className='bg-profile-yellow-900 absolute w-full h-8 top-3 left-2 -z-10' />
-          <p className='text-4xl font-bold text-profile-blue-500'>
+          <div className='bg-highlight absolute w-full h-8 top-3 left-2' />
+          <div className='text-4xl font-bold text-gray_ z-10 relative'>
             {artist.artistname.toUpperCase()}
-          </p>
+          </div>
         </div>
         <p className='text-gray-500'>{artist.about}</p>
+        <FollowToggle
+          isFollowing={isFollowing}
+          username={artist.username}
+          followerCount={artist._count.followers}
+        />
       </div>
     </div>
+  )
+}
+
+export function PadInList({ pad }: { pad: Pad }) {
+  return (
+    <Link href={`/article/${pad.id}`} key={pad.id}>
+      <p className='text-2xl font-bold text-gray-800'>
+        {pad.name.toUpperCase()}
+      </p>
+      <p className='text-gray-600 text-lg'>{pad.description}</p>
+    </Link>
   )
 }
 
@@ -72,15 +101,37 @@ function NewReleases({ artist }: { artist: Author }) {
   )
 
   return (
-    <ul className='flex flex-col space-y-8'>
+    <>
       {pads.map((pad) => (
-        <Link href={`/article/${pad.id}`} key={pad.id}>
-          <p className='text-3xl font-semibold text-profile-blue-500'>
-            {pad.name.toUpperCase()}
-          </p>
-          <p className='text-profile-blue-400 text-lg'>{pad.description}</p>
-        </Link>
+        <PadInList pad={pad} key={pad.id} />
       ))}
-    </ul>
+    </>
+  )
+}
+
+function Serieses({ artist }: { artist: Author }) {
+  const serieses = use(
+    prisma.series.findMany({
+      where: {
+        ownerId: artist.id,
+        pads: { some: { pad: { NOT: { published: null } } } },
+      },
+      take: 4,
+      include: {
+        pads: {
+          select: { pad: true, indexInSeries: true },
+          orderBy: { indexInSeries: 'asc' },
+        },
+      },
+    })
+  )
+  if (serieses.length === 0) return <></>
+
+  return (
+    <>
+      {serieses.map((series) => (
+        <SeriesList series={series} key={series.id} />
+      ))}
+    </>
   )
 }

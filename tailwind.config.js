@@ -5,9 +5,10 @@ module.exports = {
   plugins: [require('flowbite/plugin')],
   theme: {
     colors: {
-      'light-purple': '#e5b7de',
-      'yellow-green': '#e1f16b',
+      highlight: '#e5b7de',
+      background: '#e1f16b',
       'off-white': '#e6e6e6',
+      gray_: '#272727',
       'profile-purple': '#590E44',
       'profile-blue': {
         500: '#0F00FF',

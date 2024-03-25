@@ -5,8 +5,9 @@ import { Modal } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Tile } from './profile'
 import Link from 'next/link'
+import { PadInList } from './profileList'
 
-export function SeriesButton({
+export function SeriesTiles({
   series,
   artistname,
 }: {
@@ -43,6 +44,45 @@ export function SeriesButton({
                 </React.Fragment>
               ))}
             </div>
+          </Modal.Body>
+        </div>
+      </Modal>
+    </>
+  )
+}
+
+export function SeriesList({
+  series,
+}: {
+  series: Series & {
+    pads: { indexInSeries: number; pad: Pad }[]
+  }
+}) {
+  const [showModal, setShowModal] = useState(false)
+  return (
+    <>
+      <button onClick={() => setShowModal(true)}>
+        <p className='text-2xl font-bold text-gray-800 text-start'>
+          {series.name.toUpperCase()}
+        </p>
+      </button>
+      <Modal
+        dismissible
+        popup
+        show={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <div className='bg-profile-blue-100 rounded-md'>
+          <Modal.Header />
+          <Modal.Body className='grid grid-cols-[80px_auto] gap-y-7'>
+            {series.pads.map(({ pad, indexInSeries }) => (
+              <React.Fragment key={pad.id}>
+                <p className='text-2xl font-bold text-gray-700'>
+                  Teil {indexInSeries + 1}
+                </p>
+                <PadInList pad={pad} key={pad.id} />
+              </React.Fragment>
+            ))}
           </Modal.Body>
         </div>
       </Modal>

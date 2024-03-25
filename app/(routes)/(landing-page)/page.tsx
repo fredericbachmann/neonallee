@@ -20,7 +20,7 @@ export default async function Page() {
   })
 
   return (
-    <div className='bg-yellow-green min-h-screen'>
+    <div className='bg-background min-h-screen'>
       <ActionBar />
       <div className='space-y-5 select-none'>
         <Pictures />
