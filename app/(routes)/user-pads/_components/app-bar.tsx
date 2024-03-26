@@ -1,6 +1,6 @@
 'use client'
 import ActionBar from '@/app/_components/app-bar'
-import { Button, Dropdown, Label, Modal, TextInput } from 'flowbite-react'
+import { Button, Menu, Modal, TextInput } from '@mantine/core'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
@@ -13,33 +13,36 @@ export default function UserPadsAppBar() {
 
   return (
     <ActionBar>
-      <Dropdown label='Neu' gradientMonochrome='cyan' className='w-52'>
-        <Dropdown.Item
-          icon={HiDocumentText}
-          className='h-12'
-          onClick={() => setOpenModal('newPad')}
-        >
-          Dokument
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={HiSquare2Stack}
-          className='h-12'
-          onClick={() => setOpenModal('newRow')}
-        >
-          Serie
-        </Dropdown.Item>
-      </Dropdown>
+      <Menu>
+        <Menu.Target>
+          <Button>Neu</Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item
+            leftSection={<HiDocumentText className='h-6 w-6' />}
+            onClick={() => setOpenModal('newPad')}
+          >
+            Dokument
+          </Menu.Item>
+          <Menu.Item
+            leftSection={<HiSquare2Stack className='h-6 w-6' />}
+            onClick={() => setOpenModal('newRow')}
+          >
+            Serie
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
       <Modal
-        dismissible
-        show={openModal === 'newPad'}
+        opened={openModal === 'newPad'}
         onClose={() => setOpenModal(undefined)}
+        title='Neues Dokument'
       >
         <NewPad />
       </Modal>
       <Modal
-        dismissible
-        show={openModal === 'newRow'}
+        opened={openModal === 'newRow'}
         onClose={() => setOpenModal(undefined)}
+        title='Neue Serie'
       >
         <NewRow />
       </Modal>
@@ -67,23 +70,17 @@ function NewPad() {
   }
   return (
     <form onSubmit={handleCreate}>
-      <Modal.Header>Neues Dokument</Modal.Header>
-      <Modal.Body>
-        <Label htmlFor='padName' value='Name' />
-        <TextInput
-          autoFocus
-          id='padName'
-          value={padName}
-          onChange={(e) =>
-            handleInputChange(e, 'padName', setPadName, setPadNameError)
-          }
-          color={padNameError && 'failure'}
-          helperText={padNameError}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button type='submit'>Erstellen</Button>
-      </Modal.Footer>
+      <TextInput
+        label='Name'
+        autoFocus
+        id='padName'
+        value={padName}
+        onChange={(e) =>
+          handleInputChange(e, 'padName', setPadName, setPadNameError)
+        }
+        error={padNameError}
+      />
+      <Button type='submit'>Erstellen</Button>
     </form>
   )
 }
@@ -103,21 +100,15 @@ function NewRow() {
   }
   return (
     <form onSubmit={handleCreate}>
-      <Modal.Header>Neue Serie</Modal.Header>
-      <Modal.Body>
-        <Label htmlFor='seriesName' value='Name' />
-        <TextInput
-          autoFocus
-          id='seriesName'
-          value={value}
-          onChange={(e) => handleInputChange(e, 'padName', setValue, setError)} //TODO
-          color={error && 'failure'}
-          helperText={error}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button type='submit'>Erstellen</Button>
-      </Modal.Footer>
+      <TextInput
+        label='Name'
+        autoFocus
+        id='seriesName'
+        value={value}
+        onChange={(e) => handleInputChange(e, 'padName', setValue, setError)} //TODO
+        error={error}
+      />
+      <Button type='submit'>Erstellen</Button>
     </form>
   )
 }

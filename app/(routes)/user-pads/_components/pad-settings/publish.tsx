@@ -1,8 +1,8 @@
 'use client'
-import { ToggleSwitch } from 'flowbite-react'
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { _Pad } from '../../types'
+import { Switch } from '@mantine/core'
 
 export function PublishPad({ pad, setPad }: { pad: _Pad; setPad: Function }) {
   const [published, setPublished] = useState(!!pad.published)
@@ -20,7 +20,7 @@ export function PublishPad({ pad, setPad }: { pad: _Pad; setPad: Function }) {
 
   return (
     <div>
-      <ToggleSwitch
+      <Switch
         checked={published}
         label='Text veröffentlichen'
         onChange={togglePublish}

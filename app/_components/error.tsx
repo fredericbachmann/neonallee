@@ -1,6 +1,6 @@
 'use client'
 
-import { Alert } from 'flowbite-react'
+import { Alert } from '@mantine/core'
 import { HiExclamationTriangle } from 'react-icons/hi2'
 import { useErrorContext } from './providers'
 
@@ -13,9 +13,9 @@ export function ErrorAlert() {
     <>
       {error && (
         <Alert
-          className='absolute bottom-5 left-5'
+          className='absolute bottom-5 left-5 z-50'
           color='failure'
-          icon={HiExclamationTriangle}
+          icon={<HiExclamationTriangle />}
         >
           <span className='font-medium'>Ein Fehler ist aufgetreten</span>
         </Alert>

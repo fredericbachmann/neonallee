@@ -3,7 +3,7 @@ import { UserPadsPad } from './pad'
 import { _Series } from '../../types'
 import { useDrop } from 'react-dnd'
 import { HiFolder, HiOutlineXCircle } from 'react-icons/hi2'
-import { Button, Modal } from 'flowbite-react'
+import { Button, Modal } from '@mantine/core'
 import { List, arrayMove } from 'react-movable'
 import { serverEditSeries } from '../../_server-actions/update-series'
 
@@ -33,27 +33,26 @@ export function UserPadsSeries({ series }: { series: _Series }) {
 
       <Modal
         size='7xl'
-        show={showModal}
-        dismissible
+        opened={showModal}
         onClose={() => setShowModal(false)}
-      >
-        <Modal.Header>
+        title={
           <div className='flex items-center gap-5'>
             <p>{series.name}</p>
             {series.isOwner && (
               <Button
-                outline={!showEdit}
+                variant={showEdit ? '' : 'outline'}
                 onClick={() => setShowEdit(!showEdit)}
               >
                 Bearbeiten
               </Button>
             )}
           </div>
-        </Modal.Header>
+        }
+      >
         {showEdit ? (
           <EditSeries pads={padsForEditing} seriesId={series.id} />
         ) : (
-          <Modal.Body className='flex flex-wrap justify-center'>
+          <div className='flex flex-wrap justify-center'>
             {series.pads.map((pad, index) =>
               pad.pad ? (
                 <UserPadsPad
@@ -64,7 +63,7 @@ export function UserPadsSeries({ series }: { series: _Series }) {
                 <p key={index}>x</p>
               )
             )}
-          </Modal.Body>
+          </div>
         )}
       </Modal>
     </>
@@ -85,54 +84,51 @@ function EditSeries({
 
   return (
     <>
-      <Modal.Body>
-        <List
-          transitionDuration={0}
-          values={pads}
-          onChange={({ oldIndex, newIndex }) =>
-            setPads(arrayMove(pads, oldIndex, newIndex))
-          }
-          renderList={({ children, props }) => <div {...props}>{children}</div>}
-          renderItem={({ value, props, index }) => (
-            <div className='flex items-center m-2' key={index}>
-              {/* TODO: change the format to a grid with static displayed indexes */}
-              <p className='text-xl w-8'>
-                {typeof index !== 'undefined' && index + 1}
-              </p>
-              <div
-                {...props}
-                key={value.id}
-                className='flex-1 flex items-center p-3 border-2 rounded-lg border-gray-500 z-50'
+      <List
+        transitionDuration={0}
+        values={pads}
+        onChange={({ oldIndex, newIndex }) =>
+          setPads(arrayMove(pads, oldIndex, newIndex))
+        }
+        renderList={({ children, props }) => <div {...props}>{children}</div>}
+        renderItem={({ value, props, index }) => (
+          <div className='flex items-center m-2' key={index}>
+            {/* TODO: change the format to a grid with static displayed indexes */}
+            <p className='text-xl w-8'>
+              {typeof index !== 'undefined' && index + 1}
+            </p>
+            <div
+              {...props}
+              key={value.id}
+              className='flex-1 flex items-center p-3 border-2 rounded-lg border-gray-500 z-50'
+            >
+              <p className='flex-1'>{value.name}</p>
+              <button
+                onClick={(e) => {
+                  setPads(pads.filter((pad) => pad !== value))
+                }}
               >
-                <p className='flex-1'>{value.name}</p>
-                <button
-                  onClick={(e) => {
-                    setPads(pads.filter((pad) => pad !== value))
-                  }}
-                >
-                  <HiOutlineXCircle className='h-8 w-8' />
-                </button>
-              </div>
+                <HiOutlineXCircle className='h-8 w-8' />
+              </button>
             </div>
-          )}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button
-          onClick={() =>
-            serverEditSeries(
-              seriesId,
-              pads.map((pad, index) => {
-                return { padId: pad.id, indexInSeries: index }
-              })
-            )
-          }
-          outline
-          color='success'
-        >
-          Änderungen speichern
-        </Button>
-      </Modal.Footer>
+          </div>
+        )}
+      />
+      <Button
+        onClick={() =>
+          serverEditSeries(
+            seriesId,
+            pads.map((pad, index) => {
+              return { padId: pad.id, indexInSeries: index }
+            })
+          )
+        }
+        variant='outline'
+        color='green'
+        className='m-3'
+      >
+        Änderungen speichern
+      </Button>
     </>
   )
 }

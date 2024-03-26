@@ -1,6 +1,6 @@
-import { Button, Modal } from 'flowbite-react'
+import { Button, Modal } from '@mantine/core'
 import { signIn } from 'next-auth/react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
@@ -18,39 +18,35 @@ export default function Delete({ padId }: { padId: string }) {
 
   return (
     <>
-      <Button outline color='failure' onClick={() => setOpenModal(true)}>
+      <Button variant='outline' color='red' onClick={() => setOpenModal(true)}>
         Dieses Dokument löschen
       </Button>
       <Modal
-        dismissible
-        show={openModal}
+        opened={openModal}
         size='md'
-        popup
         onClose={() => setOpenModal(false)}
+        centered
       >
-        <Modal.Header />
-        <Modal.Body>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200' />
-            <h3 className='mb-5 text-lg font-normal text-gray-500 dark:text-gray-400'>
-              Dokument unwiederruflich löschen?
-            </h3>
-            <div className='flex justify-center gap-4'>
-              <Button
-                color='failure'
-                onClick={() => {
-                  handleDelete()
-                  setOpenModal(false)
-                }}
-              >
-                Löschen
-              </Button>
-              <Button color='gray' onClick={() => setOpenModal(false)}>
-                Abbrechen
-              </Button>
-            </div>
+        <div className='text-center'>
+          <HiOutlineExclamationCircle className='mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200' />
+          <h3 className='mb-5 text-lg font-normal text-gray-500 dark:text-gray-400'>
+            Dokument unwiederruflich löschen?
+          </h3>
+          <div className='flex justify-center gap-4'>
+            <Button
+              color='red'
+              onClick={() => {
+                handleDelete()
+                setOpenModal(false)
+              }}
+            >
+              Löschen
+            </Button>
+            <Button color='gray' onClick={() => setOpenModal(false)}>
+              Abbrechen
+            </Button>
           </div>
-        </Modal.Body>
+        </div>
       </Modal>
     </>
   )

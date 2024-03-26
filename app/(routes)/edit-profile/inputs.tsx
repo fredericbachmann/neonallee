@@ -1,7 +1,7 @@
 'use client'
 
 import { Author, User } from '@prisma/client'
-import { Alert, Button, TextInput } from 'flowbite-react'
+import { Alert, Button, TextInput } from '@mantine/core'
 import Image from 'next/image'
 import { useState } from 'react'
 import { HiCheck, HiPencil } from 'react-icons/hi'
@@ -55,7 +55,7 @@ export function ProfileCustomization({
       {alert === 'success' && (
         <Alert
           color='success'
-          onDismiss={() => setAlert(undefined)}
+          onClose={() => setAlert(undefined)}
           className='fixed bottom-5'
         >
           <p className='text-lg'>Änderungen gespeichert!</p>
@@ -64,8 +64,7 @@ export function ProfileCustomization({
       {alert === 'username-taken' && (
         <Alert
           color='failure'
-          withBorderAccent
-          onDismiss={() => setAlert(undefined)}
+          onClose={() => setAlert(undefined)}
           className='fixed bottom-5'
         >
           <p>Der Benutzername ist schon vergeben. Versuche einen anderen!</p>
@@ -162,13 +161,11 @@ function InputField({
     <form onSubmit={handleSubmit} className='grow flex space-x-2 items-center'>
       <div className='flex-1'>
         <TextInput
-          addon={name === 'username' && '@'}
           value={value}
           type={name === 'email' ? 'email' : 'text'}
           autoFocus
           required
-          color={error && 'failure'}
-          helperText={error}
+          error={error}
           onChange={handleChange}
         />
       </div>

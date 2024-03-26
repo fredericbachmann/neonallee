@@ -1,4 +1,4 @@
-import { Dropdown, Button } from 'flowbite-react'
+import { Menu, Button } from '@mantine/core'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,10 +12,8 @@ export default function ProfileDropdown() {
 
   if (session && session.user.image)
     return (
-      <Dropdown
-        inline
-        arrowIcon={false}
-        label={
+      <Menu>
+        <Menu.Target>
           <Image
             alt='profile picture'
             src={session.user.image!}
@@ -23,21 +21,22 @@ export default function ProfileDropdown() {
             width={44}
             className='rounded-full cursor-pointer'
           />
-        }
-      >
-        <Dropdown.Header>
-          <p className='text-slate-950'>{session.user.name}</p>
-          <p className='truncate text-slate-700'>{session.user.email}</p>
-        </Dropdown.Header>
-        <Dropdown.Item as={Link} href='/edit-profile'>
-          Einstellungen
-        </Dropdown.Item>
-        <Dropdown.Item onClick={signOut}>Logout</Dropdown.Item>
-      </Dropdown>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Label>
+            <p className='text-slate-950'>{session.user.name}</p>
+            <p className='truncate text-slate-700'>{session.user.email}</p>
+          </Menu.Label>
+          <Menu.Item component={Link} href='/edit-profile'>
+            Einstellungen
+          </Menu.Item>
+          <Menu.Item onClick={() => signOut()}>Logout</Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
     )
 
   return (
-    <Button color='success' onClick={() => signIn('google')}>
+    <Button color='green' onClick={() => signIn('google')}>
       Login
     </Button>
   )

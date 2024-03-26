@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Button, TextInput } from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { handleInputChange } from '@/app/_utils/user-input'
@@ -26,28 +26,26 @@ export function BecomeAuthorForm() {
 
   return (
     <form onSubmit={handleSubmit} className='w-72'>
-      <Label htmlFor='artistname' value='Dein Künstlername' />
       <TextInput
+        label='Dein Künstlername'
         id='artistname'
         required
         value={artistname}
         onChange={(e) =>
           handleInputChange(e, 'artistname', setArtistname, setArtistnameError)
         }
-        color={artistnameError && 'failure'}
-        helperText={artistnameError}
+        error={artistnameError}
         className='flex-1'
       />
-      <Label htmlFor='username' value='Dein Nutzername' />
       <TextInput
+        label='Dein Nutzername'
         id='username'
         required
         value={username}
         onChange={(e) =>
           handleInputChange(e, 'username', setUsername, setUsernameError)
         }
-        color={usernameError && 'failure'}
-        helperText={usernameError}
+        error={usernameError}
       />
       <br />
       <Button type='submit'>Autor*in werden!</Button>

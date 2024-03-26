@@ -1,5 +1,5 @@
 'use client'
-import { Button } from 'flowbite-react'
+import { Button } from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import { _Pad } from '../../types'
 
@@ -22,7 +22,7 @@ export function RemoveFromSeries({
   }
 
   return (
-    <Button onClick={handleClick} outline color={'gray'}>
+    <Button onClick={handleClick} variant='outline' color={'gray'}>
       <p>Aus der Serie {seriesName} entfernen</p>
     </Button>
   )
