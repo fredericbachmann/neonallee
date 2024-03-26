@@ -1,25 +1,21 @@
 'use client'
 
 import { Author, Tag } from '@prisma/client'
-import { Carousel } from 'flowbite-react'
+import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
+import { Image } from '@mantine/core'
 
 export function Pictures() {
   return (
-    <Carousel
-      slideInterval={5000}
-      leftControl
-      rightControl
-      className='h-72 sm:h-80 xl:h-96'
-    >
-      {Array.from(Array(5).keys()).map((index) => (
-        <img
-          src={`https://picsum.photos/3000?${index}`}
-          key={index}
-          className='object-cover h-full'
-        />
-      ))}
-    </Carousel>
+    <div className='h-72 sm:h-80 xl:h-96 flex'>
+      <Carousel withIndicators height='100%' style={{ flex: 1 }}>
+        {Array.from(Array(5).keys()).map((index) => (
+          <Carousel.Slide key={index}>
+            <Image src={`https://picsum.photos/3000?${index}`} />
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+    </div>
   )
 }
 

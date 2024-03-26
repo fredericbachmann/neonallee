@@ -1,5 +1,6 @@
 'use client'
 
+import { MantineProvider } from '@mantine/core'
 import { SessionProvider } from 'next-auth/react'
 import { createContext, useContext, useState } from 'react'
 
@@ -10,13 +11,11 @@ const ErrorContext = createContext({
 
 export const useErrorContext = () => useContext(ErrorContext)
 
-/** Shows an error message for three seconds */
-export const triggerError = () => useContext(ErrorContext).triggerError()
-
 /** creates the provider that manages wheather the error banner should be shown */
 function ErrorProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState(false)
 
+  /** Shows an error message for three seconds */
   function triggerError() {
     setError(true)
     setTimeout(() => setError(false), 3000)
@@ -32,7 +31,9 @@ function ErrorProvider({ children }: { children: React.ReactNode }) {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ErrorProvider>{children}</ErrorProvider>
+      <ErrorProvider>
+        <MantineProvider>{children}</MantineProvider>
+      </ErrorProvider>
     </SessionProvider>
   )
 }

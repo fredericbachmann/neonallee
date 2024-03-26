@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, TextInput } from 'flowbite-react'
+import { Button, TextInput } from '@mantine/core'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
@@ -95,11 +95,7 @@ function WriteComment() {
 
 function LoginForComment() {
   return (
-    <Button
-      outline
-      gradientDuoTone='greenToBlue'
-      onClick={() => signIn('google')}
-    >
+    <Button variant='outline' onClick={() => signIn('google')}>
       Einloggen, um zu kommentieren
     </Button>
   )

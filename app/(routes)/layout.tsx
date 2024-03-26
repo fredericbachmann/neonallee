@@ -2,6 +2,8 @@ import '../globals.css'
 import { Arimo } from 'next/font/google'
 import { Providers } from '@/app/_components/providers'
 import { ErrorAlert } from '../_components/error'
+import '@mantine/core/styles.css'
+import '@mantine/carousel/styles.css'
 
 const font = Arimo({
   subsets: ['latin'],

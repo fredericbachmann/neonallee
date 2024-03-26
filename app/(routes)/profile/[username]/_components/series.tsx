@@ -1,7 +1,7 @@
 'use client'
 
 import { Pad, Series } from '@prisma/client'
-import { Modal } from 'flowbite-react'
+import { Modal } from '@mantine/core'
 import React, { useState } from 'react'
 import { Tile } from './profile'
 import Link from 'next/link'
@@ -23,28 +23,18 @@ export function SeriesTiles({
       <button onClick={() => setShowModal(true)}>
         <Tile artistname={artistname} title={series.name} />
       </button>
-      <Modal
-        dismissible
-        popup
-        show={showModal}
-        onClose={() => setShowModal(false)}
-      >
-        <div className='bg-profile-blue-100 rounded-md'>
-          <Modal.Header />
-          <Modal.Body className='flex justify-center'>
-            <div className='grid grid-cols-2 gap-y-3'>
-              {series.pads.map((pad) => (
-                <React.Fragment key={pad.padId}>
-                  <p className='text-4xl text-profile-blue-200 font-semibold text-center pt-2'>
-                    {`Teil ${pad.indexInSeries + 1}`}
-                  </p>
-                  <Link href={`/article/${pad.padId}`}>
-                    <Tile artistname={artistname} title={pad.pad.name} />
-                  </Link>
-                </React.Fragment>
-              ))}
-            </div>
-          </Modal.Body>
+      <Modal opened={showModal} onClose={() => setShowModal(false)}>
+        <div className='grid grid-cols-2 gap-y-3'>
+          {series.pads.map((pad) => (
+            <React.Fragment key={pad.padId}>
+              <p className='text-4xl text-profile-blue-200 font-semibold text-center pt-2'>
+                {`Teil ${pad.indexInSeries + 1}`}
+              </p>
+              <Link href={`/article/${pad.padId}`}>
+                <Tile artistname={artistname} title={pad.pad.name} />
+              </Link>
+            </React.Fragment>
+          ))}
         </div>
       </Modal>
     </>
@@ -66,24 +56,16 @@ export function SeriesList({
           {series.name.toUpperCase()}
         </p>
       </button>
-      <Modal
-        dismissible
-        popup
-        show={showModal}
-        onClose={() => setShowModal(false)}
-      >
-        <div className='bg-profile-blue-100 rounded-md'>
-          <Modal.Header />
-          <Modal.Body className='grid grid-cols-[80px_auto] gap-y-7'>
-            {series.pads.map(({ pad, indexInSeries }) => (
-              <React.Fragment key={pad.id}>
-                <p className='text-2xl font-bold text-gray-700'>
-                  Teil {indexInSeries + 1}
-                </p>
-                <PadInList pad={pad} key={pad.id} />
-              </React.Fragment>
-            ))}
-          </Modal.Body>
+      <Modal opened={showModal} onClose={() => setShowModal(false)}>
+        <div className='grid grid-cols-[80px_auto] gap-y-7'>
+          {series.pads.map(({ pad, indexInSeries }) => (
+            <React.Fragment key={pad.id}>
+              <p className='text-2xl font-bold text-gray-700'>
+                Teil {indexInSeries + 1}
+              </p>
+              <PadInList pad={pad} key={pad.id} />
+            </React.Fragment>
+          ))}
         </div>
       </Modal>
     </>

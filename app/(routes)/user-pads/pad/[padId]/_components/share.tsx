@@ -1,4 +1,4 @@
-import { Alert, Button, Label, Modal, TextInput } from 'flowbite-react'
+import { Alert, Button, TextInput } from '@mantine/core'
 import { FormEvent, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -38,59 +38,54 @@ export default function Share({
   }
 
   return (
-    <>
-      <Modal.Body>
-        <hr />
-        <p className='text-lg'>Lade andere AutorInnen ein!</p>
-        <br />
-        <form onSubmit={handleShare}>
-          <div className='flex space-x-2'>
-            <div className='grow'>
-              <Label htmlFor='username' value='Nutzername' />
-              <TextInput
-                id='username'
-                placeholder='HeinzHerrmann482'
-                ref={usernameInputRef}
-                autoComplete='off'
-              />
-            </div>
-            <div>
-              <br />
-              <Button.Group>
-                <Button
-                  color={permission === 'READ' ? 'blue' : 'gray'}
-                  onClick={() => setPermission('READ')}
-                >
-                  Lesen
-                </Button>
-                <Button
-                  color={permission === 'WRITE' ? 'blue' : 'gray'}
-                  onClick={() => setPermission('WRITE')}
-                >
-                  Schreiben
-                </Button>
-              </Button.Group>
-            </div>
+    <div className='space-y-4 pt-4'>
+      <hr />
+      <p className='text-lg'>Lade andere AutorInnen ein!</p>
+      <form onSubmit={handleShare} className='space-y-2'>
+        <div className='flex space-x-2 items-end'>
+          <div className='grow'>
+            <TextInput
+              label='Nutzername'
+              id='username'
+              placeholder='HeinzHerrmann482'
+              ref={usernameInputRef}
+              autoComplete='off'
+            />
           </div>
-          <br />
-          <Button type='submit'>Freigeben</Button>
-        </form>
-      </Modal.Body>
+          <>
+            <Button.Group>
+              <Button
+                color={permission === 'READ' ? 'blue' : 'gray'}
+                onClick={() => setPermission('READ')}
+              >
+                Lesen
+              </Button>
+              <Button
+                color={permission === 'WRITE' ? 'blue' : 'gray'}
+                onClick={() => setPermission('WRITE')}
+              >
+                Schreiben
+              </Button>
+            </Button.Group>
+          </>
+        </div>
+        <Button type='submit'>Freigeben</Button>
+      </form>
       {status === 200 && (
-        <Alert onDismiss={() => setStatus(undefined)} color='info'>
+        <Alert onClose={() => setStatus(undefined)} color='blue'>
           Das hat geklappt!
         </Alert>
       )}
       {status === 400 && (
-        <Alert onDismiss={() => setStatus(undefined)} color='failure'>
+        <Alert onClose={() => setStatus(undefined)} color='red'>
           Diesen Nutzernamen gibt es nicht.
         </Alert>
       )}
       {status === 403 && (
-        <Alert onDismiss={() => setStatus(undefined)} color='failure'>
+        <Alert onClose={() => setStatus(undefined)} color='red'>
           Du hast nicht die Berechtigungen dafür!
         </Alert>
       )}
-    </>
+    </div>
   )
 }

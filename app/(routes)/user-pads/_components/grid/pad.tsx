@@ -1,5 +1,5 @@
 'use client'
-import { Card } from 'flowbite-react'
+import { Card, Image } from '@mantine/core'
 import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
 import { PadSettings } from '../pad-settings/pad-settings'
 import Link from 'next/link'
@@ -41,9 +41,12 @@ export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
   return (
     <div ref={drag} className='w-96 relative m-3 cursor-pointer'>
       <Link href={`/user-pads/pad/${pad.id}`}>
-        <Card imgSrc={`https://picsum.photos/400/200?${pad.id}`}>
+        <Card shadow='lg'>
+          <Card.Section>
+            <Image src={`https://picsum.photos/400/200?${pad.id}`} />
+          </Card.Section>
           {/* Hack for disabling cache */}
-          <div className='flex items-center'>
+          <div className='flex items-center p-3'>
             <p className='text-2xl tracking-tight truncate flex-1'>
               {pad.name}
             </p>

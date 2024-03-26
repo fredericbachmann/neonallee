@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Button, TextInput } from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { handleInputChange } from '@/app/_utils/user-input'

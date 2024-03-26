@@ -1,5 +1,5 @@
 'use client'
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Button, TextInput } from '@mantine/core'
 import { HiCheck } from 'react-icons/hi'
 import { useState } from 'react'
 import { handleInputChange } from '@/app/_utils/user-input'
@@ -32,9 +32,9 @@ export function ChangePadName({
 
   return (
     <form onSubmit={handlePadNameSubmit}>
-      <Label htmlFor='padName'>Name</Label>
-      <div className='flex items-center space-x-2'>
+      <div className='flex items-end space-x-2'>
         <TextInput
+          label='Name'
           id='padName'
           onFocus={() => setShowCheck(true)}
           onBlur={() => {
@@ -45,11 +45,11 @@ export function ChangePadName({
             handleInputChange(e, 'padName', setPadName, setPadNameError)
           }
           color={padNameError && 'failure'}
-          helperText={padNameError}
+          error={padNameError}
           className='flex-1'
         />
         {showCheck && (
-          <Button type='submit' outline color='success'>
+          <Button type='submit' variant='outline' color='green'>
             <HiCheck />
           </Button>
         )}

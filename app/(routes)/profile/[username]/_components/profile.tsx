@@ -1,62 +1,11 @@
 import { Author, Pad } from '@prisma/client'
 import Image from 'next/image'
-import FollowToggle from './FollowToggle'
-import ReadArticleCard from '@/app/(routes)/card'
 import Link from 'next/link'
 import prisma from '@/app/_utils/db'
 import { use } from 'react'
 import { SeriesTiles } from './series'
 
 export function Profile({
-  author,
-  following,
-  followerCount,
-  pads,
-}: {
-  author: Author & { user: { image: string | null } }
-  following: boolean | undefined
-  followerCount: number
-  pads: Pad[]
-}) {
-  return (
-    <div className='flex flex-col space-y-8 max-w-3xl mx-auto p-5'>
-      <div className='grid grid-flow-col space-x-2'>
-        <Image
-          alt='profile picture'
-          src={author.user.image!}
-          height={80}
-          width={80}
-          className='rounded-full row-span-2 place-self-end'
-        />
-        <p className='text-3xl self-end'>{author.artistname}</p>
-        <p className='text-sm'>@{author.username}</p>
-      </div>
-
-      <FollowToggle
-        username={author.username}
-        isFollowing={following}
-        followerCount={followerCount}
-      />
-
-      <div>
-        <p className='text-2xl text-slate-700 place-self-start'>Über mich:</p>
-        <p>{author.about === '' ? '---' : author.about}</p>
-      </div>
-      {pads.length > 0 ? (
-        <div className='flex flex-col space-y-2'>
-          <p className='text-3xl text-slate-700'>Veröffentlichte Artikel:</p>
-          {pads.map((pad, index) => (
-            <ReadArticleCard pad={pad} key={index} />
-          ))}
-        </div>
-      ) : (
-        <>Noch keine Artikel verfasst.</>
-      )}
-    </div>
-  )
-}
-
-export function Profile2({
   author,
   following,
   followerCount,
