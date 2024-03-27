@@ -30,7 +30,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
 
   return (
     <>
-      <Button onClick={() => setOpenModal(true)} color='success'>
+      <Button onClick={() => setOpenModal(true)} color='green'>
         Nutzer
       </Button>
       <Modal

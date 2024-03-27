@@ -27,10 +27,7 @@ export default function FollowToggle({
   return (
     <div className='flex items-center divide-gray-700 divide-x-2'>
       <div className='pr-2'>
-        <Button
-          color={following ? '' : 'success'}
-          onClick={() => handleFollow()}
-        >
+        <Button color={following ? '' : 'green'} onClick={() => handleFollow()}>
           {following ? 'Entfolgen' : 'Folgen'}
         </Button>
       </div>
