@@ -1,23 +1,16 @@
+'use server'
+import { authOrRedirect } from '@/app/_utils/auth'
 import prisma from '@/app/_utils/db'
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/app/_utils/auth'
+import { revalidatePath } from 'next/cache'
 
-export async function POST(
-  _: NextRequest,
-  { params }: { params: { username: string } }
-) {
-  const session = await auth()
-
-  if (!session) {
-    return NextResponse.json({ message: 'Not logged in' }, { status: 401 })
-  }
-
+export async function toggleFollow(username: string) {
+  const session = await authOrRedirect()
   const following = await prisma.user.findFirst({
     where: {
       id: session.user.id,
       following: {
         some: {
-          username: params.username,
+          username: username,
         },
       },
     },
@@ -31,7 +24,7 @@ export async function POST(
       data: {
         following: {
           connect: {
-            username: params.username,
+            username: username,
           },
         },
       },
@@ -44,12 +37,12 @@ export async function POST(
       data: {
         following: {
           disconnect: {
-            username: params.username,
+            username: username,
           },
         },
       },
     })
   }
 
-  return NextResponse.json({ message: 'success' }, { status: 200 })
+  revalidatePath(`/profile/${username}`)
 }

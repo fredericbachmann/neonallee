@@ -2,10 +2,10 @@ import prisma from '@/app/_utils/db'
 import ActionBar from '@/app/_components/app-bar'
 import { notFound } from 'next/navigation'
 import { ArticleAuthors } from './_components/author'
-import { etherApiReq } from '@/app/api/etherpad/etherApi'
 import { CommentSection } from './_components/comment'
 import { auth } from '@/app/_utils/auth'
 import { SeriesPagination } from './_components/series-overview'
+import { etherApiReq } from '@/app/_actions/pad/utils'
 
 export default async function page({ params }: { params: { padId: string } }) {
   // test if pad exists AND is marked as published
@@ -32,6 +32,9 @@ export default async function page({ params }: { params: { padId: string } }) {
             pad: {
               NOT: { published: null },
             },
+          },
+          orderBy: {
+            indexInSeries: 'asc',
           },
         },
       },
@@ -112,7 +115,7 @@ export default async function page({ params }: { params: { padId: string } }) {
           <SeriesPagination pads={series.pads} />
         )}
         <hr />
-        <CommentSection isAdmin={isAdmin} commentsProp={comments} />
+        <CommentSection isAdmin={isAdmin} comments={comments} />
       </div>
     </>
   )

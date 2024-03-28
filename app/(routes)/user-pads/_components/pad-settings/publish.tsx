@@ -1,21 +1,15 @@
 'use client'
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
 import { _Pad } from '../../types'
 import { Switch } from '@mantine/core'
+import togglePublishPad from './_actions/publish'
 
-export function PublishPad({ pad, setPad }: { pad: _Pad; setPad: Function }) {
+export function PublishPad({ pad }: { pad: _Pad }) {
   const [published, setPublished] = useState(!!pad.published)
 
   async function togglePublish() {
-    const res = await fetch(`/api/etherpad/togglePublish/${pad.id}`, {
-      method: 'POST',
-    })
-    if (res.status === 401) signIn('google')
-    if (res.status === 200) {
-      setPublished(!published)
-      setPad({ ...pad, published: published })
-    }
+    await togglePublishPad(pad.id)
+    setPublished(!published)
   }
 
   return (

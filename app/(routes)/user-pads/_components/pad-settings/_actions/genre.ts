@@ -1,4 +1,5 @@
 'use server'
+import { revalidatePadSettings } from '@/app/_actions/pad/utils'
 import { auth } from '@/app/_utils/auth'
 import prisma from '@/app/_utils/db'
 
@@ -34,4 +35,6 @@ export async function updateGenre(padId: string, genreName: string | null) {
       genreName: genreName,
     },
   })
+
+  revalidatePadSettings(padId)
 }

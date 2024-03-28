@@ -3,38 +3,23 @@
 import { Button, TextInput } from '@mantine/core'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
-import { HiOutlineTrash } from 'react-icons/hi'
-import { HiPaperAirplane, HiTrash } from 'react-icons/hi2'
-
-type Comment = {
-  text: string
-  id: string
-  userId: string
-  createdAt: Date
-  user: {
-    name: string | null
-    image: string | null
-    author: {
-      username: string
-    } | null
-  }
-}
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { HiPaperAirplane, HiTrash, HiOutlineTrash } from 'react-icons/hi2'
+import { deleteComment, sendComment } from '../_actions/comment'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { _Comment, writeCommentSchema, writeCommentSchemaType } from '../types'
 
 export function CommentSection({
   isAdmin,
-  commentsProp,
+  comments,
 }: {
   isAdmin: boolean
-  commentsProp: Comment[]
+  comments: _Comment[]
 }) {
   const { data: session, status } = useSession()
-  const [comments, setComments] = useState(commentsProp) // use state so it can be altered without reload
-
-  function removeComment(commentId: string) {
-    setComments(comments.filter((el) => el.id !== commentId))
-  }
 
   return (
     <div className='flex-col space-y-5'>
@@ -56,7 +41,6 @@ export function CommentSection({
           showDelete={
             (session && session.user.id === comment.userId) || isAdmin
           }
-          removeComment={removeComment}
           key={index}
         />
       ))}
@@ -66,25 +50,29 @@ export function CommentSection({
 
 function WriteComment() {
   const params = useParams()
-  const commentRef = useRef<HTMLInputElement>(null)
 
-  async function postComment() {
-    const comment = commentRef.current?.value
-    const res = await fetch(
-      `/api/comment?padId=${params.padId}&comment=${comment}`,
-      { method: 'POST' }
-    ) // call the internal api
-    if (res.status === 401) signIn('google')
-    if (res.status === 200) {
-      if (commentRef.current) commentRef.current.value = ''
-    } // success, clear input field
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<writeCommentSchemaType>({
+    resolver: zodResolver(writeCommentSchema),
+  })
 
   return (
     <div>
       <p className='text-xl'>Was denkst du?</p>
-      <form className='flex space-x-1' onSubmit={postComment}>
-        <TextInput type='input' className='flex-1' ref={commentRef} />
+      <form
+        className='flex space-x-1'
+        onSubmit={handleSubmit((data) => sendComment(data))}
+      >
+        <input {...register('padId')} type='hidden' value={params.padId} />
+        <TextInput
+          {...register('comment')}
+          type='input'
+          className='flex-1'
+          error={errors.comment?.message}
+        />
         <Button className='h-10' type='submit'>
           <HiPaperAirplane />
         </Button>
@@ -104,15 +92,11 @@ function LoginForComment() {
 function Comment({
   comment,
   showDelete,
-  removeComment,
 }: {
-  comment: Comment
+  comment: _Comment
   showDelete: boolean
-  removeComment: Function
 }) {
-  const [hover, setHover] = useState(false)
   const [hoverTrash, setHoverTrash] = useState(false)
-  const router = useRouter()
 
   const options = {
     year: '2-digit',
@@ -122,26 +106,16 @@ function Comment({
     minute: '2-digit',
   } as const
 
-  async function deleteComment() {
-    const res = await fetch(`/api/comment?commentId=${comment.id}`, {
-      method: 'DELETE',
-    })
-    if (res.ok) removeComment(comment.id)
-  }
-
   return (
-    <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className='flex items-center'
-    >
+    <div className='flex items-center group'>
       <div className='flex flex-col flex-1'>
         <div className='flex space-x-1 items-center'>
-          <button
+          <Link
             className='flex space-x-1 items-center'
-            onClick={() =>
-              comment.user.author &&
-              router.push(`/profile/${comment.user.author.username}`)
+            href={
+              comment.user.author
+                ? `/profile/${comment.user.author.username}`
+                : ''
             }
           >
             <Image
@@ -152,25 +126,26 @@ function Comment({
               className='rounded-full'
             />
             <p className='text-slate-950'>{comment.user.name}</p>
-          </button>
+          </Link>
           <p className='text-slate-500 text-sm'>
             {comment.createdAt.toLocaleString('de-DE', options)}
           </p>
         </div>
         <p className='text-slate-700'>{comment.text}</p>
       </div>
-      {hover && showDelete && (
-        <div
-          className='cursor-pointer'
+      {showDelete && (
+        <button
+          className='hidden group-hover:block'
           onMouseEnter={() => setHoverTrash(true)}
           onMouseLeave={() => setHoverTrash(false)}
+          onClick={() => deleteComment(comment.id)}
         >
           {hoverTrash ? (
-            <HiTrash onClick={deleteComment} className='h-5 w-5' />
+            <HiTrash className='h-5 w-5' />
           ) : (
-            <HiOutlineTrash onClick={deleteComment} className='h-5 w-5' />
+            <HiOutlineTrash className='h-5 w-5' />
           )}
-        </div>
+        </button>
       )}
     </div>
   )

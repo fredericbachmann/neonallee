@@ -4,6 +4,7 @@ import { Pad } from '@prisma/client'
 import { Button, Table } from '@mantine/core'
 import Link from 'next/link'
 import { HiTrash } from 'react-icons/hi'
+import deletePad from '../user-pads/_components/pad-settings/_actions/delete'
 
 export function AdminTable({
   pads,
@@ -48,12 +49,6 @@ function AdminTableRow({
     }[]
   }
 }) {
-  async function handleDelete() {
-    const res = await fetch(`/api/etherpad/delete/${pad.id}`, {
-      method: 'DELETE',
-    })
-  }
-
   return (
     <Table.Tr>
       <Table.Td className='underline text-blue-800'>
@@ -71,7 +66,7 @@ function AdminTableRow({
       </Table.Td>
       <Table.Td>{pad.description === '' ? '---' : pad.description}</Table.Td>
       <Table.Td>
-        <Button onClick={handleDelete}>
+        <Button onClick={() => deletePad(pad.id)}>
           <HiTrash />
         </Button>
       </Table.Td>

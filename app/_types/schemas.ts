@@ -26,6 +26,8 @@ const padName = z
   .max(20)
   .regex(/^[a-zA-Z0-9 öÖüÜäÄß]*$/)
 
+const seriesName = padName
+
 export const userInputs = {
   name,
   city,
@@ -34,4 +36,5 @@ export const userInputs = {
   email,
   about,
   padName,
+  seriesName,
 }

@@ -3,15 +3,14 @@ import { Card, Image } from '@mantine/core'
 import { BsEyeFill, BsPencilFill, BsShieldShaded } from 'react-icons/bs'
 import { PadSettings } from '../pad-settings/pad-settings'
 import Link from 'next/link'
-import { useState } from 'react'
 import { useDrag } from 'react-dnd'
 import { useRouter } from 'next/navigation'
 import { _Pad } from '../../types'
+import { movePadIntoSeries } from '../pad-settings/_actions/series'
 
 /** representation card of ONE pad for user-pads */
-export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
+export function UserPadsPad({ pad }: { pad: _Pad }) {
   const router = useRouter()
-  const [pad, setPad] = useState(padProp)
   const permission = pad.members[0].permission
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -20,7 +19,7 @@ export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
     end(item, monitor) {
       const dropResult = monitor.getDropResult<{ id: string }>()
       if (item && dropResult && pad) {
-        moveToSeries(pad.id, dropResult.id)
+        movePadIntoSeries(pad.id, dropResult.id)
       }
     },
     collect: (monitor) => ({
@@ -28,15 +27,6 @@ export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
       handlerId: monitor.getHandlerId(),
     }),
   }))
-
-  async function moveToSeries(padId: string, seriesId: string) {
-    const res = await fetch(`/api/series?padId=${padId}&seriesId=${seriesId}`, {
-      method: 'PATCH',
-    })
-    if (res.ok) {
-      router.refresh()
-    }
-  }
 
   return (
     <div ref={drag} className='w-96 relative m-3 cursor-pointer'>
@@ -80,7 +70,7 @@ export function UserPadsPad({ pad: padProp }: { pad: _Pad }) {
       </Link>
       {permission === 'OWNER' && (
         <div className='h-7 w-7 absolute top-2 right-2'>
-          <PadSettings pad={pad} setPad={setPad} />
+          <PadSettings pad={pad} />
         </div>
       )}
     </div>

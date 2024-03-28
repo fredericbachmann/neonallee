@@ -1,33 +1,17 @@
 'use client'
 import { Button, Modal } from '@mantine/core'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Share from './share'
-import { useParams } from 'next/navigation'
 import Image from 'next/image'
 
-export default function Members({ displayShare }: { displayShare: Boolean }) {
-  const { padId }: { padId: string } = useParams()
+export default function Members({
+  displayShare,
+  members,
+}: {
+  displayShare: Boolean
+  members: _Members
+}) {
   const [openModal, setOpenModal] = useState(false)
-  const [members, setMembers] = useState<
-    {
-      id: string
-      username: string
-      permission: 'OWNER' | 'READ' | 'WRITE'
-      image: string | null
-    }[]
-  >([])
-
-  const [updateMembers, setUpdateMembers] = useState(false)
-  useEffect(() => {
-    setUpdateMembers(false)
-    fetch(`/api/etherpad/getMembers/${padId}`).then((res) => {
-      if (!res.ok) return
-      res.json().then(({ members }) => {
-        setMembers(members)
-      })
-    })
-  }, [updateMembers, padId])
-
   return (
     <>
       <Button onClick={() => setOpenModal(true)} color='green'>
@@ -61,9 +45,7 @@ export default function Members({ displayShare }: { displayShare: Boolean }) {
             </div>
           ))}
         </div>
-        {displayShare && (
-          <Share members={members} updateMembers={setUpdateMembers} />
-        )}
+        {displayShare && <Share members={members} />}
       </Modal>
     </>
   )

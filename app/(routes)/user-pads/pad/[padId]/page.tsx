@@ -2,6 +2,7 @@ import prisma from '@/app/_utils/db'
 import { notFound, redirect } from 'next/navigation'
 import { authOrRedirect } from '@/app/_utils/auth'
 import { PadAppBar } from './_components/app-bar'
+import getPadMembers from '../../_actions/getMembers'
 
 export default async function page({ params }: { params: { padId: string } }) {
   const session = await authOrRedirect()
@@ -41,6 +42,7 @@ export default async function page({ params }: { params: { padId: string } }) {
           ...pad,
           seriesName: pad.series ? pad.series.series.name : undefined,
         }}
+        members={await getPadMembers(pad.id)}
       />
       <iframe
         name='embed_readwrite'

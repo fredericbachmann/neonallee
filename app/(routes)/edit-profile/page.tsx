@@ -16,9 +16,9 @@ export default async function page() {
   })
 
   return (
-    <>
+    <div>
       <ActionBar />
       <ProfileCustomization user={user} />
-    </>
+    </div>
   )
 }

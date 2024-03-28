@@ -38,7 +38,7 @@ export default async function Page({
 
   const session = await auth()
 
-  let following: boolean | undefined
+  let following = false
 
   if (session) {
     following = !!(await prisma.user.findFirst({

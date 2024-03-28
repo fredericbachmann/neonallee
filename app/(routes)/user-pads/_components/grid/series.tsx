@@ -5,7 +5,7 @@ import { useDrop } from 'react-dnd'
 import { HiFolder, HiOutlineXCircle } from 'react-icons/hi2'
 import { Button, Modal } from '@mantine/core'
 import { List, arrayMove } from 'react-movable'
-import { serverEditSeries } from '../../_server-actions/update-series'
+import { serverEditSeries } from '../../_actions/update-series'
 
 /** The representation of ONE series for the user-pads page */
 export function UserPadsSeries({ series }: { series: _Series }) {

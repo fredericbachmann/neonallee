@@ -16,15 +16,13 @@ export function SeriesPagination({
   return (
     <div className='self-center flex flex-row divide-x-2'>
       {pads.map(({ padId, indexInSeries }) => (
-        <Link
-          href={`/article/${padId}`}
-          key={indexInSeries}
-          className={`p-3 ${
-            padId === params.padId ? 'text-green-500 cursor-default' : ''
-          }`}
-        >
-          {indexInSeries + 1}
-        </Link>
+        <div className='p-3' key={indexInSeries}>
+          {padId === params.padId ? (
+            <p className='text-green-500'>{indexInSeries + 1}</p>
+          ) : (
+            <Link href={`/article/${padId}`}>{indexInSeries + 1}</Link>
+          )}
+        </div>
       ))}
     </div>
   )

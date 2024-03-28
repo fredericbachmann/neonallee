@@ -1,11 +1,16 @@
-import { Alert, Button, TextInput } from '@mantine/core'
+import { Alert, Button, Select, TextInput } from '@mantine/core'
 import { FormEvent, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
+import { z } from 'zod'
+import { sharePadSchema } from '@/app/_actions/pad/types'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { userInputs } from '@/app/_types/schemas'
+import sharePad from '../../../_actions/share'
 
 export default function Share({
   members,
-  updateMembers,
 }: {
   members: {
     id: string
@@ -13,43 +18,42 @@ export default function Share({
     permission: 'OWNER' | 'READ' | 'WRITE'
     image: string | null
   }[]
-  updateMembers: Function
 }) {
   const { padId }: { padId: string } = useParams()
 
   const [permission, setPermission] = useState<'READ' | 'WRITE'>('READ')
   const [status, setStatus] = useState<number | undefined>()
+  const [usernameError, setUsernameError] = useState<string | undefined>()
 
-  const usernameInputRef = useRef<HTMLInputElement>(null)
-
-  async function handleShare(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const username = usernameInputRef.current?.value
-    const res = await fetch(
-      `/api/etherpad/share/${padId}/${username}/${permission}`,
-      { method: 'POST' }
-    ) // call the internal api
-    setStatus(res.status)
-    if (res.status === 401) signIn('google')
-    if (res.status === 200) {
-      updateMembers(true)
-      if (usernameInputRef.current) usernameInputRef.current.value = ''
-    } // success, clear input field
+  async function onSubmit(formData: FormData) {
+    const parse = userInputs.username.safeParse(formData.get('username'))
+    if (!parse.success)
+      return setUsernameError(
+        'kein gültiges Format: ' + parse.error.issues[0].message
+      )
+    const res = await sharePad({
+      padId: padId,
+      permission: permission,
+      username: parse.data,
+    })
+    if (res === 'username-doesnt-exist') {
+      return setUsernameError('Der Nutzername existiert nicht')
+    }
+    setUsernameError(undefined)
   }
 
   return (
     <div className='space-y-4 pt-4'>
       <hr />
       <p className='text-lg'>Lade andere AutorInnen ein!</p>
-      <form onSubmit={handleShare} className='space-y-2'>
+      <form action={onSubmit} className='space-y-2'>
         <div className='flex space-x-2 items-end'>
           <div className='grow'>
             <TextInput
               label='Nutzername'
-              id='username'
+              name='username'
               placeholder='HeinzHerrmann482'
-              ref={usernameInputRef}
-              autoComplete='off'
+              error={usernameError}
             />
           </div>
           <>

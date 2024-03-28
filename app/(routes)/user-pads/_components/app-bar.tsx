@@ -6,10 +6,14 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { HiDocumentText, HiSquare2Stack } from 'react-icons/hi2'
 import { handleInputChange } from '@/app/_utils/user-input'
+import { userInputs } from '@/app/_types/schemas'
+import { createSeries } from './pad-settings/_actions/series'
+import newPad from '@/app/_actions/pad/create'
 
 /** The app bar for the user-pads page */
 export default function UserPadsAppBar() {
   const [openModal, setOpenModal] = useState<string | undefined>()
+  const closeModal = () => setOpenModal(undefined)
 
   return (
     <ActionBar>
@@ -37,77 +41,52 @@ export default function UserPadsAppBar() {
         onClose={() => setOpenModal(undefined)}
         title='Neues Dokument'
       >
-        <NewPad />
+        <NewX
+          label='Serie'
+          name='series'
+          action={createSeries}
+          closeModal={closeModal}
+        />
       </Modal>
       <Modal
         opened={openModal === 'newRow'}
         onClose={() => setOpenModal(undefined)}
         title='Neue Serie'
       >
-        <NewRow />
+        <NewX
+          label='Dokument'
+          name='pad'
+          action={newPad}
+          closeModal={closeModal}
+        />
       </Modal>
     </ActionBar>
   )
 }
 
-/** form inside the modal for a new pad */
-function NewPad() {
-  const [padName, setPadName] = useState('Unbenannt')
-  const [padNameError, setPadNameError] = useState<string | undefined>()
-  const router = useRouter()
-
-  async function handleCreate(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const res = await fetch(
-      `/api/etherpad/create/${padName ? padName : 'Unbenannt'}`,
-      { method: 'POST' }
-    )
-    if (res.status === 401) signIn('google')
-    if (res.status === 200) {
-      const json: { url: string } = await res.json()
-      router.push(json.url)
-    }
-  }
-  return (
-    <form onSubmit={handleCreate}>
-      <TextInput
-        label='Name'
-        autoFocus
-        id='padName'
-        value={padName}
-        onChange={(e) =>
-          handleInputChange(e, 'padName', setPadName, setPadNameError)
-        }
-        error={padNameError}
-      />
-      <Button type='submit'>Erstellen</Button>
-    </form>
-  )
-}
-
-function NewRow() {
-  const [value, setValue] = useState('')
+function NewX({
+  closeModal,
+  action,
+  label,
+  name,
+}: {
+  closeModal: Function
+  action: Function
+  label: string
+  name: string
+}) {
   const [error, setError] = useState<string | undefined>()
-  const router = useRouter()
 
-  async function handleCreate(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const res = await fetch(`/api/series?name=${value}`, { method: 'POST' })
-    if (res.status === 401) signIn('google')
-    if (res.status === 200) {
-      router.refresh()
-    }
+  async function onSubmit(formData: FormData) {
+    const parse = userInputs.seriesName.safeParse(formData.get(name))
+    if (!parse.success) return setError(parse.error.issues[0].message) // client-side verification
+    await action(parse.data)
+    closeModal()
   }
+
   return (
-    <form onSubmit={handleCreate}>
-      <TextInput
-        label='Name'
-        autoFocus
-        id='seriesName'
-        value={value}
-        onChange={(e) => handleInputChange(e, 'padName', setValue, setError)} //TODO
-        error={error}
-      />
+    <form action={(data) => onSubmit(data)}>
+      <TextInput label='Name' autoFocus name={name} error={error} />
       <Button type='submit'>Erstellen</Button>
     </form>
   )

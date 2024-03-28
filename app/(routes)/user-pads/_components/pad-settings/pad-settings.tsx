@@ -16,18 +16,7 @@ import Genre from './genre'
  *
  * b) the pad view (/user-pads/pad/....)
  */
-export function PadSettings({
-  pad: padProp,
-  setPad: setPadProp,
-}: {
-  pad: _Pad
-  setPad?: Function
-}) {
-  const [pad, setPad] =
-    typeof setPadProp === 'undefined' // if state is not managed higher
-      ? useState(padProp) // create new state
-      : [padProp, setPadProp] // use higher state
-
+export function PadSettings({ pad }: { pad: _Pad }) {
   const [showModal, setShowModal] = useState(false)
 
   return (
@@ -44,9 +33,9 @@ export function PadSettings({
         title='Einstellungen'
       >
         <div className='space-y-8'>
-          <ChangePadName pad={pad} setPad={setPad} />
-          <Genre pad={pad} setPad={setPad} />
-          <PublishPad pad={pad} setPad={setPad} />
+          <ChangePadName pad={pad} />
+          <Genre pad={pad} />
+          <PublishPad pad={pad} />
           {pad.seriesName && (
             <RemoveFromSeries padId={pad.id} seriesName={pad.seriesName} />
           )}

@@ -1,24 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/app/_utils/auth'
+'use server'
+
+import { authOrRedirect } from '@/app/_utils/auth'
 import prisma from '@/app/_utils/db'
-import { etherApiReq } from '@/app/api/etherpad/etherApi'
+import { z } from 'zod'
+import { etherApiReq } from './utils'
+import { revalidatePath } from 'next/cache'
 
-export async function POST(
-  _: NextRequest,
-  { params }: { params: { padName: string } }
-) {
-  const padName = params.padName ? params.padName : 'Unbenannt'
+export default async function newPad(padName: string) {
+  z.string().parse(padName)
 
-  const session = await auth()
-  if (!session) return NextResponse.json({}, { status: 401 })
+  const session = await authOrRedirect()
 
   const isAuthor = !!(await prisma.author.findUnique({
     where: {
       id: session.user.id,
     },
   }))
-  if (!isAuthor)
-    return NextResponse.json({ message: 'Not an author' }, { status: 400 })
+  if (!isAuthor) throw new Error()
 
   const data = await etherApiReq(
     'createAuthorIfNotExistsFor',
@@ -49,5 +47,5 @@ export async function POST(
 
   await etherApiReq('createPad', `padID=${padId}&authorId=${author}`) // creating a new Pad
 
-  return NextResponse.json({ url: `/user-pads/pad/${padId}` }, { status: 200 })
+  revalidatePath('/user-pads/')
 }

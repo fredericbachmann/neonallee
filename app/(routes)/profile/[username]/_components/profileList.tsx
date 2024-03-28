@@ -19,7 +19,7 @@ export function Profile3({
   pads,
 }: {
   artist: _Author
-  following: boolean | undefined
+  following: boolean
   pads: Pad[]
 }) {
   const tabs = [
@@ -41,7 +41,7 @@ function ProfileInfo({
   isFollowing,
 }: {
   artist: _Author
-  isFollowing: boolean | undefined
+  isFollowing: boolean
 }) {
   return (
     <div className='flex space-x-5 p-2 pb-7'>

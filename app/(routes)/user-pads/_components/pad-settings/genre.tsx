@@ -2,17 +2,11 @@
 import { Select } from '@mantine/core'
 import { _Pad } from '../../types'
 import { useEffect, useState } from 'react'
-import { getGenreNames, updateGenre } from '../../_server-actions/genre'
+import { getGenreNames, updateGenre } from './_actions/genre'
 import { Genre } from '@prisma/client'
 import { useErrorContext } from '@/app/_components/providers'
 
-export default function Genre({
-  pad,
-  setPad,
-}: {
-  pad: _Pad
-  setPad: Function
-}) {
+export default function Genre({ pad }: { pad: _Pad }) {
   const errorContext = useErrorContext()
   const [genreNames, setGenreNames] = useState<string[]>([])
   // not very efficient but cleaner than prop-drilling...
@@ -23,7 +17,6 @@ export default function Genre({
   async function changeGenre(value: string | null) {
     try {
       await updateGenre(pad.id, value)
-      setPad({ ...pad, genreName: value })
     } catch (error) {
       errorContext.triggerError()
     }
@@ -31,6 +24,7 @@ export default function Genre({
 
   return (
     <Select
+      label='Genre'
       searchable
       data={genreNames}
       value={pad.genreName}

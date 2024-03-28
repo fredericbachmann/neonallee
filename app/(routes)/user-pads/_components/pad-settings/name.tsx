@@ -2,58 +2,46 @@
 import { Button, TextInput } from '@mantine/core'
 import { HiCheck } from 'react-icons/hi'
 import { useState } from 'react'
-import { handleInputChange } from '@/app/_utils/user-input'
 import { signIn } from 'next-auth/react'
 import { _Pad } from '../../types'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { changePadNameSchema } from './_actions/types'
+import { zodResolver } from '@hookform/resolvers/zod'
+import changePadName from './_actions/name'
 
-export function ChangePadName({
-  pad,
-  setPad,
-}: {
-  pad: _Pad
-  setPad: Function
-}) {
+type schemaType = z.infer<typeof changePadNameSchema>
+
+export function ChangePadName({ pad }: { pad: _Pad }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<schemaType>({ resolver: zodResolver(changePadNameSchema) })
+
   const [showCheck, setShowCheck] = useState(false)
-  const [padName, setPadName] = useState(pad.name)
-  const [padNameError, setPadNameError] = useState<undefined | string>()
 
-  async function handlePadNameSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const res = await fetch(
-      `/api/etherpad/changePadName?padId=${pad.id}&padName=${padName}`,
-      { method: 'POST' }
-    )
-    if (res.status === 401) signIn('google')
-    if (res.ok) {
-      setPad({ ...pad, name: padName })
-      setShowCheck(false)
-    }
+  async function onSubmit(data: schemaType) {
+    await changePadName(data)
+    setShowCheck(false)
   }
 
   return (
-    <form onSubmit={handlePadNameSubmit}>
-      <div className='flex items-end space-x-2'>
-        <TextInput
-          label='Name'
-          id='padName'
-          onFocus={() => setShowCheck(true)}
-          onBlur={() => {
-            if (pad.name === padName) setShowCheck(false)
-          }}
-          value={padName}
-          onChange={(e) =>
-            handleInputChange(e, 'padName', setPadName, setPadNameError)
-          }
-          color={padNameError && 'failure'}
-          error={padNameError}
-          className='flex-1'
-        />
-        {showCheck && (
-          <Button type='submit' variant='outline' color='green'>
-            <HiCheck />
-          </Button>
-        )}
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className='flex items-end'>
+      <input type='hidden' {...register('padId')} value={pad.id} />
+      <TextInput
+        label='Name'
+        {...register('padName')}
+        onFocus={() => setShowCheck(true)}
+        defaultValue={pad.name}
+        error={errors.padId?.message}
+        className='flex-1'
+      />
+      {showCheck && (
+        <Button type='submit' variant='outline' color='green' className='ml-2'>
+          <HiCheck />
+        </Button>
+      )}
     </form>
   )
 }
