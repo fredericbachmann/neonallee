@@ -23,7 +23,6 @@ export default async function Page() {
         authorId: session.user.id,
       },
     },
-    tags: true,
   }
 
   // every pad that is not in a series

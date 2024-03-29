@@ -1,6 +1,6 @@
 import ActionBar from '@/app/_components/app-bar'
 import prisma from '@/app/_utils/db'
-import { Pictures, Tags, FeaturedArtists } from './tiles'
+import { Pictures, Genres, FeaturedArtists } from './tiles'
 import { Author } from '@prisma/client'
 
 export default async function Page() {
@@ -15,7 +15,7 @@ export default async function Page() {
     ORDER BY RANDOM() LIMIT 5`
   ) // five random authors that have already published (sql query because prisma doesn't support random order)
 
-  const tags = await prisma.tag.findMany({
+  const genre = await prisma.genre.findMany({
     take: 10,
   })
 
@@ -24,7 +24,7 @@ export default async function Page() {
       <ActionBar />
       <div className='space-y-5 select-none'>
         <Pictures />
-        <Tags tags={tags} />
+        <Genres genres={genre} />
         <FeaturedArtists artists={featuredArtists} />
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Author, Tag } from '@prisma/client'
+import { Author, Genre } from '@prisma/client'
 import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
 import { Image } from '@mantine/core'
@@ -19,16 +19,16 @@ export function Pictures() {
   )
 }
 
-export function Tags({ tags }: { tags: Tag[] }) {
+export function Genres({ genres }: { genres: Genre[] }) {
   return (
     <div className='bg-off-white p-4 flex space-x-2 items-center overflow-x-auto'>
       <p className='pr-5 text-3xl font-semibold'>GENRES</p>
-      {tags.map((tag) => (
+      {genres.map((genre) => (
         <button
           className='bg-highlight px-10 py-5 text-5xl font-bold rounded-sm'
-          key={tag.id}
+          key={genre.name}
         >
-          {tag.name}
+          {genre.name}
         </button>
       ))}
     </div>

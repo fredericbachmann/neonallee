@@ -21,7 +21,6 @@ export default async function page({ params }: { params: { padId: string } }) {
           authorId: session.user.id,
         },
       },
-      tags: true,
       series: {
         select: { series: true },
       },
