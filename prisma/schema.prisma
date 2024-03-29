@@ -32,15 +32,8 @@ model Pad {
   comments    Comment[]
   description String          @default("")
   series      PadsOnSeries?
-  tags        Tag[]
   genre       Genre?          @relation(fields: [genreName], references: [name])
   genreName   String?
-}
-
-model Tag {
-  id   String @id @default(cuid())
-  name String
-  pads Pad[]
 }
 
 model Genre {
