@@ -41,24 +41,14 @@ export default function UserPadsAppBar() {
         onClose={() => setOpenModal(undefined)}
         title='Neues Dokument'
       >
-        <NewX
-          label='Serie'
-          name='series'
-          action={createSeries}
-          closeModal={closeModal}
-        />
+        <NewX name='pad' action={newPad} closeModal={closeModal} />
       </Modal>
       <Modal
         opened={openModal === 'newRow'}
         onClose={() => setOpenModal(undefined)}
         title='Neue Serie'
       >
-        <NewX
-          label='Dokument'
-          name='pad'
-          action={newPad}
-          closeModal={closeModal}
-        />
+        <NewX name='series' action={createSeries} closeModal={closeModal} />
       </Modal>
     </ActionBar>
   )
@@ -67,12 +57,10 @@ export default function UserPadsAppBar() {
 function NewX({
   closeModal,
   action,
-  label,
   name,
 }: {
   closeModal: Function
   action: Function
-  label: string
   name: string
 }) {
   const [error, setError] = useState<string | undefined>()

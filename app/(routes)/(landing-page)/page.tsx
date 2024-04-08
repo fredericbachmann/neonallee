@@ -1,6 +1,6 @@
 import ActionBar from '@/app/_components/app-bar'
 import prisma from '@/app/_utils/db'
-import { Pictures, Genres, FeaturedArtists } from './tiles'
+import { Pictures, Genres2, FeaturedArtists } from './tiles'
 import { Author } from '@prisma/client'
 
 export default async function Page() {
@@ -24,7 +24,7 @@ export default async function Page() {
       <ActionBar />
       <div className='space-y-5 select-none'>
         <Pictures />
-        <Genres genres={genre} />
+        <Genres2 genres={genre} />
         <FeaturedArtists artists={featuredArtists} />
       </div>
     </div>

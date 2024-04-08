@@ -3,6 +3,7 @@ import Link from 'next/link'
 import ProfileDropdown from './dropdown'
 import { Burger, Button, Drawer, Group } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import Image from 'next/image'
 
 export default function ActionBar({
   children,
@@ -22,7 +23,7 @@ export default function ActionBar({
   return (
     <div className='flex items-center justify-between p-3 border-b'>
       <Link href='/' className='text-2xl'>
-        [LOGO]
+        <Image src='/icon.jpg' alt='logo' height={44} width={44} />
       </Link>
 
       <div className='flex items-center space-x-5'>
