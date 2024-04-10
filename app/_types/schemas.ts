@@ -18,7 +18,7 @@ const username = z
 
 const email = z.string().email()
 
-const about = z.string().max(1000)
+const about = z.string().max(300)
 
 const padName = z
   .string()

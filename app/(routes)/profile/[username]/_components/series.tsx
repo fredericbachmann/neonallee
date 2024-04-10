@@ -3,7 +3,7 @@
 import { Pad, Series } from '@prisma/client'
 import { Modal } from '@mantine/core'
 import React, { useState } from 'react'
-import { Tile } from './profile'
+import { Tile } from './profileWithTiles'
 import Link from 'next/link'
 import { PadInList } from './profileList'
 

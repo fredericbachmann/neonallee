@@ -3,7 +3,6 @@ import { Select } from '@mantine/core'
 import { _Pad } from '../../types'
 import { useEffect, useState } from 'react'
 import { getGenreNames, updateGenre } from './_actions/genre'
-import { Genre } from '@prisma/client'
 import { useErrorContext } from '@/app/_components/providers'
 
 export default function Genre({ pad }: { pad: _Pad }) {

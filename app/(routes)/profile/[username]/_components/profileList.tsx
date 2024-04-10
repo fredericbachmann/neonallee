@@ -29,10 +29,12 @@ export function Profile3({
   ]
 
   return (
-    <div className='flex flex-col p-3'>
-      <ProfileInfo artist={artist} isFollowing={following} />
-      <ProfileTabs tabs={tabs} />
-    </div>
+    <>
+      <ProfileInfo2 artist={artist} isFollowing={following} />
+      <div className='flex flex-col p-3'>
+        <ProfileTabs tabs={tabs} />
+      </div>
+    </>
   )
 }
 
@@ -77,13 +79,56 @@ function ProfileInfo({
   )
 }
 
+function ProfileInfo2({
+  artist,
+  isFollowing,
+}: {
+  artist: _Author
+  isFollowing: boolean
+}) {
+  return (
+    <div className='relative text-off-white'>
+      <Image
+        src={'https://picsum.photos/1500/1000'}
+        alt=''
+        width={1500}
+        height={1000}
+      />
+      <div className='absolute bottom-0 w-screen bg-indigo-800 bg-opacity-80 p-3'>
+        <p className='absolute -top-5 pl-2 font-bold text-4xl'>
+          {artist.artistname.toUpperCase()}
+        </p>
+        <p className='py-3'>
+          {artist.about ||
+            `The alt property is used to describe the image for screen readers and search engines. It is also the fallback text if images have been disabled or an error occurs while loading the image.`}
+        </p>
+        <FollowToggle
+          isFollowing={isFollowing}
+          username={artist.username}
+          followerCount={artist._count.followers}
+        />
+      </div>
+    </div>
+  )
+}
+
 export function PadInList({ pad }: { pad: Pad }) {
   return (
-    <Link href={`/article/${pad.id}`} key={pad.id}>
+    <Link
+      href={`/article/${pad.id}`}
+      key={pad.id}
+      className='border-highlight border-2 p-2 -mx-2 rounded-md'
+    >
       <p className='text-2xl font-bold text-gray-800'>
         {pad.name.toUpperCase()}
       </p>
       <p className='text-gray-600 text-lg'>{pad.description}</p>
+      <div className='flex items-center space-x-3'>
+        {pad.genreName && <p>{pad.genreName + ' - '}</p>}
+        <p className='text-sm'>
+          {'veröffentlicht am ' + pad.published!.toLocaleDateString()}
+        </p>
+      </div>
     </Link>
   )
 }

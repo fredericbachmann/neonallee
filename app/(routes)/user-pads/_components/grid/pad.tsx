@@ -33,7 +33,7 @@ export function UserPadsPad({ pad }: { pad: _Pad }) {
       <Link href={`/user-pads/pad/${pad.id}`}>
         <Card shadow='lg'>
           <Card.Section>
-            <Image src={`https://picsum.photos/400/200?${pad.id}`} />
+            <Image src={`https://picsum.photos/400/200?${pad.id}`} alt='' />
           </Card.Section>
           {/* Hack for disabling cache */}
           <div className='flex items-center p-3'>

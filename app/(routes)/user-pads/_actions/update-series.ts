@@ -2,6 +2,7 @@
 
 import { auth } from '@/app/_utils/auth'
 import prisma from '@/app/_utils/db'
+import { revalidatePath } from 'next/cache'
 
 export async function serverEditSeries(
   seriesId: string,
@@ -57,4 +58,6 @@ export async function serverEditSeries(
       },
     },
   })
+
+  revalidatePath('/user-pads/')
 }

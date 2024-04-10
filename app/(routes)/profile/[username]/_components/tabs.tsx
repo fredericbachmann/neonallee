@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 
 export function ProfileTabs({
   tabs,
@@ -33,7 +33,7 @@ export function ProfileTabs({
           ))}
         </ul>
       </div>
-      <ul className='p-5 flex flex-col space-y-8'>{tabs[activeTab].content}</ul>
+      <ul className='p-5 flex flex-col space-y-4'>{tabs[activeTab].content}</ul>
     </>
   )
 }
