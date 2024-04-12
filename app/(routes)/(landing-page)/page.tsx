@@ -2,6 +2,7 @@ import ActionBar from '@/app/_components/app-bar'
 import prisma from '@/app/_utils/db'
 import { Pictures, Genres2, FeaturedArtists } from './tiles'
 import { Author } from '@prisma/client'
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const featuredArtists: Author[] = await prisma.$queryRawUnsafe(

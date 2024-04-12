@@ -35,7 +35,7 @@ export function ProfileTabs({ artist }: { artist: _Author }) {
           ))}
         </ul>
       </div>
-      <ul className='p-5 flex flex-col space-y-8'>{tabs[activeTab].content}</ul>
+      <ul className='p-5 flex flex-col space-y-4'>{tabs[activeTab].content}</ul>
     </>
   )
 }

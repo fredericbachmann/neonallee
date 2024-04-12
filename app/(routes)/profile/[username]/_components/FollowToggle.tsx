@@ -12,7 +12,7 @@ export default function FollowToggle({
   followerCount: number
 }) {
   return (
-    <div className='flex items-center divide-gray-700 divide-x-2'>
+    <div className='flex items-center divide-x-2'>
       <div className='pr-2'>
         <Button
           color={isFollowing ? '' : 'green'}
@@ -21,7 +21,7 @@ export default function FollowToggle({
           {isFollowing ? 'Entfolgen' : 'Folgen'}
         </Button>
       </div>
-      <p className='text-lg text-slate-700 pl-2'>{followerCount} Follower</p>
+      <p className='text-lg pl-2'>{followerCount} Follower</p>
     </div>
   )
 }

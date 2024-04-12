@@ -3,7 +3,10 @@
 import { Author, Genre } from '@prisma/client'
 import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
-import { Image } from '@mantine/core'
+import { Image as MantineImage, Modal } from '@mantine/core'
+import Image from 'next/image'
+import { useState } from 'react'
+import GenreModal from './genre-modal'
 
 export function Pictures() {
   return (
@@ -11,7 +14,7 @@ export function Pictures() {
       <Carousel withIndicators height='100%' style={{ flex: 1 }}>
         {Array.from(Array(5).keys()).map((index) => (
           <Carousel.Slide key={index}>
-            <Image src={`https://picsum.photos/3000?${index}`} />
+            <MantineImage src={`https://picsum.photos/3000?${index}`} alt='' />
           </Carousel.Slide>
         ))}
       </Carousel>
@@ -27,6 +30,7 @@ export function Genres({ genres }: { genres: Genre[] }) {
         <button
           className='bg-highlight px-10 py-5 text-5xl font-bold rounded-sm'
           key={genre.name}
+          onClick={() => alert(genre.name)}
         >
           {genre.name}
         </button>
@@ -36,6 +40,8 @@ export function Genres({ genres }: { genres: Genre[] }) {
 }
 
 export function Genres2({ genres }: { genres: Genre[] }) {
+  const [modalGenre, setModalGenre] = useState<string | undefined>(undefined)
+
   return (
     <div className='bg-off-white'>
       <p className='p-4 -mb-4 text-3xl'>GENRES</p>
@@ -44,11 +50,19 @@ export function Genres2({ genres }: { genres: Genre[] }) {
           <button
             className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-medium text-3xl'
             key={genre.name}
+            onClick={() => setModalGenre(genre.name)}
           >
             {genre.name}
           </button>
         ))}
       </div>
+      <Modal
+        opened={modalGenre !== undefined}
+        onClose={() => setModalGenre(undefined)}
+        title={modalGenre}
+      >
+        {modalGenre && <GenreModal genreName={modalGenre} />}
+      </Modal>
     </div>
   )
 }
@@ -65,7 +79,12 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
           className='justify-self-center relative'
           key={index}
         >
-          <img src={`https://picsum.photos/500?${index}`} />
+          <Image
+            src={`https://picsum.photos/500?${index}`}
+            alt=''
+            height={500}
+            width={500}
+          />
           <p className='absolute left-3 bottom-5 text-white'>
             {artist.artistname.toUpperCase()}
           </p>

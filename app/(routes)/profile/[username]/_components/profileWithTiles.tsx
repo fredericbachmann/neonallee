@@ -5,43 +5,43 @@ import prisma from '@/app/_utils/db'
 import { use } from 'react'
 import { SeriesTiles } from './series'
 
-export function Profile({
-  author,
-  following,
-  followerCount,
-  pads,
-}: {
-  author: Author & { user: { image: string | null } }
-  following: boolean | undefined
-  followerCount: number
-  pads: Pad[]
-}) {
-  const elements = [<NewReleases artist={author} />, <Series artist={author} />]
+// export function Profile({
+//   author,
+//   following,
+//   followerCount,
+//   pads,
+// }: {
+//   author: Author & { user: { image: string | null } }
+//   following: boolean | undefined
+//   followerCount: number
+//   pads: Pad[]
+// }) {
+//   const elements = [<NewReleases artist={author} />, <Series artist={author} />]
 
-  return (
-    <div>
-      <Image
-        src='https://picsum.photos/1500/1000'
-        alt=''
-        width={1500}
-        height={1000}
-        className='w-screen'
-      />
-      {elements.map((el, index) => (
-        <div
-          className={
-            index % 2
-              ? 'bg-profile-blue-100 text-profile-blue-200'
-              : 'bg-profile-blue-200 text-profile-yellow-400'
-          }
-          key={el.key}
-        >
-          {el}
-        </div>
-      ))}
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <Image
+//         src='https://picsum.photos/1500/1000'
+//         alt=''
+//         width={1500}
+//         height={1000}
+//         className='w-screen'
+//       />
+//       {elements.map((el, index) => (
+//         <div
+//           className={
+//             index % 2
+//               ? 'bg-profile-blue-100 text-profile-blue-200'
+//               : 'bg-profile-blue-200 text-profile-yellow-400'
+//           }
+//           key={index}
+//         >
+//           {el}
+//         </div>
+//       ))}
+//     </div>
+//   )
+// }
 
 const tileSizes = 'w-36 h-36 shrink-0'
 
