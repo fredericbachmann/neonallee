@@ -18,7 +18,7 @@ export default function GenreModal({ genreName }: { genreName: string }) {
     <div className='flex flex-col space-y-3'>
       <h1 className='text-lg'>Neueste Artikel</h1>
       {pads.map((pad) => (
-        <PadInList pad={pad} />
+        <PadInList pad={pad} key={pad.id} />
       ))}
     </div>
   )
