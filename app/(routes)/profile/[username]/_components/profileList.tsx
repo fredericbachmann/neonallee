@@ -8,7 +8,7 @@ import { SeriesList } from './series'
 import { BsFacebook, BsTwitterX, BsYoutube } from 'react-icons/bs'
 import FollowToggle from './FollowToggle'
 
-type _Author = Author & {
+export type _Author = Author & {
   user: { image: string }
   _count: { followers: number }
 }
@@ -22,12 +22,6 @@ export function Profile3({
   following: boolean
   pads: Pad[]
 }) {
-  const tabs = [
-    { title: 'Neu', content: <NewReleases artist={artist} /> },
-    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
-    { title: 'Serien', content: <Serieses artist={artist} /> },
-  ]
-
   return (
     <div className='flex flex-col p-3'>
       <ProfileInfo artist={artist} isFollowing={following} />
@@ -88,7 +82,7 @@ export function PadInList({ pad }: { pad: Pad }) {
   )
 }
 
-function NewReleases({ artist }: { artist: Author }) {
+export function NewReleases({ artist }: { artist: Author }) {
   const pads = use(
     prisma.pad.findMany({
       where: {
@@ -109,7 +103,7 @@ function NewReleases({ artist }: { artist: Author }) {
   )
 }
 
-function Serieses({ artist }: { artist: Author }) {
+export function Serieses({ artist }: { artist: Author }) {
   const serieses = use(
     prisma.series.findMany({
       where: {

@@ -1,18 +1,17 @@
 'use client'
 
+import { Author } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export function ArticleAuthors({
   authors,
 }: {
-  authors: {
-    username: string
-    id: string
+  authors: (Author & {
     user: {
       image: string | null
     }
-  }[]
+  })[]
 }) {
   return (
     <div className='space-y-2'>
@@ -27,7 +26,7 @@ export function ArticleAuthors({
                 width={40}
                 className='rounded-full'
               />
-              <div>{author.username}</div>
+              <div>{author.artistname}</div>
             </div>
           </Link>
         </div>

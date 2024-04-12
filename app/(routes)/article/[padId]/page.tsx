@@ -52,9 +52,7 @@ export default async function page({ params }: { params: { padId: string } }) {
         },
       },
     },
-    select: {
-      username: true,
-      id: true,
+    include: {
       user: {
         select: {
           image: true,

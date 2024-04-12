@@ -1,13 +1,15 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
+import { NewReleases, Serieses, _Author } from './profileList'
 
-export function ProfileTabs({
-  tabs,
-}: {
-  tabs: { title: string; content: React.ReactNode }[]
-}) {
+export function ProfileTabs({ artist }: { artist: _Author }) {
   const [activeTab, setActiveTab] = useState(0)
+  const tabs = [
+    { title: 'Neu', content: <NewReleases artist={artist} /> },
+    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
+    { title: 'Serien', content: <Serieses artist={artist} /> },
+  ]
 
   return (
     <>
