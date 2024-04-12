@@ -3,8 +3,10 @@
 import { Author, Genre } from '@prisma/client'
 import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
-import { Image as MantineImage } from '@mantine/core'
+import { Image as MantineImage, Modal } from '@mantine/core'
 import Image from 'next/image'
+import { useState } from 'react'
+import GenreModal from './genre-modal'
 
 export function Pictures() {
   return (
@@ -38,6 +40,8 @@ export function Genres({ genres }: { genres: Genre[] }) {
 }
 
 export function Genres2({ genres }: { genres: Genre[] }) {
+  const [modalGenre, setModalGenre] = useState<string | undefined>(undefined)
+
   return (
     <div className='bg-off-white'>
       <p className='p-4 -mb-4 text-3xl'>GENRES</p>
@@ -46,12 +50,19 @@ export function Genres2({ genres }: { genres: Genre[] }) {
           <button
             className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-medium text-3xl'
             key={genre.name}
-            onClick={() => alert(genre.name)}
+            onClick={() => setModalGenre(genre.name)}
           >
             {genre.name}
           </button>
         ))}
       </div>
+      <Modal
+        opened={modalGenre !== undefined}
+        onClose={() => setModalGenre(undefined)}
+        title={modalGenre}
+      >
+        {modalGenre && <GenreModal genreName={modalGenre} />}
+      </Modal>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { Modal } from '@mantine/core'
 import React, { useState } from 'react'
 import { Tile } from './profileWithTiles'
 import Link from 'next/link'
-import { PadInList } from './profileList'
+import { PadInList } from '@/app/_components/pad-link'
 
 export function SeriesTiles({
   series,
