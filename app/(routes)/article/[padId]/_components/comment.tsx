@@ -55,6 +55,7 @@ function WriteComment() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<writeCommentSchemaType>({
     resolver: zodResolver(writeCommentSchema),
   })
@@ -64,7 +65,10 @@ function WriteComment() {
       <p className='text-xl'>Was denkst du?</p>
       <form
         className='flex space-x-1'
-        onSubmit={handleSubmit((data) => sendComment(data))}
+        onSubmit={handleSubmit(async (data) => {
+          await sendComment(data)
+          reset()
+        })}
       >
         <input {...register('padId')} type='hidden' value={params.padId} />
         <TextInput

@@ -29,10 +29,12 @@ export function Profile3({
   ]
 
   return (
-    <div className='flex flex-col p-3'>
-      <ProfileInfo artist={artist} isFollowing={following} />
-      <ProfileTabs tabs={tabs} />
-    </div>
+    <>
+      <ProfileInfo2 artist={artist} isFollowing={following} />
+      <div className='flex flex-col p-3'>
+        <ProfileTabs tabs={tabs} />
+      </div>
+    </>
   )
 }
 
@@ -67,6 +69,39 @@ function ProfileInfo({
           </div>
         </div>
         <p className='text-gray-500'>{artist.about}</p>
+        <FollowToggle
+          isFollowing={isFollowing}
+          username={artist.username}
+          followerCount={artist._count.followers}
+        />
+      </div>
+    </div>
+  )
+}
+
+function ProfileInfo2({
+  artist,
+  isFollowing,
+}: {
+  artist: _Author
+  isFollowing: boolean
+}) {
+  return (
+    <div className='relative text-off-white'>
+      <Image
+        src={'https://picsum.photos/1500/1000'}
+        alt=''
+        width={1500}
+        height={1000}
+      />
+      <div className='absolute bottom-0 w-screen bg-indigo-800 bg-opacity-80 p-3'>
+        <p className='absolute -top-5 pl-2 font-bold text-4xl'>
+          {artist.artistname.toUpperCase()}
+        </p>
+        <p className='py-3'>
+          {artist.about ||
+            `The alt property is used to describe the image for screen readers and search engines. It is also the fallback text if images have been disabled or an error occurs while loading the image.`}
+        </p>
         <FollowToggle
           isFollowing={isFollowing}
           username={artist.username}
