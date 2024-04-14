@@ -44,11 +44,10 @@ export function Genres2({ genres }: { genres: Genre[] }) {
 
   return (
     <div className='bg-off-white'>
-      <p className='p-4 -mb-4 text-3xl'>GENRES</p>
-      <div className='flex flex-wrap p-4'>
+      <div className='flex flex-wrap p-2'>
         {genres.map((genre) => (
           <button
-            className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-medium text-3xl'
+            className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-semibold text-xl'
             key={genre.name}
             onClick={() => setModalGenre(genre.name)}
           >
@@ -71,7 +70,7 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
   return (
     <div className='px-4 grid gap-2 items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'>
       <p className='text-3xl font-semibold text-center whitespace-pre'>
-        RANDOM{`\n`}ARTISTS
+        AutorInnen
       </p>
       {artists.map((artist, index) => (
         <Link
