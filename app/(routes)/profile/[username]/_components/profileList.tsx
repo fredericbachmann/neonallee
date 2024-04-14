@@ -3,12 +3,12 @@ import { ProfileTabs } from './tabs'
 import Image from 'next/image'
 import { use } from 'react'
 import prisma from '@/app/_utils/db'
+import Link from 'next/link'
 import { SeriesList } from './series'
 import { BsFacebook, BsTwitterX, BsYoutube } from 'react-icons/bs'
 import FollowToggle from './FollowToggle'
-import { PadInList } from '@/app/_components/pad-link'
 
-export type _Author = Author & {
+type _Author = Author & {
   user: { image: string }
   _count: { followers: number }
 }
@@ -22,13 +22,17 @@ export function Profile3({
   following: boolean
   pads: Pad[]
 }) {
+  const tabs = [
+    { title: 'Neu', content: <NewReleases artist={artist} /> },
+    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
+    { title: 'Serien', content: <Serieses artist={artist} /> },
+  ]
+
   return (
-    <>
-      <ProfileInfo2 artist={artist} isFollowing={following} />
-      <div className='flex flex-col p-3'>
-        <ProfileTabs tabs={tabs} />
-      </div>
-    </>
+    <div className='flex flex-col p-3'>
+      <ProfileInfo artist={artist} isFollowing={following} />
+      <ProfileTabs tabs={tabs} />
+    </div>
   )
 }
 
@@ -73,40 +77,18 @@ function ProfileInfo({
   )
 }
 
-function ProfileInfo2({
-  artist,
-  isFollowing,
-}: {
-  artist: _Author
-  isFollowing: boolean
-}) {
+export function PadInList({ pad }: { pad: Pad }) {
   return (
-    <div className='relative text-off-white'>
-      <Image
-        src={'https://picsum.photos/1500/1000'}
-        alt=''
-        width={1500}
-        height={1000}
-      />
-      <div className='absolute bottom-0 w-screen bg-indigo-800 bg-opacity-80 p-3'>
-        <p className='absolute -top-5 pl-2 font-bold text-4xl'>
-          {artist.artistname.toUpperCase()}
-        </p>
-        <p className='py-3'>
-          {artist.about ||
-            `The alt property is used to describe the image for screen readers and search engines. It is also the fallback text if images have been disabled or an error occurs while loading the image.`}
-        </p>
-        <FollowToggle
-          isFollowing={isFollowing}
-          username={artist.username}
-          followerCount={artist._count.followers}
-        />
-      </div>
-    </div>
+    <Link href={`/article/${pad.id}`} key={pad.id}>
+      <p className='text-2xl font-bold text-gray-800'>
+        {pad.name.toUpperCase()}
+      </p>
+      <p className='text-gray-600 text-lg'>{pad.description}</p>
+    </Link>
   )
 }
 
-export function NewReleases({ artist }: { artist: Author }) {
+function NewReleases({ artist }: { artist: Author }) {
   const pads = use(
     prisma.pad.findMany({
       where: {
@@ -127,7 +109,7 @@ export function NewReleases({ artist }: { artist: Author }) {
   )
 }
 
-export function Serieses({ artist }: { artist: Author }) {
+function Serieses({ artist }: { artist: Author }) {
   const serieses = use(
     prisma.series.findMany({
       where: {

@@ -1,15 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { NewReleases, Serieses, _Author } from './profileList'
 
-export function ProfileTabs({ artist }: { artist: _Author }) {
+export function ProfileTabs({
+  tabs,
+}: {
+  tabs: { title: string; content: React.ReactNode }[]
+}) {
   const [activeTab, setActiveTab] = useState(0)
-  const tabs = [
-    { title: 'Neu', content: <NewReleases artist={artist} /> },
-    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
-    { title: 'Serien', content: <Serieses artist={artist} /> },
-  ]
 
   return (
     <>
@@ -35,7 +33,7 @@ export function ProfileTabs({ artist }: { artist: _Author }) {
           ))}
         </ul>
       </div>
-      <ul className='p-5 flex flex-col space-y-4'>{tabs[activeTab].content}</ul>
+      <ul className='p-5 flex flex-col space-y-8'>{tabs[activeTab].content}</ul>
     </>
   )
 }
