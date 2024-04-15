@@ -24,7 +24,7 @@ const padName = z
   .string()
   .min(3)
   .max(20)
-  .regex(/^[a-zA-Z0-9 öÖüÜäÄß]*$/)
+  .regex(/^[a-z0-9 öÖüÜäÄß#,.!?\-']*$/i)
 
 const seriesName = padName
 

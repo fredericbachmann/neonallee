@@ -3,21 +3,22 @@
 import { Author, Genre } from '@prisma/client'
 import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
-import { Image as MantineImage, Modal } from '@mantine/core'
+import { Modal } from '@mantine/core'
 import Image from 'next/image'
 import { useState } from 'react'
 import GenreModal from './genre-modal'
+import deskPic from '@/public/desk.jpg'
 
 export function Pictures() {
   return (
     <div className='h-72 sm:h-80 xl:h-96 flex'>
-      <Carousel withIndicators height='100%' style={{ flex: 1 }}>
-        {Array.from(Array(5).keys()).map((index) => (
-          <Carousel.Slide key={index}>
-            <MantineImage src={`https://picsum.photos/3000?${index}`} alt='' />
-          </Carousel.Slide>
-        ))}
-      </Carousel>
+      <Image
+        src={deskPic}
+        alt=''
+        width={1426}
+        height={951}
+        className='object-cover'
+      />
     </div>
   )
 }
