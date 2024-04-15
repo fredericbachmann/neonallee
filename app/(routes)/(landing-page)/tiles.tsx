@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import GenreModal from './genre-modal'
 import deskPic from '@/public/desk.jpg'
+import { HiArrowRight } from 'react-icons/hi2'
 
 export function Pictures() {
   return (
@@ -48,7 +49,7 @@ export function Genres2({ genres }: { genres: Genre[] }) {
       <div className='flex flex-wrap p-2'>
         {genres.map((genre) => (
           <button
-            className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-semibold text-xl'
+            className='p-2 m-2 rounded-xl bg-highlight font-semibold text-xl'
             key={genre.name}
             onClick={() => setModalGenre(genre.name)}
           >
@@ -71,7 +72,7 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
   return (
     <div className='px-4 grid gap-2 items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'>
       <p className='text-3xl font-semibold text-center whitespace-pre'>
-        AutorInnen
+        einige{`\n`}unserer{`\n`}Autoren
       </p>
       {artists.map((artist, index) => (
         <Link
@@ -84,9 +85,11 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
             alt=''
             height={500}
             width={500}
+            className='grayscale'
           />
-          <p className='absolute left-3 bottom-5 text-white'>
+          <p className='absolute left-3 bottom-5 text-white flex items-center'>
             {artist.artistname.toUpperCase()}
+            <HiArrowRight className='h-5 w-5 ml-2' />
           </p>
         </Link>
       ))}

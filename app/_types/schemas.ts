@@ -23,7 +23,7 @@ const about = z.string().max(200)
 const padName = z
   .string()
   .min(3)
-  .max(20)
+  .max(40)
   .regex(/^[a-z0-9 öÖüÜäÄß#,.!?\-']*$/i)
 
 const seriesName = padName

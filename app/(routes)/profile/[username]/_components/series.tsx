@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { Tile } from './profileWithTiles'
 import Link from 'next/link'
 import { PadInList } from '@/app/_components/pad-link'
+import { HiArrowRight } from 'react-icons/hi2'
 
 export function SeriesTiles({
   series,
@@ -51,10 +52,14 @@ export function SeriesList({
   const [showModal, setShowModal] = useState(false)
   return (
     <>
-      <button onClick={() => setShowModal(true)}>
-        <p className='text-2xl font-bold text-gray-800 text-start'>
+      <button
+        onClick={() => setShowModal(true)}
+        className='flex items-center space-x-3'
+      >
+        <p className='text-2xl font-bold text-gray-800'>
           {series.name.toUpperCase()}
         </p>
+        <HiArrowRight className='w-5 h-5' />
       </button>
       <Modal opened={showModal} onClose={() => setShowModal(false)}>
         <div className='grid grid-cols-[80px_auto] gap-y-7'>

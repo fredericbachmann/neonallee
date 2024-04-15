@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { SeriesList } from './series'
 import { BsFacebook, BsTwitterX, BsYoutube } from 'react-icons/bs'
 import FollowToggle from './FollowToggle'
+import { PadInList } from '@/app/_components/pad-link'
 
 type _Author = Author & {
   user: { image: string }
@@ -24,7 +25,7 @@ export function Profile3({
 }) {
   const tabs = [
     { title: 'Neu', content: <NewReleases artist={artist} /> },
-    { title: "Author's Pick", content: <>Noch nicht implementiert</> },
+    { title: 'Tipp des Autors', content: <>Noch nicht implementiert</> },
     { title: 'Serien', content: <Serieses artist={artist} /> },
   ]
 
@@ -100,7 +101,7 @@ function ProfileInfo2({
         </p>
         <p className='py-3'>
           {artist.about ||
-            `The alt property is used to describe the image for screen readers and search engines. It is also the fallback text if images have been disabled or an error occurs while loading the image.`}
+            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac lectus nisi. Interdum et malesuada fames ac ante ipsum primis in faucibus. In malesuada libero sit amet laoreet elementum.`}
         </p>
         <FollowToggle
           isFollowing={isFollowing}
@@ -109,17 +110,6 @@ function ProfileInfo2({
         />
       </div>
     </div>
-  )
-}
-
-export function PadInList({ pad }: { pad: Pad }) {
-  return (
-    <Link href={`/article/${pad.id}`} key={pad.id}>
-      <p className='text-2xl font-bold text-gray-800'>
-        {pad.name.toUpperCase()}
-      </p>
-      <p className='text-gray-600 text-lg'>{pad.description}</p>
-    </Link>
   )
 }
 

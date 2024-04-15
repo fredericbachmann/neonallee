@@ -1,5 +1,6 @@
 import { Pad } from '@prisma/client'
 import Link from 'next/link'
+import { HiArrowRight } from 'react-icons/hi2'
 
 export function PadInList({ pad }: { pad: Pad }) {
   return (
@@ -10,10 +11,11 @@ export function PadInList({ pad }: { pad: Pad }) {
         </p>
         <p className='text-gray-600 text-lg'>{pad.description}</p>
         <div className='flex items-center space-x-3'>
-          {pad.genreName && <p>{pad.genreName + ' - '}</p>}
+          {pad.genreName && <p>{pad.genreName}</p>}
           <p className='text-sm'>
             {'veröffentlicht am ' + pad.published!.toLocaleDateString()}
           </p>
+          <HiArrowRight />
         </div>
       </div>
     </Link>

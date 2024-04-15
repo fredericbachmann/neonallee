@@ -18,6 +18,9 @@ export default function ActionBar({
       <Button component={Link} href='/user-pads' variant='subtle' size='md'>
         Meine Dokumente
       </Button>
+      <Button component={Link} href='/artists' variant='subtle' size='md'>
+        Alle KünstlerInnen
+      </Button>
     </>
   )
 
