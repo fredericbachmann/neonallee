@@ -1,12 +1,13 @@
 import '../globals.css'
-import { Arimo } from 'next/font/google'
+import { Tinos } from 'next/font/google'
 import { Providers } from '@/app/_components/providers'
 import { ErrorAlert } from '../_components/error'
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css'
 
-const font = Arimo({
+const font = Tinos({
   subsets: ['latin'],
+  weight: '400',
   display: 'swap',
 })
 

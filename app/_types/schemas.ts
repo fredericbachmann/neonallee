@@ -18,13 +18,13 @@ const username = z
 
 const email = z.string().email()
 
-const about = z.string().max(300)
+const about = z.string().max(200)
 
 const padName = z
   .string()
   .min(3)
-  .max(20)
-  .regex(/^[a-zA-Z0-9 öÖüÜäÄß]*$/)
+  .max(40)
+  .regex(/^[a-z0-9 öÖüÜäÄß#,.!?\-']*$/i)
 
 const seriesName = padName
 

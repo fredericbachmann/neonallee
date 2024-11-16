@@ -3,19 +3,23 @@
 import { Author, Genre } from '@prisma/client'
 import { Carousel } from '@mantine/carousel'
 import Link from 'next/link'
-import { Image as MantineImage } from '@mantine/core'
+import { Modal } from '@mantine/core'
 import Image from 'next/image'
+import { useState } from 'react'
+import GenreModal from './genre-modal'
+import deskPic from '@/public/desk.jpg'
+import { HiArrowRight } from 'react-icons/hi2'
 
 export function Pictures() {
   return (
     <div className='h-72 sm:h-80 xl:h-96 flex'>
-      <Carousel withIndicators height='100%' style={{ flex: 1 }}>
-        {Array.from(Array(5).keys()).map((index) => (
-          <Carousel.Slide key={index}>
-            <MantineImage src={`https://picsum.photos/3000?${index}`} alt='' />
-          </Carousel.Slide>
-        ))}
-      </Carousel>
+      <Image
+        src={deskPic}
+        alt=''
+        width={1426}
+        height={951}
+        className='object-cover'
+      />
     </div>
   )
 }
@@ -38,20 +42,28 @@ export function Genres({ genres }: { genres: Genre[] }) {
 }
 
 export function Genres2({ genres }: { genres: Genre[] }) {
+  const [modalGenre, setModalGenre] = useState<string | undefined>(undefined)
+
   return (
     <div className='bg-off-white'>
-      <p className='p-4 -mb-4 text-3xl'>GENRES</p>
-      <div className='flex flex-wrap p-4'>
+      <div className='flex flex-wrap p-2'>
         {genres.map((genre) => (
           <button
-            className='p-2 m-2 rounded-xl border-2 border-highlight hover:bg-highlight font-medium text-3xl'
+            className='p-2 m-2 rounded-xl bg-highlight font-semibold text-xl'
             key={genre.name}
-            onClick={() => alert(genre.name)}
+            onClick={() => setModalGenre(genre.name)}
           >
             {genre.name}
           </button>
         ))}
       </div>
+      <Modal
+        opened={modalGenre !== undefined}
+        onClose={() => setModalGenre(undefined)}
+        title={modalGenre}
+      >
+        {modalGenre && <GenreModal genreName={modalGenre} />}
+      </Modal>
     </div>
   )
 }
@@ -60,7 +72,7 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
   return (
     <div className='px-4 grid gap-2 items-center grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'>
       <p className='text-3xl font-semibold text-center whitespace-pre'>
-        RANDOM{`\n`}ARTISTS
+        einige{`\n`}unserer{`\n`}Autoren
       </p>
       {artists.map((artist, index) => (
         <Link
@@ -73,9 +85,11 @@ export function FeaturedArtists({ artists }: { artists: Author[] }) {
             alt=''
             height={500}
             width={500}
+            className='grayscale'
           />
-          <p className='absolute left-3 bottom-5 text-white'>
+          <p className='absolute left-3 bottom-5 text-white flex items-center'>
             {artist.artistname.toUpperCase()}
+            <HiArrowRight className='h-5 w-5 ml-2' />
           </p>
         </Link>
       ))}

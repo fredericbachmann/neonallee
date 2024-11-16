@@ -6,8 +6,10 @@ import { Profile3 } from './_components/profileList'
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: { username: string }
+  searchParams: { [oben: string]: string | string[] | undefined }
 }) {
   const author = await prisma.author.findUnique({
     where: {
