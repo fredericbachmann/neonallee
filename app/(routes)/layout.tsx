@@ -11,7 +11,7 @@ const font = Arimo({
 })
 
 export const metadata = {
-  title: 'Literapolis',
+  title: 'Neonallee',
   description: '',
 }
 
