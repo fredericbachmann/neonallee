@@ -4,12 +4,6 @@ A publishing platform for writers, built around **real-time collaborative editin
 
 Built solo as an MVP between June 2023 and July 2025. Next.js App Router, Prisma/PostgreSQL, and a self-hosted Etherpad instance doing the collaborative editing. The UI is in German.
 
-<!-- SCREENSHOTS: add docs/landing.png, docs/editor.png, docs/article.png — or delete the table below. -->
-
-| Landing page                      | Collaborative editor           | Published article                      |
-| --------------------------------- | ------------------------------ | -------------------------------------- |
-| ![Landing page](docs/landing.png) | ![Pad editor](docs/editor.png) | ![Published article](docs/article.png) |
-
 ---
 
 ## What it does
