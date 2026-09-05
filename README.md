@@ -2,7 +2,7 @@
 
 A publishing platform for writers, built around **real-time collaborative editing**. Authors draft texts together in a shared editor, organise them into series, and publish them to a public readership that can browse by genre, follow authors, and comment.
 
-Built solo as an MVP between June 2023 and July 2025. Next.js App Router, Prisma/PostgreSQL, and a self-hosted Etherpad instance doing the collaborative editing. The UI is in German.
+Built solo as an MVP. Next.js App Router, Prisma/PostgreSQL, and a self-hosted Etherpad instance doing the collaborative editing. The UI is in German.
 
 ---
 
